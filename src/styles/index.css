@@ -1,0 +1,357 @@
+:root {
+  --bg-color: rgb(37, 37, 37);
+  --h-color: rgb(30, 30, 30);
+  --h-height: 4.5em;
+  --n-color: rgb(35, 35, 35);
+  --n-width: 25em;
+  --v-i-color: rgb(34, 34, 34);
+  --c1: white;
+  --c2: whitesmoke;
+  --c3: rgb(255, 112, 76);
+  --c4: rgb(127, 118, 255);
+  --f1: "Ubuntu";
+}
+
+body {
+  background-color: var(--bg-color);
+  margin: 0;
+  margin-top: var(--h-height);
+}
+
+body * {
+  box-sizing: border-box;
+}
+
+.disabled {
+  display: none !important;
+}
+
+header {
+  background-color: var(--h-color);
+  width: 100%;
+  height: var(--h-height);
+  padding: 0 3.5em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+header .s1 {
+  width: 100%;
+  height: var(--h-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header .s2 {
+  width: 100%;
+  height: 0;
+}
+header .s2 .input-cont {
+  display: none;
+}
+header .name {
+  font: 700 2em var(--f1);
+  text-decoration: none;
+}
+header nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  pointer-events: none;
+}
+header nav a {
+  color: white;
+  opacity: 0.9;
+  font: 500 1.4em var(--f1);
+  border-radius: 2em;
+  text-decoration: none;
+  pointer-events: all;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+header nav a:hover {
+  scale: 1.05;
+}
+header .input-cont {
+  width: 20em;
+  height: 2.8em;
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+  position: relative;
+  pointer-events: all;
+}
+header .input-cont i {
+  color: gray;
+  position: absolute;
+  left: 1em;
+}
+header .input-cont input {
+  color: white;
+  background-color: transparent;
+  font: 500 1em var(--f1);
+  width: 100%;
+  height: 100%;
+  border: 2px solid gray;
+  border-radius: 5em;
+  padding: 0.5em 1em;
+  padding-left: 3em;
+  transition: all 0.12s;
+}
+header .input-cont input:focus {
+  outline: none;
+}
+
+.header-movie .name,
+.header-movie .a-active {
+  font-weight: 700;
+  color: var(--c3);
+}
+.header-movie input:focus {
+  border-color: var(--c3);
+}
+
+.header-tv .name,
+.header-tv .a-active {
+  font-weight: 700;
+  color: var(--c4);
+}
+.header-tv input:focus {
+  border-color: var(--c4);
+}
+
+.h2-header {
+  color: white;
+  font: 700 2.5em var(--f1);
+  margin: 0;
+  margin-bottom: -0.2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+}
+.h2-header div {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.h2-header button {
+  color: gray;
+  background-color: transparent;
+  font: 400 0.45em var(--f1);
+  border: none;
+  display: none;
+  cursor: pointer;
+}
+.h2-header button:hover {
+  text-decoration: underline;
+}
+
+.searchRes-cont {
+  max-height: calc(100vh - var(--h-height));
+  padding-bottom: 1em;
+  display: flex;
+  justify-content: end;
+  align-items: start;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  flex-direction: row-reverse; /* Change direction to row-reverse */
+  position: fixed;
+  top: var(--h-height);
+  right: 3.5em;
+  z-index: 100;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.searchRes-cont .searchRes {
+  background-color: var(--h-color);
+  border-radius: 1em;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+.searchRes-cont .searchRes .result {
+  color: white;
+  background-color: var(--h-color);
+  width: 25em;
+  height: 9em;
+  padding: 0.5em 0.8em;
+  display: flex;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.searchRes-cont .searchRes .result .imgCont {
+  height: 100%;
+}
+.searchRes-cont .searchRes .result .imgCont img {
+  height: 100%;
+}
+.searchRes-cont .searchRes .result .nameCont {
+  flex: 1;
+  padding: 1em 0.8em;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 0.6em;
+}
+.searchRes-cont .searchRes .result .nameCont h3 {
+  color: whitesmoke;
+  font: 500 1.2em var(--f1);
+  margin: 0;
+}
+.searchRes-cont .searchRes .result .nameCont h4 {
+  color: gray;
+  font: 400 0.9em var(--f1);
+  margin: 0;
+}
+.searchRes-cont .searchRes .result .ratingCont {
+  width: 2.5em;
+  height: 100%;
+  padding-top: 1em;
+}
+.searchRes-cont .searchRes .result .ratingCont div {
+  color: gray;
+  font: 500 1em var(--f1);
+  aspect-ratio: 1/1;
+  width: 100%;
+  border: 2px solid gray;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.searchRes-cont .searchRes .result:hover {
+  background-color: var(--bg-color);
+}
+.searchRes-cont .searchRes .showAll {
+  color: gray;
+  background-color: var(--h-color);
+  font: 500 1.2em var(--f1);
+  width: 100%;
+  height: 3.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.searchRes-cont .searchRes .showAll span {
+  font-weight: 400;
+}
+.searchRes-cont .searchRes .showAll:hover {
+  background-color: var(--bg-color);
+}
+
+.collection {
+  background-color: var(--v-i-color);
+  width: 100%;
+  border-radius: 1em;
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+  padding: 1.5em;
+  padding-bottom: 0.5em !important;
+}
+.collection .info {
+  display: flex;
+  gap: 1.5em;
+}
+.collection .info .imgCont {
+  background-color: rgba(0, 0, 0, 0.3);
+  --width: 10em;
+  min-width: var(--width);
+  max-width: var(--width);
+  border-radius: 0.8em;
+  overflow: hidden;
+}
+.collection .info .imgCont img {
+  width: 100%;
+}
+.collection .info .text h2 {
+  color: white;
+  font: 700 2.5em var(--f1);
+  margin: 0;
+}
+.collection .info .text p {
+  color: rgb(221, 221, 221);
+  font: 500 1.4em var(--f1);
+  margin: 0.5 0;
+}
+
+footer {
+  color: rgba(255, 255, 255, 0.3);
+  background-color: var(--h-color);
+  font: 400 1em var(--f1);
+  width: 100%;
+  padding: 1.5em 3.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5em;
+}
+footer .name {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+footer a {
+  color: gray;
+  font-weight: 500;
+}
+
+.back {
+  color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(0, 0, 0, 0.2);
+  width: -moz-fit-content;
+  width: fit-content;
+  font: 500 1.1em var(--f1);
+  border-radius: 2em;
+  margin-bottom: 1em;
+  padding: 0.5em 0.8em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  transition: all 0.12s;
+}
+
+.back:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 850px) {
+  :root {
+    --h-height: 9em;
+  }
+  header .s1 {
+    height: 4.5em;
+  }
+  header .s1 .input-cont {
+    display: none;
+  }
+  header .s2 {
+    height: 4.5em;
+  }
+  header .s2 .input-cont {
+    width: 100%;
+    height: 3em;
+    margin-left: 0;
+    margin-top: 0.4em;
+    display: flex;
+    align-items: center;
+    position: relative;
+    pointer-events: all;
+  }
+  .searchRes-cont .searchRes .result {
+    width: calc(100vw - 8em);
+  }
+}/*# sourceMappingURL=index.css.map */

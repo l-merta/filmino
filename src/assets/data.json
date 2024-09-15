@@ -1,0 +1,194 @@
+{
+  "icons": {
+    "movies": [
+      {
+        "id": "28",
+        "class": "fa-regular fa-bomb"
+      },
+      {
+        "id": "12",
+        "class": "fa-regular fa-sword"
+      },
+      {
+        "id": "16",
+        "class": "fa-regular fa-paintbrush-fine"
+      },
+      {
+        "id": "35",
+        "class": "fa-regular fa-face-laugh"
+      },
+      {
+        "id": "80",
+        "class": "fa-regular fa-droplet"
+      },
+      {
+        "id": "99",
+        "class": "fa-regular fa-camera"
+      },
+      {
+        "id": "18",
+        "class": "fa-regular fa-masks-theater"
+      },
+      {
+        "id": "10751",
+        "class": "fa-regular fa-family"
+      },
+      {
+        "id": "14",
+        "class": "fa-regular fa-wand-sparkles"
+      },
+      {
+        "id": "36",
+        "class": "fa-regular fa-book"
+      },
+      {
+        "id": "27",
+        "class": "fa-regular fa-knife-kitchen"
+      },
+      {
+        "id": "10402",
+        "class": "fa-regular fa-music"
+      },
+      {
+        "id": "9648",
+        "class": "fa-regular fa-cloud-fog"
+      },
+      {
+        "id": "10749",
+        "class": "fa-regular fa-heart"
+      },
+      {
+        "id": "10749",
+        "class": "fa-regular fa-heart"
+      },
+      {
+        "id": "878",
+        "class": "fa-regular fa-atom-simple"
+      },
+      {
+        "id": "10770",
+        "class": "fa-regular fa-tv"
+      },
+      {
+        "id": "53",
+        "class": "fa-regular fa-gun"
+      },
+      {
+        "id": "10752",
+        "class": "fa-regular fa-person-rifle"
+      },
+      {
+        "id": "37",
+        "class": "fa-regular fa-user-cowboy"
+      }
+    ],
+    "tv": [
+      {
+        "id": "10759",
+        "class": "fa-regular fa-sword"
+      },
+      {
+        "id": "16",
+        "class": "fa-regular fa-paintbrush-fine"
+      },
+      {
+        "id": "35",
+        "class": "fa-regular fa-face-laugh"
+      },
+      {
+        "id": "80",
+        "class": "fa-regular fa-droplet"
+      },
+      {
+        "id": "99",
+        "class": "fa-regular fa-camera"
+      },
+      {
+        "id": "18",
+        "class": "fa-regular fa-masks-theater"
+      },
+      {
+        "id": "10751",
+        "class": "fa-regular fa-family"
+      },
+      {
+        "id": "10762",
+        "class": "fa-regular fa-children"
+      },
+      {
+        "id": "9648",
+        "class": "fa-regular fa-cloud-fog"
+      },
+      {
+        "id": "10763",
+        "class": "fa-regular fa-tv"
+      },
+      {
+        "id": "10764",
+        "class": "fa-regular fa-camera-movie"
+      },
+      {
+        "id": "10765",
+        "class": "fa-regular fa-wand-sparkles"
+      },
+      {
+        "id": "10766",
+        "class": "fa-regular fa-people"
+      },
+      {
+        "id": "10767",
+        "class": "fa-regular fa-comment"
+      },
+      {
+        "id": "10768",
+        "class": "fa-regular fa-person-rifle"
+      },
+      {
+        "id": "37",
+        "class": "fa-regular fa-user-cowboy"
+      }
+    ],
+    "general": [
+      {
+        "id": "film",
+        "class": "fa-regular fa-film"
+      },
+      {
+        "id": "serial",
+        "class": "fa-regular fa-tv-retro"
+      },
+      {
+        "id": "herci",
+        "class": "fa-regular fa-people"
+      },
+      {
+        "id": "popularni",
+        "class": "fa-regular fa-fire"
+      },
+      {
+        "id": "nadchazejici",
+        "class": "fa-regular fa-crystal-ball"
+      },
+      {
+        "id": "nejoblibenejsi",
+        "class": "fa-regular fa-sparkles"
+      },
+      {
+        "id": "trailer",
+        "class": "fa-regular fa-video"
+      },
+      {
+        "id": "stream",
+        "class": "fa-regular fa-tv"
+      },
+      {
+        "id": "recenze",
+        "class": "fa-regular fa-comments"
+      },
+      {
+        "id": "hledat",
+        "class": "fa-regular fa-magnifying-glass"
+      }
+    ]
+  }
+}

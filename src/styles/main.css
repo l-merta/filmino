@@ -1,0 +1,323 @@
+.genres {
+  width: var(--n-width);
+  padding-top: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  position: fixed;
+  top: var(--h-height);
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+}
+.genres .cont {
+  background-color: var(--h-color);
+  width: 85%;
+  height: 80%;
+  border-radius: 1.5em;
+  padding: 1.5em 1em;
+}
+.genres .cont .genres-list {
+  width: 100%;
+  height: 88%;
+  padding-bottom: 2px;
+  display: flex;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 0.5em !important;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.genres .cont h3 {
+  color: white;
+  font: 700 1.4em var(--f1);
+  width: 100%;
+  border-bottom: 2px solid rgb(49, 49, 49);
+  margin: 0;
+  margin-bottom: 0.8em;
+  padding-bottom: 0.8em;
+}
+.genres .cont a {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  font: 500 1em var(--f1);
+  width: -moz-fit-content;
+  width: fit-content;
+  height: 3em;
+  border: 2px solid transparent;
+  border-radius: 2em;
+  padding: 0 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.genres .cont a:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.genres .cont .genre-active {
+  color: red;
+}
+.genres .cont .genre-active-movie {
+  border-color: var(--c3);
+}
+.genres .cont .genre-active-tv {
+  border-color: var(--c4);
+}
+.genres .const ::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+main {
+  width: 100%;
+  min-height: calc(100vh - var(--h-height) - 5.8em);
+  position: relative;
+}
+
+.main-home .header-background {
+  width: 100%;
+  height: 25em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.main-home .header-background h1 {
+  color: rgb(255, 255, 255);
+  mix-blend-mode: difference;
+  font: 900 5em var(--f1);
+  letter-spacing: 0.2em;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 0 5px white;
+  z-index: 1;
+}
+.main-home .header-background span {
+  color: rgba(255, 255, 255, 0);
+  font: 900 5em var(--f1);
+  letter-spacing: 0.2em;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+.main-home .header-background img {
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  filter: grayscale(90%) blur(2px) sepia(90%) hue-rotate(-42deg) saturate(300%);
+}
+.main-home .links {
+  margin-top: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5em;
+}
+.main-home .links a {
+  color: white;
+  font: 700 2em var(--f1);
+  width: 10em;
+  border-radius: 0.15em;
+  padding: 0.6em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.12s;
+}
+.main-home .links a:hover {
+  opacity: 0.9;
+}
+.main-home .links .filmy {
+  background-color: var(--c3);
+  border-color: rgb(212, 78, 0);
+}
+.main-home .links .serialy {
+  background-color: var(--c4);
+  border-color: rgb(96, 0, 221);
+}
+
+.main-video {
+  width: calc(100% - var(--n-width));
+  padding: 4em 8vw;
+  padding-left: 1vw;
+  margin-left: var(--n-width);
+}
+
+.videoSection {
+  margin-bottom: 3.5em;
+}
+.videoSection .videoCont {
+  width: 100%;
+  margin-top: 2.5em;
+  position: relative;
+  overflow: hidden; /* Hide horizontal overflow */
+}
+.videoSection .videoCont .innerCont {
+  width: 100%;
+  display: flex;
+  gap: 1.5em;
+}
+.videoSection .videoCont .innerCont .video {
+  --width: 13em;
+  min-width: var(--width);
+  max-width: var(--width);
+  border-radius: 1em;
+  text-decoration: none;
+  cursor: pointer;
+}
+.videoSection .videoCont .innerCont .video .imgCont {
+  color: gray;
+  background-color: rgb(48, 48, 48);
+  width: 100%;
+  aspect-ratio: 10/16;
+  border-radius: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.15s;
+}
+.videoSection .videoCont .innerCont .video .imgCont img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  z-index: 1;
+}
+.videoSection .videoCont .innerCont .video .imgCont .img-noLoad {
+  display: none;
+}
+.videoSection .videoCont .innerCont .video .imgCont i {
+  scale: 3;
+  position: absolute;
+  z-index: 0;
+}
+.videoSection .videoCont .innerCont .video h4 {
+  color: white;
+  font: 700 1.5em var(--f1);
+  margin: 0;
+  margin-top: 0.8em;
+  line-height: 1.5em;
+  text-decoration: none;
+}
+.videoSection .videoCont .innerCont .video:hover .imgCont {
+  box-shadow: 0 10px 20px 5px rgba(255, 255, 255, 0.08);
+}
+.videoSection .videoCont .innerCont .video-load {
+  background-color: rgb(48, 48, 48);
+  aspect-ratio: 10/16;
+  --width: 15em;
+  min-width: var(--width);
+  max-width: var(--width);
+  border-radius: 1em;
+}
+.videoSection .videoCont .innerCont-wrap {
+  flex-wrap: wrap;
+}
+.videoSection .videoCont-small .innerCont .video {
+  --width: 9em;
+}
+.videoSection .videoCont-small .innerCont .video h4 {
+  font-size: 1.2em;
+}
+.videoSection .videoCont-medium .innerCont .video {
+  --width: 11em;
+}
+.videoSection .videoCont-medium .innerCont .video h4 {
+  font-size: 1.3em;
+}
+.videoSection .more {
+  width: 100%;
+  height: 3em;
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+}
+.videoSection .more button {
+  color: gray;
+  background-color: transparent;
+  opacity: 0.5;
+  font: 400 1.8em var(--f1);
+  aspect-ratio: 1/1;
+  height: 100%;
+  border: 3px solid gray;
+  border-radius: 50%;
+  padding-bottom: 0.15em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.videoSection .more button:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+.videoSection .more button:focus {
+  outline: none;
+}
+.videoSection .more-hide {
+  display: none;
+}
+
+.actorInfo {
+  width: 100%;
+  margin-bottom: 3em;
+  display: flex;
+  gap: 2em;
+}
+.actorInfo .imgCont {
+  background-color: rgba(0, 0, 0, 0.3);
+  aspect-ratio: 10/16;
+  width: 12em;
+  border-radius: 1em;
+  overflow: hidden;
+}
+.actorInfo .imgCont img {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.actorInfo .info h1 {
+  color: white;
+  font: 900 2.5em var(--f1);
+  margin: 0;
+}
+.actorInfo .info h4 {
+  color: gray;
+  font: 500 1.4em var(--f1);
+  margin: 0.4em 0;
+}
+
+@media (max-width: 850px) {
+  .genres {
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 3em;
+    position: relative;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+  .main-video {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 8vw;
+  }
+  .videoSection {
+    scale: 0.95;
+  }
+}/*# sourceMappingURL=main.css.map */

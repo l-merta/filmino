@@ -1,0 +1,274 @@
+main {
+  background-color: var(--v-i-color);
+  width: 100%;
+  max-width: 75em;
+  padding: 2em 4em;
+  margin: 0 auto;
+}
+main .inInfo {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 2em;
+}
+main .inInfo .imgCont {
+  background-color: rgba(0, 0, 0, 0.3);
+  min-width: 12em;
+  min-height: 19.2em;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+  border-radius: 1em;
+  box-shadow: 5px 5px 20px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+main .inInfo .imgCont img {
+  width: 100%;
+}
+main .inInfo .info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main .inInfo .info .s1 {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+main .inInfo .info .type {
+  color: whitesmoke;
+  font: 500 1.3em var(--f1);
+}
+main .inInfo .info .type .runtime {
+  opacity: 0.7;
+  font-size: 0.8em;
+  margin-left: 0.5em;
+}
+main .inInfo .info h1 {
+  color: white;
+  font: 500 2.4em var(--f1);
+  margin: 0.25em 0;
+  margin-bottom: 0.25em;
+}
+main .inInfo .info h2 {
+  color: gray;
+  font: 500 1.4em var(--f1);
+  margin: 0.4em 0;
+  margin-top: 0;
+}
+main .inInfo .info .genres-list {
+  margin-top: 1.2em;
+  margin-bottom: 1.5em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3em;
+}
+main .inInfo .info .genres-list .year {
+  color: gray;
+  font: 400 1.3em var(--f1);
+  margin-right: 1em;
+}
+main .inInfo .info .genres-list .genre {
+  color: white;
+  opacity: 0.8;
+  font: 500 1em var(--f1);
+  border: 2px solid gray;
+  border-radius: 2em;
+  padding: 0.5em 0.8em;
+  text-decoration: none;
+}
+main .inInfo .info .genres-list .genre:focus {
+  outline: none;
+}
+main .inInfo .info .genres-list .genre-movie {
+  border-color: var(--c3);
+}
+main .inInfo .info .genres-list .genre-tv {
+  border-color: var(--c4);
+}
+main .inInfo .info .tagline {
+  color: whitesmoke;
+  opacity: 0.8;
+  margin: 0.3em 0;
+  margin-bottom: 0.5em;
+  font: 500 1.5em var(--f1);
+}
+main .inInfo .info .popis {
+  color: whitesmoke;
+  font: 400 1.2em var(--f1);
+  margin: 0.2em 0;
+  margin-top: 0.6em;
+  line-height: 1.45em;
+  word-spacing: 0.1em;
+}
+main .inInfo .info .addInfo {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 1em;
+}
+main .inInfo .info .addInfo .producer {
+  color: white;
+  font: 500 1em var(--f1);
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 12em;
+  border: 2px solid gray;
+  border-radius: 2em;
+  padding: 0.5em 0.8em;
+  text-align: center;
+}
+main .inInfo .info .addInfo .score {
+  --width: 3.5em;
+  min-width: var(--width);
+  max-width: var(--width);
+}
+main .inInfo .info .addInfo .score .circle {
+  color: white;
+  aspect-ratio: 1/1;
+  width: 100%;
+  font: 700 1.3em var(--f1);
+  border: 4px solid gray;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .gap {
+  width: 100%;
+  height: 4em;
+}
+main h2 {
+  color: white;
+  font: 500 2em var(--f1);
+  margin: 1.5em 0 0.8em 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+main iframe {
+  aspect-ratio: 16/9;
+  width: 50em;
+  max-width: 100%;
+  border: none;
+}
+main .streamPlatform-cont {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+main .streamPlatform-cont .streamPlatform {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  text-decoration: none;
+  transition: all 0.12s;
+}
+main .streamPlatform-cont .streamPlatform img {
+  height: 3.2em;
+  border-radius: 0.5em;
+}
+main .streamPlatform-cont .streamPlatform h4 {
+  color: whitesmoke;
+  font: 500 1.4em var(--f1);
+  margin: 0;
+  text-align: center;
+}
+main .streamPlatform-cont .streamPlatform:hover {
+  scale: 1.05;
+}
+main .streamPlatform-cont .streamPlatform-small img {
+  height: 1.75em;
+}
+main .reviews-cont {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+main .reviews-cont .review {
+  background-color: var(--h-color);
+  width: 100%;
+  padding: 2em;
+  border-radius: 1em;
+  position: relative;
+}
+main .reviews-cont .review .name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2em;
+}
+main .reviews-cont .review .name h4 {
+  color: rgba(245, 245, 245, 0.65);
+  font: 500 1.5em var(--f1);
+  margin: 0.3em 0;
+  margin-top: 0;
+}
+main .reviews-cont .review .name span {
+  color: gray;
+  font: 500 1em var(--f1);
+}
+main .reviews-cont .review .date {
+  color: gray;
+  font: 400 1em var(--f1);
+}
+main .reviews-cont .review p {
+  color: white;
+  font: 400 1.2em var(--f1);
+  margin: 0.7em 0;
+  margin-bottom: 0;
+  line-height: 1.35em;
+  word-spacing: 0.15em;
+}
+main .reviews-cont .review .hider {
+  background-color: var(--h-color);
+  height: 6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+main .reviews-cont .review .hider button {
+  color: gray;
+  background-color: var(--h-color);
+  font: 500 1.2em var(--f1);
+  border: 2px solid gray;
+  border-radius: 2em;
+  margin-top: 0.3em;
+  padding: 0.5em 0.8em;
+  cursor: pointer;
+}
+main .reviews-cont .review-small {
+  overflow-y: hidden;
+  height: 22em;
+}
+
+@media (max-width: 850px) {
+  main {
+    padding: 2em 2em;
+  }
+  main .inInfo {
+    flex-direction: column;
+  }
+  main .inInfo .info {
+    padding-top: 5em;
+    position: relative;
+  }
+  main .inInfo .info .addInfo {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+}/*# sourceMappingURL=video.css.map */
