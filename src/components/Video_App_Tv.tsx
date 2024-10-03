@@ -67,6 +67,7 @@ function Video_App_Tv() {
     function s(res: any) {
       res = JSON.parse(res);
       console.log(res);
+      document.title = "Filmíno - " + res.name;
       findTvLinks(res.original_name, res.name, res.first_air_date.split("-")[0]);
       setVideoData(res);
     }

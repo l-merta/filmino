@@ -18,6 +18,8 @@ function Search_App() {
   videoId.push(urlParams.get('type'));
   videoId.push(urlParams.get('query'));
 
+  document.title = "Filmíno - " + videoId[2];
+
   const [videoIds, setVideoIds] = useState<number[]>([]);
   const [collectionsRendered, setCollectionsRendered] = useState(0);
   const [allCollectionsLoaded, setAllCollectionsLoaded] = useState(false); // New state

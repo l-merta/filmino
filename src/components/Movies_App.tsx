@@ -10,25 +10,6 @@ import Genres from './Genres'
 import VideoSection from './VideoSection'
 
 function Movies_App() {
-  /*
-  const redirectIfFilmyId = () => {
-    //const path = window.location.pathname;
-    const splt = document.referrer.split("/");
-    const videoId = [];
-    videoId.push(splt[splt.length-2]);
-    videoId.push(splt[splt.length-1]);
-    //history.replaceState(null, '', '/'+videoId[0]+'/'+videoId[1]);
-
-    console.log(videoId);
-    if (videoId[1].length > 0) {
-      window.location.href = '/video.html';
-    }
-  };
-  window.addEventListener('popstate', redirectIfFilmyId);
-  redirectIfFilmyId();
-  */
-  
-
   return (
     <>
       <Header cls="header-movie" activeLink={["a-active", ""]} fromRoot="../"></Header>

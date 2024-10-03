@@ -22,6 +22,7 @@ function Herec_App() {
     function s(res: any) {
       res = JSON.parse(res);
       console.log(res);
+      document.title = "Filmíno - " + res.name;
       setActorData(res);
     }
 

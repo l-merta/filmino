@@ -16,6 +16,8 @@ function Zanr_App() {
   videoId.push(splt[splt.length-2]);
   videoId.push(urlParams.get('id'));
   videoId.push(urlParams.get('name'));
+  
+  document.title = "Filmíno - " + videoId[2];
 
   return (
     <>

@@ -61,6 +61,7 @@ function Video_App_Movie() {
     function s(res: any) {
       res = JSON.parse(res);
       console.log(res);
+      document.title = "Filmíno - " + res.title;
       setVideoData(res);
       findMovieLinks(res.original_title, res.title, res.release_date);
     }

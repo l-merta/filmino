@@ -17,6 +17,8 @@ function Zanr_App() {
   videoId.push(urlParams.get('id'));
   videoId.push(urlParams.get('name'));
   
+  document.title = "Filmíno - " + videoId[2];
+  
   return (
     <>
       <Header cls="header-movie" activeLink={["a-active", ""]} fromRoot="../"></Header>

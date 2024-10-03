@@ -4,8 +4,6 @@ import Header from './Header';
 import Footer from './Footer';
 
 function Home_App() {
-  console.log(window.theMovieDb);
-  //window.theMovieDb.movies.getPopular({}, (d: any)=>{console.log(JSON.parse(d))}, (d: any)=>{console.log(JSON.parse(d))});
   return (
     <>
     <Header cls="header-movie" activeLink={["", ""]} fromRoot=""></Header>

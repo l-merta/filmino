@@ -8,8 +8,6 @@ import Genres from './Genres'
 import VideoSection from './VideoSection'
 
 function Movies_App() {
-  //console.log(window.theMovieDb.movies.getPopular({}, (data: any)=>{console.log(data)}, (data: any)=>{console.log(data)}));
-  //console.log(window.theMovieDb);
   return (
     <>
       <Header cls="header-tv" activeLink={["", "a-active"]} fromRoot="../"></Header>

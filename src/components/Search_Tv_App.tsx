@@ -16,6 +16,8 @@ function Search_App() {
   videoId.push(splt[splt.length-2]);
   videoId.push(urlParams.get('type'));
   videoId.push(urlParams.get('query'));
+
+  document.title = "Filmíno - " + videoId[2];
   
   return (
     <>
