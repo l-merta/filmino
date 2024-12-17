@@ -1,30 +1,46 @@
-# React + TypeScript + Vite
+# Filmino
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Filmino Logo](public/images/Filmino_filmy_logo.png)
 
-Currently, two official plugins are available:
+https://merta.soskolin.eu/vlastni/filmino/filmy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Filmino je webová aplikace, která umožňuje uživatelům prozkoumávat rozsáhlou databázi filmů, televizních pořadů a herců pomocí API TMDB a JustWatch. S uživatelsky přívětivým rozhraním můžete vyhledávat různá média, objevovat populární tituly a zjistit, kde sledovat své oblíbené pořady a filmy.
 
-## Expanding the ESLint configuration
+## Funkce
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Vyhledávací funkce**: Snadno vyhledejte filmy, televizní pořady a herce pomocí vyhledávacího pole.
+- **Filtrace podle žánru**: Procházejte média podle žánrů a objevujte to, co máte rádi.
+- **Sekce Populární a Nadcházející**: Objevte nejpopulárnější tituly a nadcházející vydání.
+- **Filmografie herců**: Zobrazte kompletní filmografii herce, seřazenou od nejlepší po nejhorší.
+- **Podrobnosti o médiích**: Každý záznam o médiích zahrnuje:
+  - Popis
+  - Odkazy na streamovací platformy
+  - Trailer
+  - Hodnocení
+  - Recenze
+  - Informace o obsazení a štábu
+  - Doporučení podobných médií
 
-- Configure the top-level `parserOptions` property like this:
+## Použité technologie
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **React**: Knihovna JavaScriptu pro vytváření uživatelských rozhraní.
+- **TypeScript**: Typovaný nadmnožina JavaScriptu, která se kompiluje do čistého JavaScriptu.
+- **Vite**: Rychlý nástroj pro sestavení a vývojový server pro moderní webové projekty.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Jak začít
+
+Chcete-li získat místní kopii a spustit ji, postupujte podle těchto kroků:
+
+1. **Naklonujte repozitář**:
+   ```bash
+   git clone https://github.com/l-merta/filmino
+2. **Přejděte do adresáře projektu**:
+   ```bash
+   cd filmino
+3. **Nainstalujte závislosti**:
+   ```bash
+   npm install
+4. **Spusťte aplikaci**:
+   ```bash
+   npm run dev
+5. **Otevřete svůj prohlížeč** a přejděte na http://localhost:5173
