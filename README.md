@@ -1,6 +1,6 @@
 # Filmino
 
-![Filmino Logo](https://admin.mertalukas.cz/api/v1/websites/filmino/images)
+![Filmino Logo](public/images/Filmino_filmy_logo.png)
 
 https://merta.soskolin.eu/vlastni/filmino/filmy
 
