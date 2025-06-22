@@ -1,12 +1,13 @@
 services:
   app:
     build:
-      context: ./app  # Specify the React app folder
+      context: ./app
       dockerfile: Dockerfile.app.dev
     ports:
       - "5100:5100"
     volumes:
-      - ./app:/app  # Mount local files into the container for live reloading
-      - /app/node_modules  # Exclude node_modules to avoid conflicts
+      - ./app:/app
+      - /app/node_modules
+      - /app/.next
     environment:
-      - NODE_ENV=development  # Development environment
+      - NODE_ENV=development
