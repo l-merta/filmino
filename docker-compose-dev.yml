@@ -11,3 +11,4 @@ services:
       - /app/.next
     environment:
       - NODE_ENV=development
+      - TURBOPACK_WATCH_OPTIONS_POLL_INTERVAL=1000
