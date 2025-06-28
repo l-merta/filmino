@@ -11,3 +11,5 @@ services:
       - /app/.next
     environment:
       - NODE_ENV=development
+    env_file:
+      - ./app/.env
