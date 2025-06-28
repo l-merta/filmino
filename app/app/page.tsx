@@ -1,8 +1,8 @@
 "use client";
-import { useGetMoviePopular } from "@/hooks/useGetMoviePopular";
+import { useGetMovieTopRated } from "@/hooks/useGetMovie";
 
 export default function Home() {
-  const { data, isLoading, error } = useGetMoviePopular();
+  const { data, isLoading, error } = useGetMovieTopRated(5);
   console.log(data, isLoading, error);
 
   return (
