@@ -5,7 +5,4 @@ export const axiosInstance = axios.create({
   headers: {
     Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}`,
   },
-  params: {
-    language: "cs-CZ",
-  },
 });

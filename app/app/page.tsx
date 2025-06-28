@@ -1,11 +1,15 @@
 "use client";
-import { useGetMovieTopRated } from "@/hooks/useGetMovie";
+
+import { useState, useEffect } from "react";
+
+import Welcome from "@/pages/Welcome";
 
 export default function Home() {
-  const { data, isLoading, error } = useGetMovieTopRated(5);
-  console.log(data, isLoading, error);
+  const [isMounted, setIsMounted] = useState(false);
 
-  return (
-    <h1>Hello</h1>
-  );
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (isMounted) return <Welcome />;
 }

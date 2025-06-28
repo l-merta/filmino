@@ -29,3 +29,14 @@ export async function apiDelete<T>(path: string): Promise<T> {
   const { data } = await apiClient.delete<T>(path);
   return data;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function tmdbGet<T>(path: string, params?: Record<string, any>): Promise<T> {
+  const { data } = await apiClient.get<T>("/tmdb", { 
+    params: { 
+      path, 
+      ...params 
+    } 
+  });
+  return data;
+}
