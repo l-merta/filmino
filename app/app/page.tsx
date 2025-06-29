@@ -1,5 +1,5 @@
 import Welcome from "@/pages/Welcome";
 
-export default function Home() {
+export default function Page() {
   return <Welcome />;
 }

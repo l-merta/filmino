@@ -1,17 +1,17 @@
-import MovieList from "@/components/MovieList";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 
 export default function Welcome() {
   return (
     <>
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Filmino!</h1>
-      <p className="text-lg text-gray-600">
-        Your personal movie and TV show tracker.
-      </p>
-    </div>
-    <div className="container mx-auto p-4">
-      <MovieList />
-    </div>
+    <main className="flex min-h-screen flex-col items-start justify-center gap-6 p-24">
+      <h1 className="font-bold text-4xl">Filmino</h1>
+      <nav className="flex gap-2">
+        <Link href='filmy'><Button variant="default">Filmy</Button></Link>
+        <Link href='serialy'><Button>Seriály</Button></Link>
+      </nav>
+    </main>
     </>
   );
 }
