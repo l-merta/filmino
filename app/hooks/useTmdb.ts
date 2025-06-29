@@ -1,61 +1,82 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
 import { MovieList, Params } from "@/types/tmdbApi";
+
+interface TmdbHookReturn<T> {
+  data: T | null;
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => void;
+}
+
+function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  // Serialize params to create a stable dependency
+  const paramsString = JSON.stringify(params);
+
+  const refetch = () => {
+    setRefetchTrigger(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const result = await tmdbGet<T>(endpoint, params);
+        setData(result);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An error occurred'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endpoint, paramsString, refetchTrigger]);
+
+  return { data, isLoading, error, refetch };
+}
 
 // Movie list endpoints
 export const tmdbMovie = {
   NowPlaying: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["movie", "now_playing", page, params],
-      queryFn: () => tmdbGet<MovieList>("/movie/now_playing", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/movie/now_playing", { page, ...params });
   },
   Popular: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["movie", "popular", page, params],
-      queryFn: () => tmdbGet<MovieList>("/movie/popular", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/movie/popular", { page, ...params });
   },
   TopRated: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["movie", "top_rated", page, params],
-      queryFn: () => tmdbGet<MovieList>("/movie/top_rated", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/movie/top_rated", { page, ...params });
   },
   Upcoming: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["movie", "upcoming", page, params],
-      queryFn: () => tmdbGet<MovieList>("/movie/upcoming", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/movie/upcoming", { page, ...params });
   },
 };
 
-// Tv list endpoints
+// TV list endpoints
 export const tmdbTv = {
   Popular: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["tv", "popular", page, params],
-      queryFn: () => tmdbGet<MovieList>("/tv/popular", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/tv/popular", { page, ...params });
   },
   TopRated: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["tv", "top_rated", page, params],
-      queryFn: () => tmdbGet<MovieList>("/tv/top_rated", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/tv/top_rated", { page, ...params });
   },
   OnTheAir: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useQuery({
-      queryKey: ["tv", "on_the_air", page, params],
-      queryFn: () => tmdbGet<MovieList>("/tv/on_the_air", { page, ...params }),
-    });
+    return useTmdbQuery<MovieList>("/tv/on_the_air", { page, ...params });
   },
 };
 
