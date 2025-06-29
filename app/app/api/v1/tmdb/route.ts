@@ -3,7 +3,7 @@ import { axiosInstance } from "@/lib/axios";
 
 // Default parameters that apply to all TMDB requests
 const DEFAULT_PARAMS = {
-  language: "en-US",
+  language: "cs-CZ", //en-US
   include_adult: true,
 };
 
