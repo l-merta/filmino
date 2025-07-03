@@ -35,7 +35,7 @@ export default function CardRow({ data }: CardRowProps) {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className="flex gap-4 animate-slide"
+        className="flex animate-slide"
         style={{
           width: 'fit-content',
           animationPlayState: isHovered ? 'paused' : 'running'

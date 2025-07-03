@@ -11,13 +11,13 @@ interface CardProps {
 
 export default function Card({ details }: CardProps) {
   if (!details) { return (
-    <div className="w-50 flex-shrink-0 flex flex-col gap-2">
+    <div className="w-50 flex-shrink-0 flex flex-col gap-2 mr-4">
       <Skeleton className="w-full aspect-[2/3]" />
       <Skeleton className="w-full h-5" />
       <Skeleton className="w-30 h-5" />
     </div>
   )} else { return (
-    <div className="w-50 flex-shrink-0 flex flex-col gap-0.5">
+    <div className="w-50 flex-shrink-0 flex flex-col gap-0.5 mr-4">
       <Image 
         src={tmdb.image(details.poster_path || details.backdrop_path || "")} 
         alt={details.title} 
