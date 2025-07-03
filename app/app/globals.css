@@ -132,3 +132,16 @@
     @apply bg-[var(--background-2)] w-[var(--main-width)] min-h-screen mx-auto py-10 px-10 flex flex-col gap-12;
   }
 }
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide {
+  animation: slide 30s linear infinite;
+}

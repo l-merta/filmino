@@ -1,21 +1,17 @@
-import Card from "@/components/Card";
-import { tmdb } from "@/hooks/useTmdb";
+import CardRow from "@/components/CardRow";
+
+import { MovieList } from "@/types/tmdbApi";
 
 interface ListProps {
   header: string;
+  data: MovieList | null;
 }
 
-export default function List({ header }: ListProps) {
-  const { data } = tmdb.movie.Popular();
-
+export default function List({ header, data }: ListProps) {
   return (
     <div>
-      <h2 className="font-bold text-2xl mb-4 opacity-80">{header}</h2>
-      <div className="grid grid-cols-5 gap-y-10 gap-x-5">
-        {Array.from({ length: 20 }).map((_, index) => (
-          <Card key={"card-" + index} details={data?.results[index]} />
-        ))}
-      </div>
+      <h2 className="font-bold text-2xl mb-4 opacity-90">{header}</h2>
+      <CardRow data={data} />
     </div>
   );
 }

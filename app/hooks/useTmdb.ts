@@ -80,8 +80,15 @@ export const tmdbTv = {
   },
 };
 
+export const tmdbImage = {
+  getImage: (path: string) => {
+    return `https://image.tmdb.org/t/p/w500/${path}`;
+  },
+}
+
 export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  image: tmdbImage.getImage,
 };
