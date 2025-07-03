@@ -1,16 +1,16 @@
 "use client";
 
-import Card from "@/components/Card";
-import { useState, useRef } from "react";
-
+import { useState, useRef, useEffect } from "react";
 import { MovieList } from "@/types/tmdbApi";
+
+import Card from "@/components/Card";
 
 interface CardRowProps {
   data: MovieList | null;
 }
 
 export default function CardRow({ data }: CardRowProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Create duplicated items for infinite loop
@@ -22,6 +22,10 @@ export default function CardRow({ data }: CardRowProps) {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+
+  useEffect(() => {
+    if (data) setIsHovered(false);
+  }, [data]);
 
   return (
     <div 
@@ -37,10 +41,8 @@ export default function CardRow({ data }: CardRowProps) {
           animationPlayState: isHovered ? 'paused' : 'running'
         }}
       >
-        {items.map((item) => (
-          <div key={`card-${item.id}`} className="flex-shrink-0">
-            <Card details={item.details} />
-          </div>
+        {items.map((item, index) => (
+          <Card key={'card-' + index} details={item.details} />
         ))}
       </div>
     </div>
