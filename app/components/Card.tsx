@@ -3,20 +3,25 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import { Skeleton } from "./ui/skeleton";
 
-import { MovieDetails } from "@/types/tmdbApi";
+import { MediaDetails } from "@/types/tmdbApi";
 
 interface CardProps {
-  details?: MovieDetails;
+  type?: "movie" | "tv";
+  details?: MediaDetails;
 }
 
-export default function Card({ details }: CardProps) {
-  if (!details) { return (
+export function SkeletonCard() {
+  return (
     <div className="flex flex-col gap-2">
       <Skeleton className="w-full aspect-[2/3]" />
       <Skeleton className="w-full h-5" />
       <Skeleton className="w-30 h-5" />
     </div>
-  )} else { return (
+  );
+}
+
+export function MovieCard({ details }: CardProps) {
+  if (details) return (
     <div className="flex flex-col gap-0.5">
       <div className="w-full aspect-[2/3] relative">
         <Image 
@@ -34,5 +39,35 @@ export default function Card({ details }: CardProps) {
       <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span>
       {details.video && <span className="font-semibold text-[1.0rem] opacity-60">video</span>}
     </div>
-  )}
+  )
+}
+
+export function TvCard({ details }: CardProps) {
+  console.log("details", details);
+
+  if (details) return (
+    <div className="flex flex-col gap-0.5">
+      <div className="w-full aspect-[2/3] relative">
+        <Image 
+          src={tmdb.image(details.poster_path || details.backdrop_path || "")} 
+          alt={details.name} 
+          width={300} 
+          height={450} 
+          className="w-full h-full object-cover rounded-md absolute z-2" 
+        />
+        <Skeleton className="w-full h-full rounded-md absolute z-1" />
+      </div>
+      <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{details.original_name}</span>
+      {details.original_name !== details.name && <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">{details.name}</span>}
+      <span className="font-semibold text-[1.0rem] opacity-60">{details.first_air_date.split('-')[0]}{details.last_air_date && (" - " + details.last_air_date.split('-')[0])}</span>
+      <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span>
+      {details.video && <span className="font-semibold text-[1.0rem] opacity-60">video</span>}
+    </div>
+  )
+}
+
+export default function Card({ type, details }: CardProps) {
+  if (!details) return <SkeletonCard />
+  if (type == 'movie') return <MovieCard details={details} />
+  if (type == 'tv') return <TvCard details={details} />
 }

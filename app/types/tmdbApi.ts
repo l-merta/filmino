@@ -17,13 +17,16 @@ export interface Params {
   [key: string]: string | number | boolean | undefined; // Allow additional parameters
 }
 
-export interface MovieDetails {
+export interface MediaDetails {
   id: number;
   title: string;
+  name: string;
   overview: string;
   release_date: string;
-  poster_path: string;
-  backdrop_path: string;
+  first_air_date: string;
+  last_air_date: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
   vote_average: number;
   vote_count: number;
   popularity: number;
@@ -32,12 +35,12 @@ export interface MovieDetails {
   video: boolean;
   original_language: string;
   original_title: string;
-  // Add more if needed
+  original_name: string;
 }
 
-export interface MovieList {
+export interface MediaList {
   page: number;
-  results: MovieDetails[];
+  results: MediaDetails[];
   total_pages: number;
   total_results: number;
 }

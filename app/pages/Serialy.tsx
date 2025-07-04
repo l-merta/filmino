@@ -1,9 +1,20 @@
+"use client";
+
+import { tmdb } from "@/hooks/useTmdb";
+
+import Header from "@/components/Header";
+import Carousel from "@/components/Carousel";
+import List from "@/sections/List";
+
 export default function Serialy() {
   return (
-    <main className="flex min-h-screen flex-col items-start justify-center gap-6 p-24">
-      <h1 className="font-bold text-4xl">Seriály</h1>
-      <p>Welcome to the tv shows page!</p>
-      {/* You can add more content or components here */}
+    <>
+    <Header active="serialy" />
+    <main className="main-container">
+      <Carousel />
+      <List header="Populární" type='tv' fetchFunction={(params) => tmdb.get("/tv/popular", params)} />
+      <List header="Nadcházející" type='tv' fetchFunction={(params) => tmdb.get("/tv/on_the_air", params)} />
     </main>
+    </>
   );
 }

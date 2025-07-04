@@ -6,8 +6,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-mono: var(--font-montserrat);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -78,6 +78,8 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
+  --color-main: oklch(68.101% 0.18955 39.985);
+  --color-main-2: oklch(58.348% 0.22689 266.387);
   --main-width: 80rem;
 }
 
@@ -118,18 +120,18 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 font-mono;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground flex flex-col items-center;
   }
 }
 @layer components {
   header {
-    @apply bg-[var(--background-2)] w-[var(--main-width)] mx-auto py-6 px-10;
+    @apply bg-[var(--background-2)] w-[var(--main-width)] mx-auto py-6 px-10 z-10;
   }
   .main-container {
-    @apply bg-[var(--background-2)] w-[var(--main-width)] min-h-screen mx-auto py-10 px-10 flex flex-col gap-12;
+    @apply bg-[var(--background-2)] w-[var(--main-width)] min-h-screen mx-auto py-10 px-10 pt-30 flex flex-col gap-12;
   }
 }
 

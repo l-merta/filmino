@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Card from "@/components/Card";
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
-import { MovieList, MovieDetails } from "@/types/tmdbApi";
+import { MediaList, MediaDetails } from "@/types/tmdbApi";
 
 interface ListProps {
   header: string;
-  fetchFunction: (params?: Record<string, unknown>) => Promise<MovieList>;
+  icon?: React.ReactNode;
+  type: "movie" | "tv";
+  fetchFunction: (params?: Record<string, unknown>) => Promise<MediaList>;
 }
 
-export default function List({ header, fetchFunction }: ListProps) {
-  const [mediaItems, setMediaItems] = useState<MovieDetails[]>([]);
+export default function List({ header, icon, type, fetchFunction }: ListProps) {
+  const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(0);
 
   const fetchData = async (page: number = 1) => {
@@ -39,10 +41,13 @@ export default function List({ header, fetchFunction }: ListProps) {
 
   return (
     <div>
-      <h2 className="font-bold text-2xl mb-4 opacity-90">{header}</h2>
+      <div className="flex items-center gap-3 mb-4 opacity-90">
+        {icon}
+        <h2 className="font-bold text-2xl">{header}</h2>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
-          <Card key={'card-' + index} details={mediaItems[index]} />
+          <Card key={'card-' + index} details={mediaItems[index]} type={type} />
         ))}
       </div>
       {mediaItems.length > 0 && <div className="w-full flex justify-center align-middle">

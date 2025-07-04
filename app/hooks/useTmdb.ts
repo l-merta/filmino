@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { MovieList, Params } from "@/types/tmdbApi";
+import { MediaList, Params } from "@/types/tmdbApi";
 
 interface TmdbHookReturn<T> {
   data: T | null;
@@ -48,19 +48,19 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
 export const tmdbMovie = {
   NowPlaying: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/movie/now_playing", { page, ...params });
+    return useTmdbQuery<MediaList>("/movie/now_playing", { page, ...params });
   },
   Popular: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/movie/popular", { page, ...params });
+    return useTmdbQuery<MediaList>("/movie/popular", { page, ...params });
   },
   TopRated: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/movie/top_rated", { page, ...params });
+    return useTmdbQuery<MediaList>("/movie/top_rated", { page, ...params });
   },
   Upcoming: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/movie/upcoming", { page, ...params });
+    return useTmdbQuery<MediaList>("/movie/upcoming", { page, ...params });
   },
 };
 
@@ -68,15 +68,15 @@ export const tmdbMovie = {
 export const tmdbTv = {
   Popular: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/tv/popular", { page, ...params });
+    return useTmdbQuery<MediaList>("/tv/popular", { page, ...params });
   },
   TopRated: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/tv/top_rated", { page, ...params });
+    return useTmdbQuery<MediaList>("/tv/top_rated", { page, ...params });
   },
   OnTheAir: (config: Params = {}) => {
     const { page = 1, ...params } = config;
-    return useTmdbQuery<MovieList>("/tv/on_the_air", { page, ...params });
+    return useTmdbQuery<MediaList>("/tv/on_the_air", { page, ...params });
   },
 };
 
