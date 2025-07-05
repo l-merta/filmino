@@ -23,7 +23,7 @@ export default function List({ header, icon, type, fetchFunction }: ListProps) {
       setTotalCardCount(prev => prev + 10);
 
       if (totalCardCount + 10 >= mediaItems.length) {
-        const result = await fetchFunction({ page });
+        const result = await fetchFunction({ page, excluded_genres: [10767, 10764, 10763] });
         if (page === 1) {
           setMediaItems(result.results || []);
         } else {
