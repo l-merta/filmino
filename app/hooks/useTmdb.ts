@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { MediaList, Params } from "@/types/tmdbApi";
-
-interface TmdbHookReturn<T> {
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-  refetch: () => void;
-}
+import { GenreList, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -62,6 +55,10 @@ export const tmdbMovie = {
     const { page = 1, ...params } = config;
     return useTmdbQuery<MediaList>("/movie/upcoming", { page, ...params });
   },
+  Trending: (config: Params = {}) => {
+    const { page = 1, ...params } = config;
+    return useTmdbQuery<MediaList>("/trending/movie/day", { page, ...params });
+  },
 };
 
 // TV list endpoints
@@ -78,7 +75,20 @@ export const tmdbTv = {
     const { page = 1, ...params } = config;
     return useTmdbQuery<MediaList>("/tv/on_the_air", { page, ...params });
   },
+  Trending: (config: Params = {}) => {
+    const { page = 1, ...params } = config;
+    return useTmdbQuery<MediaList>("/trending/tv/day", { page, ...params });
+  },
 };
+
+export const tmdbGenre = {
+  Movie: (config: Params = {}) => {
+    return useTmdbQuery<GenreList>("/genre/movie/list", { ...config });
+  },
+  Tv: (config: Params = {}) => {
+    return useTmdbQuery<GenreList>("/genre/tv/list", {...config});
+  },
+}
 
 export const tmdbImage = {
   getImage: (path: string) => {
@@ -90,5 +100,6 @@ export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  genre: tmdbGenre,
   image: tmdbImage.getImage,
 };

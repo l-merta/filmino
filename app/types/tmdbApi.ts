@@ -14,7 +14,7 @@ export interface Params {
   vote_count_gte?: number;
   with_runtime_gte?: number;
   with_runtime_lte?: number;
-  [key: string]: string | number | boolean | undefined; // Allow additional parameters
+  [key: string]: string | number | boolean | Array<any> | undefined; // Allow additional parameters
 }
 
 export interface MediaDetails {
@@ -43,4 +43,20 @@ export interface MediaList {
   results: MediaDetails[];
   total_pages: number;
   total_results: number;
+}
+
+export interface GenreList {
+  genres: GenreDetails[];
+}
+
+export interface GenreDetails {
+  id: number;
+  name: string;
+}
+
+export interface TmdbHookReturn<T> {
+  data: T | null;
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => void;
 }

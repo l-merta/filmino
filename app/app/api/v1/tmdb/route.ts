@@ -59,23 +59,25 @@ export async function GET(request: NextRequest) {
 
     let responseData = response.data;
 
-    // Filter results if excluded_genres is provided and response has results array
-    console.log("Excluded genres:", excludedGenres);
-    console.log("Results before genre filtering:", responseData.results.length);
-    if (excludedGenres.length > 0 && responseData.results && Array.isArray(responseData.results)) {
-      responseData = {
-        ...responseData,
-        results: responseData.results.filter((item: MediaDetails) => {
-          // Check if item has genre_ids and filter out items with excluded genres
-          if (item.genre_ids && Array.isArray(item.genre_ids)) {
-            return !item.genre_ids.some((genreId: number) => excludedGenres.includes(genreId));
-          }
-          return true; // Keep items without genre_ids
-        })
-      };
+    if (responseData.results) {
+      // Filter results if excluded_genres is provided and response has results array
+      console.log("Excluded genres:", excludedGenres);
+      console.log("Results before genre filtering:", responseData.results.length);
+      if (excludedGenres.length > 0 && responseData.results && Array.isArray(responseData.results)) {
+        responseData = {
+          ...responseData,
+          results: responseData.results.filter((item: MediaDetails) => {
+            // Check if item has genre_ids and filter out items with excluded genres
+            if (item.genre_ids && Array.isArray(item.genre_ids)) {
+              return !item.genre_ids.some((genreId: number) => excludedGenres.includes(genreId));
+            }
+            return true; // Keep items without genre_ids
+          })
+        };
+      }
+      console.log("Results after genre filtering:", responseData.results.length);
     }
 
-    console.log("Results after genre filtering:", responseData.results.length);
     return NextResponse.json(responseData);
   } catch (error: unknown) {
     console.error("TMDB API error:", error);

@@ -5,16 +5,16 @@ import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
-import { MediaList, MediaDetails } from "@/types/tmdbApi";
+import { MediaList, TmdbHookReturn } from "@/types/tmdbApi";
 
 interface ListProps {
   header: string;
   icon?: React.ReactNode;
   type: "movie" | "tv";
-  fetchFunction: (params?: Record<string, unknown>) => Promise<MediaList>;
+  useFetch: (params?: Record<string, unknown>) => TmdbHookReturn<MediaList>;
 }
 
-export default function List({ header, icon, type, fetchFunction }: ListProps) {
+export default function List({ header, icon, type, useFetch }: ListProps) {
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(0);
 
