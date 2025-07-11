@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
 import { GenreList, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";

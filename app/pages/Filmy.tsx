@@ -15,10 +15,10 @@ export default function Filmy() {
     <Header active="filmy" />
     <main className="main-container">
       <Carousel />
-      <GenreList useFetch={tmdb.genre.Movie} />
-      <List header="Populární" icon={<Flame size={30} />} type='movie' useFetch={tmdb.movie.Popular} />
-      <List header="Nadcházející" icon={<Clapperboard size={30} />} type='movie' useFetch={tmdb.movie.Upcoming} />
-      <List header="Trending" icon={<Sparkles size={30} />} type='movie' useFetch={tmdb.movie.Trending} />
+      <GenreList type='filmy' useFetch={tmdb.genre.Movie} />
+      <List header="Populární" icon={<Flame size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/popular", params)} />
+      <List header="Nadcházející" icon={<Clapperboard size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/upcoming", params)} />
+      <List header="Trending" icon={<Sparkles size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/trending/movie/day", params)} />
     </main>
     </>
   );

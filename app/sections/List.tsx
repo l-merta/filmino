@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 
 import Card from "@/components/Card";
@@ -5,24 +7,26 @@ import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
-import { MediaList, TmdbHookReturn } from "@/types/tmdbApi";
+import { MediaList, MediaDetails, Params } from "@/types/tmdbApi";
 
 interface ListProps {
   header: string;
   icon?: React.ReactNode;
   type: "movie" | "tv";
-  useFetch: (params?: Record<string, unknown>) => TmdbHookReturn<MediaList>;
+  fetchFunction: (params?: Params) => Promise<MediaList>;
 }
 
-export default function List({ header, icon, type, useFetch }: ListProps) {
+export default function List({ header, icon, type, fetchFunction }: ListProps) {
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
-  const [totalCardCount, setTotalCardCount] = useState(0);
+  const [totalCardCount, setTotalCardCount] = useState(10);
 
-  const fetchData = async (page: number = 1) => {
+  const fetchData = async (page: number = 1, increaseCardCount: boolean = true) => {
     try {
-      setTotalCardCount(prev => prev + 10);
+      const newTotalCardCount = increaseCardCount ? totalCardCount + 10 : totalCardCount;
 
-      if (totalCardCount + 10 >= mediaItems.length) {
+      setTotalCardCount(newTotalCardCount);
+
+      if (newTotalCardCount > mediaItems.length) {
         const result = await fetchFunction({ page, excluded_genres: [10767, 10764, 10763] });
         if (page === 1) {
           setMediaItems(result.results || []);
@@ -36,7 +40,7 @@ export default function List({ header, icon, type, useFetch }: ListProps) {
   };
 
   useEffect(() => {
-    fetchData(1);
+    fetchData(1, false);
   }, []);
 
   return (

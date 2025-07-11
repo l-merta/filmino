@@ -1,3 +1,5 @@
+"use client";
+
 import Genre from "@/components/Genre";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -5,9 +7,10 @@ import { GenreList as GenreListType, TmdbHookReturn } from "@/types/tmdbApi";
 
 interface GenreListProps {
   useFetch: () => TmdbHookReturn<GenreListType>;
+  type: 'filmy' | 'serialy';
 }
 
-export default function GenreList({ useFetch }: GenreListProps) {
+export default function GenreList({ useFetch, type }: GenreListProps) {
   const { data } = useFetch();
 
   if (!data) return (
@@ -20,7 +23,7 @@ export default function GenreList({ useFetch }: GenreListProps) {
   else return (
     <div className="flex flex-wrap gap-2">
       {data.genres.map((genre) => (
-        <Genre key={genre.id} name={genre.name} link='' />
+        <Genre key={genre.id} name={genre.name} link={type + '/zanr/' + genre.id} />
       ))}
     </div>
   )

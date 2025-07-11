@@ -14,7 +14,8 @@ export interface Params {
   vote_count_gte?: number;
   with_runtime_gte?: number;
   with_runtime_lte?: number;
-  [key: string]: string | number | boolean | Array<any> | undefined; // Allow additional parameters
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // Allow additional parameters
 }
 
 export interface MediaDetails {
