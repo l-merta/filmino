@@ -67,7 +67,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         alt={'logo image'}
         width={logo.width} 
         height={logo.height} 
-        className="max-w-100 w-fit max-h-80 mb-3" 
+        className="max-w-full w-100 max-h-80 mb-3" 
       />}
       {!logo && poster && 
         <>
