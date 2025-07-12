@@ -18,11 +18,21 @@ export interface Params {
   [key: string]: any; // Allow additional parameters
 }
 
+export interface MediaList {
+  page: number;
+  results: MediaDetails[];
+  total_pages: number;
+  total_results: number;
+}
 export interface MediaDetails {
   id: number;
+  imdb_id: string | null;
   title: string;
   name: string;
   overview: string;
+  runtime: number | null;
+  number_of_seasons: number | null;
+  number_of_episodes: number | null;
   release_date: string;
   first_air_date: string;
   last_air_date: string;
@@ -31,25 +41,34 @@ export interface MediaDetails {
   vote_average: number;
   vote_count: number;
   popularity: number;
-  genre_ids: number[];
+  genres: GenreDetails[];
   adult: boolean;
   video: boolean;
   original_language: string;
   original_title: string;
   original_name: string;
+  status: string;
 }
 
-export interface MediaList {
-  page: number;
-  results: MediaDetails[];
-  total_pages: number;
-  total_results: number;
+export interface MediaImages {
+  id: number;
+  posters: MediaImageDetails[];
+  logos: MediaImageDetails[];
+  backdrops: MediaImageDetails[];
+}
+export interface MediaImageDetails {
+  file_path: string;
+  width: number;
+  height: number;
+  aspect_ratio: number;
+  vote_average: number;
+  vote_count: number;
+  iso_639_1: string | null,
 }
 
 export interface GenreList {
   genres: GenreDetails[];
 }
-
 export interface GenreDetails {
   id: number;
   name: string;

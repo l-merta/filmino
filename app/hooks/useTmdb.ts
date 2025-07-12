@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
+import { GenreDetails, GenreList, MediaDetails, MediaImages, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
+import { Images } from "lucide-react";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -41,6 +42,12 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
 
 // Movie list endpoints
 export const tmdbMovie = {
+  Details: (id: number, config: Params = {}) => {
+    return useTmdbQuery<MediaDetails>(`/movie/${id}`, { ...config });
+  },
+  Images: (id: number, config: Params = {}) => {
+    return useTmdbQuery<MediaImages>(`/movie/${id}/images`, { ...config });
+  },
   NowPlaying: (config: Params = {}) => {
     const { page = 1, ...params } = config;
     return useTmdbQuery<MediaList>("/movie/now_playing", { page, ...params });
@@ -65,6 +72,12 @@ export const tmdbMovie = {
 
 // TV list endpoints
 export const tmdbTv = {
+  Details: (id: number) => {
+    return useTmdbQuery<MediaDetails>(`/tv/${id}`);
+  },
+  Images: (id: number, config: Params = {}) => {
+    return useTmdbQuery<MediaImages>(`/tv/${id}/images`, { ...config });
+  },
   Popular: (config: Params = {}) => {
     const { page = 1, ...params } = config;
     return useTmdbQuery<MediaList>("/tv/popular", { page, ...params });
@@ -106,7 +119,7 @@ export const tmdbGenre = {
 
 export const tmdbImage = {
   getImage: (path: string) => {
-    return `https://image.tmdb.org/t/p/w500/${path}`;
+    return `https://image.tmdb.org/t/p/original/${path}`;
   },
 }
 

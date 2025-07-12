@@ -68,8 +68,8 @@ export async function GET(request: NextRequest) {
           ...responseData,
           results: responseData.results.filter((item: MediaDetails) => {
             // Check if item has genre_ids and filter out items with excluded genres
-            if (item.genre_ids && Array.isArray(item.genre_ids)) {
-              return !item.genre_ids.some((genreId: number) => excludedGenres.includes(genreId));
+            if (item.genres && Array.isArray(item.genres)) {
+              return true//!item.genres.some((genreId: number) => excludedGenres.includes(genreId));
             }
             return true; // Keep items without genre_ids
           })

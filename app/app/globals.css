@@ -124,6 +124,9 @@
 .page-serialy {
   --color-main: var(--color-main-2);
 }
+main {
+  overflow-x: hidden
+}
 
 @layer base {
   * {

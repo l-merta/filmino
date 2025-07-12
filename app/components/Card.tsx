@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { tmdb } from "@/hooks/useTmdb";
 
@@ -22,7 +23,7 @@ export function SkeletonCard() {
 
 export function MovieCard({ details }: CardProps) {
   if (details) return (
-    <div className="flex flex-col gap-0.5">
+    <Link href={'/filmy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative">
         <Image 
           src={tmdb.image(details.poster_path || details.backdrop_path || "")} 
@@ -38,7 +39,7 @@ export function MovieCard({ details }: CardProps) {
       <span className="font-semibold text-[1.0rem] opacity-60">{details.release_date.split('-')[0]}</span>
       <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span>
       {details.video && <span className="font-semibold text-[1.0rem] opacity-60">video</span>}
-    </div>
+    </Link>
   )
 }
 
@@ -46,7 +47,7 @@ export function TvCard({ details }: CardProps) {
   console.log("details", details);
 
   if (details) return (
-    <div className="flex flex-col gap-0.5">
+    <Link href={'/serialy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative">
         <Image 
           src={tmdb.image(details.poster_path || details.backdrop_path || "")} 
@@ -62,7 +63,7 @@ export function TvCard({ details }: CardProps) {
       <span className="font-semibold text-[1.0rem] opacity-60">{details.first_air_date.split('-')[0]}{details.last_air_date && (" - " + details.last_air_date.split('-')[0])}</span>
       <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span>
       {details.video && <span className="font-semibold text-[1.0rem] opacity-60">video</span>}
-    </div>
+    </Link>
   )
 }
 
