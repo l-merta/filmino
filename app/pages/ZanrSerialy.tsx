@@ -6,30 +6,30 @@ import Header from "@/components/Header";
 import GenreList from "@/sections/GenreList";
 import List from "@/sections/List";
 
-interface ZanrFilmyProps {
+interface ZanrSerialyProps {
   genreId: number;
 }
 
-export default function ZanrFilmy({ genreId }: ZanrFilmyProps) {
-  const { data: genreData, error: genreError } = tmdb.genre.Details(genreId, 'movie');
+export default function ZanrSerialy({ genreId }: ZanrSerialyProps) {
+  const { data: genreData, error: genreError } = tmdb.genre.Details(genreId, 'tv');
 
   if (genreError) return (
-      <div className="page-filmy">
-      <Header active="filmy" />
+    <div className="page-serialy">
+      <Header active="serialy" />
       <main className="main-container section-spacing">
         <div>Error loading genre: {genreError.message}</div>
       </main>
     </div>
   );
   return (
-    <div className="page-filmy">
-      <Header active="filmy" />
+    <div className="page-serialy">
+      <Header active="serialy" />
       <main className="main-container section-spacing">
-        <GenreList type='filmy' active={genreId} useFetch={tmdb.genre.Movie} />
+        <GenreList type='serialy' active={genreId} useFetch={tmdb.genre.Tv} />
         <List 
           header={genreData ? `${genreData.name}` : ''} 
-          type='movie' 
-          fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, with_genres: genreId })} 
+          type='tv' 
+          fetchFunction={(params) => tmdb.get("/discover/tv", { ...params, with_genres: genreId })} 
           cardCount={20}
         />
       </main>

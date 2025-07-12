@@ -14,15 +14,16 @@ interface ListProps {
   icon?: React.ReactNode;
   type: "movie" | "tv";
   fetchFunction: (params?: Params) => Promise<MediaList>;
+  cardCount?: number;
 }
 
-export default function List({ header, icon, type, fetchFunction }: ListProps) {
+export default function List({ header, icon, type, fetchFunction, cardCount }: ListProps) {
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
-  const [totalCardCount, setTotalCardCount] = useState(10);
+  const [totalCardCount, setTotalCardCount] = useState(cardCount || 10);
 
   const fetchData = async (page: number = 1, increaseCardCount: boolean = true) => {
     try {
-      const newTotalCardCount = increaseCardCount ? totalCardCount + 10 : totalCardCount;
+      const newTotalCardCount = increaseCardCount ? totalCardCount + (cardCount || 10) : totalCardCount;
 
       setTotalCardCount(newTotalCardCount);
 
