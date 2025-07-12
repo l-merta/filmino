@@ -90,6 +90,18 @@ export const tmdbGenre = {
   Tv: (config: Params = {}) => {
     return useTmdbQuery<GenreList>("/genre/tv/list", {...config});
   },
+  Details: (id: number, type: 'tv' | 'movie') => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<GenreList>(`/genre/${type}/list`);
+    
+    const genreData = data?.genres?.find(genre => genre.id === id) || null;
+    
+    return {
+      data: genreData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
 }
 
 export const tmdbImage = {

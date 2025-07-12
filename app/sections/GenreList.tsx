@@ -7,10 +7,11 @@ import { GenreList as GenreListType, TmdbHookReturn } from "@/types/tmdbApi";
 
 interface GenreListProps {
   useFetch: () => TmdbHookReturn<GenreListType>;
+  active?: number;
   type: 'filmy' | 'serialy';
 }
 
-export default function GenreList({ useFetch, type }: GenreListProps) {
+export default function GenreList({ useFetch, active, type }: GenreListProps) {
   const { data } = useFetch();
 
   if (!data) return (
@@ -23,7 +24,7 @@ export default function GenreList({ useFetch, type }: GenreListProps) {
   else return (
     <div className="flex flex-wrap gap-2">
       {data.genres.map((genre) => (
-        <Genre key={genre.id} name={genre.name} link={type + '/zanr/' + genre.id} />
+        <Genre key={genre.id} name={genre.name} link={'/' + type + '/zanr/' + genre.id} special={active == genre.id ? 'active' : undefined} />
       ))}
     </div>
   )
