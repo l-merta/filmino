@@ -3,6 +3,20 @@
 const nextConfig = {
   /* config options here */
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'unsplash.it',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+        pathname: '/**',
+      },
+    ],
+  },
   webpackDevMiddleware: config => {
     config.watchOptions = {
       poll: 1000,

@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@tanstack/query-sync-storage-persister": "^5.81.5",
+    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query-persist-client": "^5.81.5",
+    "axios": "^1.10.0"
+  }
+}
