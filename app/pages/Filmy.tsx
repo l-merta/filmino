@@ -13,7 +13,7 @@ export default function Filmy() {
   return (
     <div className="page-filmy">
       <Header active="filmy" />
-      <main className="main-container">
+      <main className="main-container section-spacing">
         <Carousel />
         <GenreList type='filmy' useFetch={tmdb.genre.Movie} />
         <List header="Populární" icon={<Flame size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/popular", params)} />

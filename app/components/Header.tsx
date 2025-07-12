@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ active }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between fixed top-0 !mx-auto">
+    <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
       <div className="flex items-center space-x-5">
         <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
         <Input placeholder="Hledat" className="w-80"></Input>
