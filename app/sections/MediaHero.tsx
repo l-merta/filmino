@@ -67,7 +67,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         alt={'logo image'}
         width={logo.width} 
         height={logo.height} 
-        className="max-w-full w-100 max-h-80 mb-3" 
+        className="max-w-100 w-full !max-h-100 mb-3" 
       />}
       {!logo && poster && 
         <>
@@ -89,6 +89,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
       <div className="flex items-center gap-2">
         <MediaDataRow data={data} type={type} />
       </div>
+      {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
       <p className="opacity-85 max-w-140 w-screen line-clamp-5">{data.overview}</p>
     </div>
     </>
