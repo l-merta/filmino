@@ -25,9 +25,14 @@ export default function Header({ active }: HeaderProps) {
           Seriály
         </a>
         {!session ?
-          <Link href="/prihlaseni">
-            <Button variant="outline" className="ml-2">Přihlásit se</Button>
-          </Link>
+          <div className="flex items-center space-x-2">
+            <Link href="/prihlaseni">
+              <Button variant="outline" className="!bg-[var(--color-main)] !text-[var(--background-2)] border-0 ml-2">Přihlášení</Button>
+            </Link>
+            <Link href="/registrace">
+              <Button variant="outline" className="">Registrace</Button>
+            </Link>
+          </div>
         :
           <Link href="/profil" className="text-sm flex items-center space-x-2 ml-2">
             <Avatar>
