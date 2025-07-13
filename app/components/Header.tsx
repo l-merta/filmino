@@ -2,12 +2,15 @@ import Link from "next/link";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface HeaderProps {
   active?: 'filmy' | 'serialy';
 }
 
 export default function Header({ active }: HeaderProps) {
+  const session = false; // Placeholder for session management
+
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
       <div className="flex items-center space-x-5">
@@ -21,9 +24,19 @@ export default function Header({ active }: HeaderProps) {
         <a href="/serialy" className={(active == "serialy" ? "text-[var(--color-main-2)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Seriály
         </a>
-        <Link href="/prihlaseni">
-          <Button variant="outline" className="ml-2">Přihlásit se</Button>
-        </Link>
+        {!session ?
+          <Link href="/prihlaseni">
+            <Button variant="outline" className="ml-2">Přihlásit se</Button>
+          </Link>
+        :
+          <Link href="/profil" className="text-sm flex items-center space-x-2 ml-2">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>UN</AvatarFallback>
+            </Avatar>
+            <span>username</span>
+          </Link>
+        }
       </nav>
     </header>
   );
