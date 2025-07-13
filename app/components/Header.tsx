@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 interface HeaderProps {
-  active: 'filmy' | 'serialy';
+  active?: 'filmy' | 'serialy';
 }
 
 export default function Header({ active }: HeaderProps) {
@@ -19,7 +21,9 @@ export default function Header({ active }: HeaderProps) {
         <a href="/serialy" className={(active == "serialy" ? "text-[var(--color-main-2)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Seriály
         </a>
-        <Button variant="outline" className="ml-2">Přihlásit se</Button>
+        <Link href="/prihlaseni">
+          <Button variant="outline" className="ml-2">Přihlásit se</Button>
+        </Link>
       </nav>
     </header>
   );
