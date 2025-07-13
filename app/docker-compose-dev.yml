@@ -1,0 +1,45 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile.app.dev
+    ports:
+      - "5100:5100"
+    volumes:
+      - .:/app
+      - /node_modules
+      - /.next
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5200:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5300:80"
+    depends_on:
+      - db
+
+
+volumes:
+  db_data:
