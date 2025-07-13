@@ -2,11 +2,12 @@ import Image from "next/image";
 import { tmdb } from "@/hooks/useTmdb";
 
 import Genre from "@/components/Genre";
+import Separator from "@/components/Separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Timer } from "lucide-react";
 
 import { MediaDetails } from "@/types/tmdbApi";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface MediaHeroProps {
   data: MediaDetails | null;
@@ -86,7 +87,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
           <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
         ))}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <MediaDataRow data={data} type={type} />
       </div>
       {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
@@ -100,7 +101,7 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
   if (type == 'movie') return (
     <>
     <span className="opacity-85">{data.release_date.split('-')[0]}</span>
-    <span className="font-bold">/</span>
+    <Separator />
     <div className="flex items-center gap-2">
       <Timer size={18} />
       <span className="opacity-85">{data.runtime ? data.runtime + ' min' : 'N/A'}</span>
@@ -112,21 +113,21 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
     <span className="opacity-85">{data.first_air_date.split('-')[0]}</span>
     {data.status == "Ended" ? 
       <>
-      <span className="font-bold">/</span>
-      <span className="opacity-85">Ukončeno</span>
+      <Separator />
+      <span className="opacity-85">ukončeno</span>
       </>
     : ''
     }
     {data.number_of_seasons ?
       <>
-      <span className="font-bold">/</span>
+      <Separator />
       <span className="opacity-85">{data.number_of_seasons} {data.number_of_seasons > 4 ? 'sérií' : 'série'}</span>
       </>
     : ''
     }
     {data.number_of_episodes ? 
       <>
-      <span className="font-bold">/</span>
+      <Separator />
       <span className="opacity-85">{data.number_of_episodes} ep</span>
       </>
     : ''
