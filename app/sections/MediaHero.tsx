@@ -98,9 +98,21 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
 }
 
 export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie' | 'tv' }) {
+  let airDate;
+  if (type == 'movie') {
+    airDate = data.release_date.split('-')[0] || '';
+  } else if (type == 'tv') {
+    if (data.first_air_date && data.last_air_date && data.first_air_date.split('-')[0] == data.last_air_date.split('-')[0])
+      airDate = data.first_air_date.split('-')[0] ||'';
+    else if (!data.last_air_date)
+      airDate = data.first_air_date.split('-')[0] + ' - ' || '';
+    else 
+      airDate = data.first_air_date.split('-')[0] + ' - ' + data.last_air_date.split('-')[0] || '';
+  }
+
   if (type == 'movie') return (
     <>
-    <span className="opacity-85">{data.release_date.split('-')[0]}</span>
+    <span className="opacity-85">{airDate}</span>
     <Separator />
     <div className="flex items-center gap-2">
       <Timer size={18} />
@@ -110,14 +122,7 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
   )
   else if (type == 'tv') return (
     <>
-    <span className="opacity-85">{data.first_air_date.split('-')[0]}</span>
-    {data.status == "Ended" ? 
-      <>
-      <Separator />
-      <span className="opacity-85">ukončeno</span>
-      </>
-    : ''
-    }
+    <span className="opacity-85">{airDate}</span>
     {data.number_of_seasons ?
       <>
       <Separator />
