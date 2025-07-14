@@ -14,6 +14,7 @@ interface RegisterFormData {
   username: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 export default function Registrace() {
@@ -22,6 +23,7 @@ export default function Registrace() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -41,8 +43,12 @@ export default function Registrace() {
 
     try {
       // Validate form data
-      if (!formData.username || !formData.email || !formData.password) {
+      if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
         throw new Error("Všechna pole jsou povinná");
+      }
+
+      if (formData.password !== formData.confirmPassword) {
+        throw new Error("Hesla se neshodují");
       }
 
       if (formData.password.length < 8) {
@@ -116,7 +122,18 @@ export default function Registrace() {
                 type="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                placeholder="Heslo (min. 6 znaků)"
+                placeholder="Heslo (min. 8 znaků)"
+                required
+              />
+            </div>
+            <div>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Potvrzení hesla"
                 required
               />
             </div>
