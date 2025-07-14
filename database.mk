@@ -19,7 +19,7 @@ prisma-generate:
 
 # Apply migrations and start dev DB
 migrate:
-	$(call PRISMA_CMD,migrate dev)
+	cd $(APP_DIR) && $(PRISMA) migrate dev
 
 # Create new migration with name
 new-migrate:
@@ -27,7 +27,7 @@ new-migrate:
 
 # Push schema without generating SQL migration (for prototyping)
 prisma-push:
-	$(call PRISMA_CMD,db push)
+	cd $(APP_DIR) && $(PRISMA) db push
 
 # Open Prisma Studio
 prisma-studio:
