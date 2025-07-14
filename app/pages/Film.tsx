@@ -30,7 +30,7 @@ export default function Film() {
       <Header active="filmy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='movie' />
-        {data && <List header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/similar", params)} />}
+        {data && <List header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/recommendations", params)} />}
       </main>
     </ div>
   )

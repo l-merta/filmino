@@ -30,7 +30,7 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='tv' />
-        {data && <List header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/similar", params)} />}
+        {data && <List header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />}
       </main>
     </div>
   )
