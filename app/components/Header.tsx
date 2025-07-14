@@ -1,15 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+import { LogOut } from "lucide-react";
 
 interface HeaderProps {
   active?: 'filmy' | 'serialy';
 }
 
 export default function Header({ active }: HeaderProps) {
-  const session = false; // Placeholder for session management
+  const { data: session } = useSession();
 
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
@@ -34,13 +40,22 @@ export default function Header({ active }: HeaderProps) {
             </Link>
           </div>
         :
-          <Link href="/profil" className="text-sm flex items-center space-x-2 ml-2">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>UN</AvatarFallback>
-            </Avatar>
-            <span>username</span>
-          </Link>
+          <div className="flex items-center space-x-3">
+            <Link href="/profil" className="text-sm flex items-center space-x-2 ml-2">
+              <Avatar>
+                <AvatarImage src={session.user.image || ""} />
+                <AvatarFallback>{session.user.username && session.user.username.substring(0, 1).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <span className="whitespace-nowrap">{session.user.username}</span>
+            </Link>
+            <Button
+              onClick={() => signOut({ callbackUrl: "/prihlaseni" })}
+              className=""
+              variant="outline"
+            >
+              <LogOut />
+            </Button>
+          </div>
         }
       </nav>
     </header>

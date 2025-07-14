@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { apiPost } from "@/lib/apiClient";
 
 import Header from "@/components/Header";
@@ -15,6 +17,7 @@ interface RegisterFormData {
 }
 
 export default function Registrace() {
+  const router = useRouter();
   const [formData, setFormData] = useState<RegisterFormData>({
     username: "",
     email: "",
@@ -55,8 +58,20 @@ export default function Registrace() {
       // Make API call
       await apiPost("/auth/register", formData);
       
-      setMessage({ type: "success", text: "Registrace byla úspěšná" });
-      setFormData({ username: "", email: "", password: "" });
+      // Auto-login after successful registration
+      const result = await signIn("credentials", {
+        username: formData.username,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setMessage({ type: "error", text: "Registrace proběhla, ale přihlášení selhalo" });
+      } else {
+        setMessage({ type: "success", text: "Registrace byla úspěšná" });
+        // Redirect to /filmy after successful login
+        router.push("/filmy");
+      }
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || error.message || "Došlo k chybě při registraci";
       setMessage({ type: "error", text: errorMessage });
@@ -133,9 +148,14 @@ export default function Registrace() {
             <span>Nebo</span>
             <Separator className="!w-full flex-1/2" />
           </div>
-          <div className="text-center text-sm text-muted-foreground">
-            Google
-          </div>
+          <Button 
+            type="button" 
+            variant="outline" 
+            className="w-full"
+            onClick={() => signIn("google", { callbackUrl: "/filmy" })}
+          >
+            Registrovat se přes Google
+          </Button>
         </div>
       </main>
     </div>
