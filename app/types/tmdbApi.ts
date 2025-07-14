@@ -11,7 +11,8 @@ export interface Params {
   release_date_lte?: string;
   vote_average_gte?: number;
   vote_average_lte?: number;
-  vote_count_gte?: number;
+  ["vote_count.gte"]?: number;
+  ["vote_count.lte"]?: number;
   with_runtime_gte?: number;
   with_runtime_lte?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

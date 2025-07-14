@@ -29,7 +29,7 @@ export default function ZanrFilmy({ genreId }: ZanrFilmyProps) {
         <List 
           header={genreData ? `${genreData.name}` : ''} 
           type='movie' 
-          fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, with_genres: genreId })} 
+          fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, with_genres: genreId, "vote_count.gte": 200 })} 
           cardCount={20}
         />
       </main>

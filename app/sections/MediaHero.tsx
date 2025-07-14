@@ -3,9 +3,10 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import Genre from "@/components/Genre";
 import Separator from "@/components/Separator";
+// import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { Timer } from "lucide-react";
+import { Timer, Star } from "lucide-react";
 
 import { MediaDetails } from "@/types/tmdbApi";
 
@@ -61,27 +62,32 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         className="w-full h-full object-cover absolute z-1" 
       />}
     </div>
-    <div className="w-fit min-h-120 flex flex-col gap-4 relative z-3">
+    <div className="w-full min-h-120 flex flex-col gap-4 relative z-3">
       <div className="bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-[-1] scale-150"></div>
-      {logo && <Image 
-        src={tmdb.image(logo.file_path)}
-        alt={'logo image'}
-        width={logo.width} 
-        height={logo.height} 
-        className="max-w-100 w-full !max-h-50 object-contain object-left mb-3" 
-      />}
-      {!logo && poster && 
-        <>
-        <Image 
-          src={tmdb.image(poster.file_path)}
-          alt={'poster image'}
-          width={poster.width} 
-          height={poster.height} 
-          className="max-w-100 w-fit max-h-80 rounded-md" 
-        />
-        <span className="font-semibold text-xl mb-3">{name}</span>
-        </>
-      }
+      <div className="w-full flex justify-between items-start gap-4">
+        <div className="">
+          {logo && <Image 
+            src={tmdb.image(logo.file_path)}
+            alt={'logo image'}
+            width={logo.width} 
+            height={logo.height} 
+            className="max-w-100 w-full !max-h-50 object-contain object-left mb-3" 
+          />}
+          {!logo && poster && 
+            <div className="space-y-2">
+              <Image 
+                src={tmdb.image(poster.file_path)}
+                alt={'poster image'}
+                width={poster.width} 
+                height={poster.height} 
+                className="max-w-100 w-fit max-h-80 rounded-md" 
+              />
+              <span className="font-semibold text-xl mb-3">{name}</span>
+            </div>
+          }
+        </div>
+        {/* <AnimatedCircularProgressBar min={0} max={10} value={7.6} gaugePrimaryColor="black" gaugeSecondaryColor="gray" className="w-20 h-20" /> */}
+      </div>
       <div className="max-w-screen flex flex-wrap gap-2">
         {data.genres.map((genre, index) => (
           <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
@@ -98,7 +104,9 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
 }
 
 export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie' | 'tv' }) {
+  const iconSize = 16;
   let airDate;
+
   if (type == 'movie') {
     airDate = data.release_date.split('-')[0] || '';
   } else if (type == 'tv') {
@@ -114,15 +122,32 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
     <>
     <span className="opacity-85">{airDate}</span>
     <Separator />
+    {data.vote_count > 0 && 
+      <>
+      <div className="flex items-center gap-2">
+        <Star size={iconSize} />
+        <span className="opacity-85">{data.vote_average.toFixed(1)}</span>
+      </div>
+      <Separator />
+      </>
+    }
     <div className="flex items-center gap-2">
-      <Timer size={18} />
+      <Timer size={iconSize} />
       <span className="opacity-85">{data.runtime ? data.runtime + ' min' : 'N/A'}</span>
     </div>
     </>
   )
   else if (type == 'tv') return (
     <>
-    <span className="opacity-85">{airDate}</span>
+    <span className="opacity-85">{airDate}</span>{data.vote_count > 0 && 
+      <>
+      <Separator />
+      <div className="flex items-center gap-2">
+        <Star size={iconSize} />
+        <span className="opacity-85">{data.vote_average.toFixed(1)}</span>
+      </div>
+      </>
+    }
     {data.number_of_seasons ?
       <>
       <Separator />

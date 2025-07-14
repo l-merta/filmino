@@ -29,7 +29,7 @@ export default function ZanrSerialy({ genreId }: ZanrSerialyProps) {
         <List 
           header={genreData ? `${genreData.name}` : ''} 
           type='tv' 
-          fetchFunction={(params) => tmdb.get("/discover/tv", { ...params, with_genres: genreId })} 
+          fetchFunction={(params) => tmdb.get("/discover/tv", { ...params, with_genres: genreId, "vote_count.gte": 200 })} 
           cardCount={20}
         />
       </main>

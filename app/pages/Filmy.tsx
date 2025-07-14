@@ -17,6 +17,7 @@ export default function Filmy() {
         <Carousel useFetch={tmdb.movie.Trending} type='movie' />
         <GenreList type='filmy' useFetch={tmdb.genre.Movie} />
         <List header="Populární" icon={<Flame size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/popular", params)} />
+        {/* <List header="Objevte nové" icon={<Flame size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, "vote_count.gte": 200})} /> */}
         <List header="Nejlépe hodnocené" icon={<Sparkles size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/top_rated", params)} />
         <List header="Nadcházející" icon={<Clapperboard size={30} />} type='movie' fetchFunction={(params) => tmdb.get("/movie/upcoming", params)} />
       </main>
