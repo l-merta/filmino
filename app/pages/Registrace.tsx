@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { apiPost } from "@/lib/apiClient";
+
 import Header from "@/components/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { apiPost } from "@/lib/apiClient";
+import { Separator } from "@/components/ui/separator";
 
 interface RegisterFormData {
   username: string;
@@ -40,8 +42,8 @@ export default function Registrace() {
         throw new Error("Všechna pole jsou povinná");
       }
 
-      if (formData.password.length < 6) {
-        throw new Error("Heslo musí mít alespoň 6 znaků");
+      if (formData.password.length < 8) {
+        throw new Error("Heslo musí mít alespoň 8 znaků");
       }
 
       // Email validation
@@ -53,7 +55,7 @@ export default function Registrace() {
       // Make API call
       await apiPost("/auth/register", formData);
       
-      setMessage({ type: "success", text: "Registrace byla úspěšná! Můžete se přihlásit." });
+      setMessage({ type: "success", text: "Registrace byla úspěšná" });
       setFormData({ username: "", email: "", password: "" });
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || error.message || "Došlo k chybě při registraci";
@@ -67,67 +69,49 @@ export default function Registrace() {
     <div className="page-filmy">
       <Header />
       <main className="main-container section-spacing">
-        <div className="max-w-md mx-auto">
+        <div className="max-w-80 w-full mx-auto space-y-4">
           <h1 className="text-3xl font-bold text-center mb-8">Registrace</h1>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">
-                Uživatelské jméno
-              </label>
+          <form onSubmit={handleSubmit} className="w-full space-y-4">
+            <div>
               <Input
                 id="username"
                 name="username"
                 type="text"
                 value={formData.username}
                 onChange={handleInputChange}
-                placeholder="Zadejte uživatelské jméno"
+                placeholder="Uživatelské jméno"
                 required
               />
             </div>
-
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                E-mail
-              </label>
+            <div>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Zadejte e-mail"
+                placeholder="E-mail"
                 required
               />
             </div>
-
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Heslo
-              </label>
+            <div>
               <Input
                 id="password"
                 name="password"
                 type="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                placeholder="Zadejte heslo (min. 6 znaků)"
+                placeholder="Heslo (min. 6 znaků)"
                 required
               />
             </div>
-
             {message && (
               <div
-                className={`p-3 rounded-md text-sm ${
-                  message.type === "success"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
-                }`}
+                className={`text-sm opacity-90`}
               >
                 {message.text}
               </div>
             )}
-
             <Button
               type="submit"
               className="w-full"
@@ -136,14 +120,21 @@ export default function Registrace() {
               {isLoading ? "Registruji..." : "Registrovat"}
             </Button>
           </form>
-
-          <div className="text-center mt-6">
+          <div className="text-center">
             <p className="text-sm text-muted-foreground">
               Už máte účet?{" "}
               <a href="/prihlaseni" className="text-primary hover:underline">
                 Přihlaste se
               </a>
             </p>
+          </div>
+          <div className="w-full flex items-center justify-center gap-2">
+            <Separator className="!w-full flex-1/2" />
+            <span>Nebo</span>
+            <Separator className="!w-full flex-1/2" />
+          </div>
+          <div className="text-center text-sm text-muted-foreground">
+            Google
           </div>
         </div>
       </main>

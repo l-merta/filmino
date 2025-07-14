@@ -28,7 +28,7 @@ export default NextAuth({
       async authorize(credentials) {
         if (!credentials) return null;
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.users.findUnique({
           where: { username: credentials.username },
         });
         if (!user || !user.password) return null;
@@ -38,7 +38,6 @@ export default NextAuth({
 
         return {
           id: user.id,
-          name: user.name,
           email: user.email,
           username: user.username,
         };
