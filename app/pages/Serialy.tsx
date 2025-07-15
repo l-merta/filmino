@@ -14,8 +14,8 @@ export default function Serialy() {
     <div className="page-serialy">
     <Header active="serialy" />
     <main className="main-container section-spacing">
-      <Carousel useFetch={tmdb.tv.Trending} type='tv' />
       <GenreList type='serialy' useFetch={tmdb.genre.Tv} />
+      <Carousel useFetch={tmdb.tv.Trending} type='tv' />
       <List header="Populární" icon={<Flame size={30} />} type='tv' fetchFunction={(params) => tmdb.get("/discover/tv", { ...params, "vote_count.gte": 100, without_genres: "10767,10766,10764,10763" })} />
       <List header="Aktuální" icon={<Sparkles size={30} />} type='tv' fetchFunction={(params) => tmdb.get("/tv/top_rated", params)} />
       <List header="Nadcházející" icon={<Clapperboard size={30} />} type='tv' fetchFunction={(params) => tmdb.get("/tv/top_rated", params)} />
