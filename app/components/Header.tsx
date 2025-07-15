@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
+import Search from "./Search";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { LogOut } from "lucide-react";
@@ -21,7 +21,7 @@ export default function Header({ active }: HeaderProps) {
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
       <div className="flex items-center space-x-5">
         <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
-        <Input placeholder="Hledat" className="w-80"></Input>
+        <Search />
       </div>
       <nav className="flex items-center space-x-4">
         <a href="/filmy" className={(active == "filmy" ? "text-[var(--color-main-1)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
