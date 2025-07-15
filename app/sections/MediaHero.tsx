@@ -25,6 +25,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
       include_image_language: data ? `cs,en,${data.original_language},null` : 'cs,en,null' 
     });
 
+  const original_name = data?.original_name || data?.original_title;
   const name = data?.title || data?.name;
 
   const poster = images && (images.posters[0] || null);
@@ -66,13 +67,18 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
       <div className="bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-[-1] scale-150"></div>
       <div className="w-full flex justify-between items-start gap-4">
         <div className="">
-          {logo && <Image 
-            src={tmdb.image(logo.file_path)}
-            alt={'logo image'}
-            width={logo.width} 
-            height={logo.height} 
-            className="max-w-100 w-full !max-h-50 object-contain object-left mb-3" 
-          />}
+          {logo && 
+            <div className="space-y-2">
+              <Image 
+                src={tmdb.image(logo.file_path)}
+                alt={'logo image'}
+                width={logo.width} 
+                height={logo.height} 
+                className="max-w-100 w-full !max-h-35 object-contain object-left mb-3" 
+              />
+              {name !== original_name && <span className="font text-lg mb-3 opacity-80">{name}</span>}
+            </div>
+          }
           {!logo && poster && 
             <div className="space-y-2">
               <Image 

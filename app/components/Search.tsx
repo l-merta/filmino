@@ -39,9 +39,9 @@ export default function Search() {
         onChange={handleInput}
       />
       {search.length > 0 && (
-        <div className="w-screen flex flex-wrap gap-2 absolute top-13 left-0">
-          <SearchBlock search={search} fetchFunction={(params) => tmdb.get("/search/movie", { ...params, query: search })} />
-          <SearchBlock search={search} fetchFunction={(params) => tmdb.get("/search/tv", { ...params, query: search })} />
+        <div className="w-screen flex flex-wrap gap-2 absolute top-13 left-0 pointer-events-none">
+          <SearchBlock search={search} link='filmy' typeName='filmy' fetchFunction={(params) => tmdb.get("/search/movie", { ...params })} />
+          <SearchBlock search={search} link='serialy' typeName='seriály' fetchFunction={(params) => tmdb.get("/search/tv", { ...params })} />
         </div>
       )}
     </div>
