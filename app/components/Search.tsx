@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
+import { tmdb } from "@/hooks/useTmdb";
 import throttle from "lodash.throttle";
 
 import { Input } from "./ui/input";
@@ -39,8 +40,8 @@ export default function Search() {
       />
       {search.length > 0 && (
         <div className="w-screen flex flex-wrap gap-2 absolute top-13 left-0">
-          <SearchBlock search={search} />
-          <SearchBlock search={search} />
+          <SearchBlock search={search} fetchFunction={(params) => tmdb.get("/search/movie", { ...params, query: search })} />
+          <SearchBlock search={search} fetchFunction={(params) => tmdb.get("/search/tv", { ...params, query: search })} />
         </div>
       )}
     </div>
