@@ -4,6 +4,7 @@ export interface Params {
   language?: string;
   region?: string;
   with_genres?: string;
+  without_genres?: string;
   sort_by?: string;
   primary_release_date_gte?: string;
   primary_release_date_lte?: string;

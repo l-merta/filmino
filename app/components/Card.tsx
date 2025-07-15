@@ -43,8 +43,6 @@ export function MovieCard({ details }: CardProps) {
 }
 
 export function TvCard({ details }: CardProps) {
-  console.log("details", details);
-
   if (details) return (
     <Link href={'/serialy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative">
