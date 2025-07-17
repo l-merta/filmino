@@ -20,6 +20,7 @@ export default function SearchBlock({ search, fetchFunction, link, typeName }: S
 
   const showResults = 4;
 
+  useEffect(() => {
   const fetchData = async () => {
     try {
       setIsLoading(true);
@@ -27,17 +28,15 @@ export default function SearchBlock({ search, fetchFunction, link, typeName }: S
       console.log("Search results:", result);
       setMediaItems(result.results || []);
       setResultsLength(result.total_results || 0);
-      setIsLoading(false);
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [search]);
+  fetchData();
+}, [search, fetchFunction]);
 
   if (!isLoading) return (
     <div className="w-80 bg-[var(--background)] flex flex-col gap-1 rounded-b-md pb-1.5 pointer-events-auto z-6">

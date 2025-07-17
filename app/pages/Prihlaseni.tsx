@@ -56,6 +56,8 @@ export default function Prihlaseni() {
         // Redirect to /filmy after successful login
         router.push("/filmy");
       }
+      
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage = error.message || "Došlo k chybě při přihlašování";
       setMessage({ type: "error", text: errorMessage });

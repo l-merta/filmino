@@ -1,5 +1,7 @@
 import ZanrFilmy from "@/pages/ZanrFilmy";
 
-export default function Page({ params }: { params: { id: string } }) {
-  return <ZanrFilmy genreId={parseInt(params.id)} />;
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
+  return <ZanrFilmy genreId={parseInt(id)} />;
 }

@@ -24,12 +24,12 @@ export default function Header({ active }: HeaderProps) {
         <Search />
       </div>
       <nav className="flex items-center space-x-4">
-        <a href="/filmy" className={(active == "filmy" ? "text-[var(--color-main-1)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
+        <Link href="/filmy" className={(active == "filmy" ? "text-[var(--color-main-1)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Filmy
-        </a>
-        <a href="/serialy" className={(active == "serialy" ? "text-[var(--color-main-2)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
+        </Link>
+        <Link href="/serialy" className={(active == "serialy" ? "text-[var(--color-main-2)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Seriály
-        </a>
+        </Link>
         {!session ?
           <div className="flex items-center space-x-2">
             <Link href="/prihlaseni">
