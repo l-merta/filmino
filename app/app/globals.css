@@ -119,16 +119,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-.page-filmy {
-  --color-main: var(--color-main-1);
-}
-.page-serialy {
-  --color-main: var(--color-main-2);
-}
-main {
-  overflow-x: hidden
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50 font-mono;
@@ -136,8 +126,17 @@ main {
   body {
     @apply bg-background text-foreground flex flex-col items-center overflow-x-hidden;
   }
+  main {
+    overflow-x: hidden
+  }
 }
 @layer components {
+  .page-filmy {
+    --color-main: var(--color-main-1);
+  }
+  .page-serialy {
+    --color-main: var(--color-main-2);
+  }
   .section-spacing {
     @apply max-w-[var(--main-width)] !w-screen mx-auto px-3 sm:px-10;
   }
@@ -147,8 +146,8 @@ main {
   .main-container {
     @apply bg-[var(--background-2)] min-h-screen py-10 pt-30 flex flex-col gap-12;
   }
-  .button-genre {
-    @apply hover:!border-[var(--color-main)] transition-colors duration-200;
+  .button-outline {
+    @apply hover:!border-[var(--color-main)] !transition-colors duration-200;
   }
 }
 

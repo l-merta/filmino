@@ -36,10 +36,10 @@ export default function Header({ active }: HeaderProps) {
               <Button variant="outline" className="!bg-[var(--color-main)] !text-[var(--background-2)] border-0 ml-2">Přihlášení</Button>
             </Link>
             <Link href="/registrace">
-              <Button variant="outline" className="">Registrace</Button>
+              <Button variant="outline" className="button-outline">Registrace</Button>
             </Link>
           </div>
-        :
+        : 
           <div className="flex items-center space-x-3">
             <Link href="/profil" className="text-sm flex items-center space-x-2 ml-2">
               <Avatar>

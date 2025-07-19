@@ -34,7 +34,7 @@ export default function Search() {
     <div className="relative">
       <Input
         placeholder="Hledat"
-        className="w-90"
+        className="button-outline w-90"
         value={inputValue}
         onChange={handleInput}
       />

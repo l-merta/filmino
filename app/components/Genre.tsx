@@ -14,7 +14,7 @@ export default function Genre({ name, link, special }: GenreProps) {
       <Button 
         variant={'outline'} 
         className={
-          'button-genre !border-transparent border-1 ' + 
+          'button-outline !border-transparent border-1 ' + 
           (special === 'outline' ? '!border-[var(--color-main)] border-1 ' : ' ') + 
           (special === 'active' ? 'border-0 !bg-[var(--color-main)] !text-[var(--background-2)] hover:!opacity-80 ' : ' ')
         }

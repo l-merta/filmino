@@ -59,7 +59,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
         ))}
       </div>
       {mediaItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">
-        <Button variant={"ghost"} className="w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{fetchData(Math.floor(totalCardCount / 20) + 1)}}><Plus /></Button>
+        <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{fetchData(Math.floor(totalCardCount / 20) + 1)}}><Plus /></Button>
       </div>}
     </div>
   );
