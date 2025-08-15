@@ -9,6 +9,8 @@ COMPOSE_PROD = docker compose -f ./app/docker-compose-prod.yml
 up-dev:
 	$(COMPOSE_DEV) down --remove-orphans
 	$(COMPOSE_DEV) up --build -d
+	make prisma-generate
+	make migrate-deploy
 
 ## Stop development environment
 down-dev:

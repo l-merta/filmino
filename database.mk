@@ -1,5 +1,5 @@
 # Makefile for Prisma & DB tasks
-ENV_FILE=../.env
+ENV_FILE=./.env
 SCHEMA=./prisma/schema.prisma
 PRISMA=npx prisma
 
@@ -8,7 +8,7 @@ APP_DIR=./app
 
 # Run Prisma commands inside app/
 define PRISMA_CMD
-	cd $(APP_DIR) && $(PRISMA) $(1) --schema=$(SCHEMA) --env-file=$(ENV_FILE)
+	cd $(APP_DIR) && $(PRISMA) $(1) --schema=$(SCHEMA)
 endef
 
 .PHONY: prisma-generate migrate new-migrate prisma-push prisma-studio prisma-reset help
@@ -24,6 +24,9 @@ migrate:
 # Create new migration with name
 new-migrate:
 	cd $(APP_DIR) && $(PRISMA) migrate dev --name $$NAME --schema=$(SCHEMA)
+	
+migrate-deploy:
+	cd $(APP_DIR) && $(PRISMA) migrate deploy --schema=$(SCHEMA)
 
 # Push schema without generating SQL migration (for prototyping)
 prisma-push:
