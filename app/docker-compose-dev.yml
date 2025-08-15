@@ -12,6 +12,7 @@ services:
       - /.next
     environment:
       - NODE_ENV=development
+      - DB_URL_PRISMA=${DB_URL}
     env_file:
       - .env
 
