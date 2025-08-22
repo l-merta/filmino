@@ -81,7 +81,7 @@
   --color-main-1: oklch(68.101% 0.18955 39.985);
   /* --color-main-1: oklch(71.27% 0.21055 352.804); */
   --color-main-2: oklch(58.348% 0.22689 266.387);
-  --main-width: 80rem;
+  --main-width: 95rem;
 }
 
 .dark {
