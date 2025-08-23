@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import SeriesCard from "@/components/SeriesCard";
 
-import { MediaDetails, Params } from "@/types/tmdbApi";
 import { tmdb } from "@/hooks/useTmdb";
 
 interface SeriesListProps {
@@ -34,6 +33,7 @@ export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
       <div className="flex items-center gap-3 mb-4 opacity-90">
         {icon}
         <h2 className="font-bold text-2xl">{header}</h2>
+        <span className="font-thin text-2xl">{data?.number_of_seasons}</span>
       </div>
       <Carousel
         opts={{
