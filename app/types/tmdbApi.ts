@@ -69,6 +69,23 @@ export interface MediaImageDetails {
   iso_639_1: string | null,
 }
 
+export interface MediaVideos {
+  id: number;
+  results: MediaVideoDetails[];
+}
+export interface MediaVideoDetails {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  site: string;
+  size: number;
+  type: "Behind the Scenes" | "Bloopers" | "Clip" | "Featurette" | "Teaser" | "Trailer";
+  official: boolean;
+  published_at: string;
+}
+
 export interface ActorList {
   cast: ActorDetails[];
 }

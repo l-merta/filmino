@@ -39,6 +39,8 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
   return { data, isLoading, error, refetch };
 }
 
+export { useTmdbQuery };
+
 // Movie list endpoints
 export const tmdbMovie = {
   Details: (id: number, config: Params = {}) => {

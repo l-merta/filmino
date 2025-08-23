@@ -2,13 +2,14 @@ import Image from "next/image";
 import { tmdb } from "@/hooks/useTmdb";
 
 import Genre from "@/components/Genre";
+import Video from "@/components/Video";
 import Separator from "@/components/Separator";
 // import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { Timer, Star } from "lucide-react";
-
 import { MediaDetails } from "@/types/tmdbApi";
+
+import { Timer, Star } from "lucide-react";
 
 interface MediaHeroProps {
   data: MediaDetails | null;
@@ -62,8 +63,9 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         height={backdrop.height} 
         className="w-full h-full object-cover absolute z-1" 
       />}
+      <div className="w-full h-full absolute z-2"><Video id={data.id} type={type} /></div>
     </div>
-    <div className="w-full min-h-120 flex flex-col gap-4 relative z-3">
+    <div className="w-fit min-h-120 flex flex-col gap-4 relative z-3">
       <div className="bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-[-1] scale-150"></div>
       <div className="w-full flex justify-between items-start gap-4">
         <div className="">

@@ -31,7 +31,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
 
       if (newTotalCardCount > actorItems.length) {
         const result = await fetchFunction({ page });
-        setTotalPages(Math.ceil(result.cast.length / 10) || 0);
+        setTotalPages(Math.floor(result.cast.length / 10) || 0);
         if (page === 1) {
           setActorItems(result.cast || []);
         } else {
