@@ -55,7 +55,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
-          <Card key={'card-' + index} details={mediaItems[index]} type={type} />
+          (index < mediaItems.length && <Card key={'card-' + index} details={mediaItems[index]} type={type} />)
         ))}
       </div>
       {mediaItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">

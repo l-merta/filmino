@@ -118,11 +118,11 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
   if (type == 'movie') {
     airDate = data.release_date.split('-')[0] || '';
   } else if (type == 'tv') {
-    if (data.first_air_date && data.last_air_date && data.first_air_date.split('-')[0] == data.last_air_date.split('-')[0])
-      airDate = data.first_air_date.split('-')[0] ||'';
-    else if (!data.last_air_date)
+    if (data.in_production)
       airDate = data.first_air_date.split('-')[0] + ' - ' || '';
-    else 
+    else if (data.first_air_date && data.last_air_date && data.first_air_date.split('-')[0] == data.last_air_date.split('-')[0])
+      airDate = data.first_air_date.split('-')[0] || '';
+    else
       airDate = data.first_air_date.split('-')[0] + ' - ' + data.last_air_date.split('-')[0] || '';
   }
 

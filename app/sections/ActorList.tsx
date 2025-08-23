@@ -31,7 +31,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
 
       if (newTotalCardCount > actorItems.length) {
         const result = await fetchFunction({ page });
-        setTotalPages(Math.floor(result.cast.length / 10) || 0);
+        setTotalPages(Math.ceil(result.cast.length / 20) - 1 || 0);
         if (page === 1) {
           setActorItems(result.cast || []);
         } else {
@@ -55,7 +55,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
-          <ActorCard key={'card-' + index} type={type} details={actorItems[index]} />
+          (index < actorItems.length && <ActorCard key={'card-' + index} type={type} details={actorItems[index]} />)
         ))}
       </div>
       {actorItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">

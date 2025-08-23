@@ -32,6 +32,7 @@ export interface MediaDetails {
   title: string;
   name: string;
   overview: string;
+  in_production: boolean;
   tagline: string;
   runtime: number | null;
   number_of_seasons: number | null;
