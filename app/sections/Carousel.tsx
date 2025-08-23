@@ -3,7 +3,6 @@
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
 
-import { Card } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -30,7 +29,7 @@ export default function CarouselSection({ useFetch, type }: CarouselSectionProps
   const carouselLength = 5;
 
   if (!data) return (
-    <Skeleton className="w-full h-100" />
+    <Skeleton className="w-full h-120" />
   )
   else return (
     <Carousel
