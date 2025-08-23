@@ -69,6 +69,26 @@ export interface MediaImageDetails {
   iso_639_1: string | null,
 }
 
+export interface ActorList {
+  cast: ActorDetails[];
+}
+export interface ActorDetails {
+  id: number;
+  gender: number;
+  adult: boolean;
+  name: string;
+  original_name: string;
+  character: string;
+  roles: CharacterDetails[];
+  popularity: number;
+  profile_path: string | null;
+}
+export interface CharacterDetails {
+  credit_id: string;
+  character: string;
+  episode_count: number;
+}
+
 export interface GenreList {
   genres: GenreDetails[];
 }

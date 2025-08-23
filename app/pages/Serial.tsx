@@ -4,6 +4,7 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
+import ActorList from "@/sections/ActorList";
 import List from "@/sections/List";
 
 export default function Serial() {
@@ -30,6 +31,7 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='tv' />
+        {data && <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />}
         {data && <List header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />}
       </main>
     </div>

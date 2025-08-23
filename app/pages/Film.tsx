@@ -4,6 +4,7 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
+import ActorList from "@/sections/ActorList";
 import List from "@/sections/List";
 
 export default function Film() {
@@ -30,6 +31,7 @@ export default function Film() {
       <Header active="filmy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='movie' />
+        {data && <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/credits", params)} />}
         {data && <List header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/recommendations", params)} />}
       </main>
     </ div>
