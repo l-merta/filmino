@@ -149,6 +149,18 @@
   .button-outline {
     @apply hover:!border-[var(--color-main)] !transition-colors duration-200;
   }
+
+  @media (max-width: 639px) {
+    .mediaHero-thin .backdrop-container {
+      @apply !w-full !h-[calc(100vw*0.5625)];
+    }
+    .mediaHero-thin .media-info {
+      @apply mt-[calc(100vw*0.5625-4rem)];
+    }
+    .mediaHero-thin .media-info .shadow {
+      @apply hidden;
+    }
+  }
 }
 
 @keyframes slide {

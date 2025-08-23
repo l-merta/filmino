@@ -54,60 +54,60 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
     </div>
   )
   else return (
-    <>
-    <div className="w-75/100 h-130 absolute right-0 top-20 flex items-center justify-center overflow-hidden">
-      {backdrop && <Image 
-        src={tmdb.image(backdrop.file_path)}
-        alt={'backdrop image'}
-        width={backdrop.width} 
-        height={backdrop.height} 
-        className="w-full h-full object-cover absolute z-1" 
-      />}
-      <div className="w-full h-full absolute z-2"><Video id={data.id} type={type} /></div>
-    </div>
-    <div className="w-fit min-h-120 flex flex-col gap-4 relative z-3">
-      <div className="bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-[-1] scale-150"></div>
-      <div className="w-full flex justify-between items-start gap-4">
-        <div className="">
-          {logo && 
-            <div className="space-y-2">
-              <Image 
-                src={tmdb.image(logo.file_path)}
-                alt={'logo image'}
-                width={logo.width} 
-                height={logo.height} 
-                className="max-w-100 w-full !max-h-35 object-contain object-left mb-3" 
-              />
-              {name !== original_name && <span className="font text-lg mb-3 opacity-80">{name}</span>}
-            </div>
-          }
-          {!logo && poster && 
-            <div className="space-y-2">
-              <Image 
-                src={tmdb.image(poster.file_path)}
-                alt={'poster image'}
-                width={poster.width} 
-                height={poster.height} 
-                className="max-w-100 w-fit max-h-80 rounded-md" 
-              />
-              <span className="font-semibold text-xl mb-3">{name}</span>
-            </div>
-          }
+    <div className="mediaHero-thin">
+      <div className="backdrop-container w-75/100 h-130 absolute right-0 top-20 flex items-center justify-center overflow-hidden">
+        {backdrop && <Image 
+          src={tmdb.image(backdrop.file_path)}
+          alt={'backdrop image'}
+          width={backdrop.width} 
+          height={backdrop.height} 
+          className="w-full h-full object-cover absolute z-1" 
+        />}
+        <div className="w-full h-full absolute z-2"><Video id={data.id} type={type} /></div>
+      </div>
+      <div className="media-info w-fit min-h-120 flex flex-col gap-4 relative z-3">
+        <div className="shadow bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-[-1] scale-150"></div>
+        <div className="w-full flex justify-between items-start gap-4">
+          <div className="">
+            {logo && 
+              <div className="space-y-2">
+                <Image 
+                  src={tmdb.image(logo.file_path)}
+                  alt={'logo image'}
+                  width={logo.width} 
+                  height={logo.height} 
+                  className="max-w-100 w-full !max-h-35 object-contain object-left mb-3" 
+                />
+                {name !== original_name && <span className="font text-lg mb-3 opacity-80">{name}</span>}
+              </div>
+            }
+            {!logo && poster && 
+              <div className="space-y-2">
+                <Image 
+                  src={tmdb.image(poster.file_path)}
+                  alt={'poster image'}
+                  width={poster.width} 
+                  height={poster.height} 
+                  className="max-w-100 w-fit max-h-80 rounded-md" 
+                />
+                <span className="font-semibold text-xl mb-3">{name}</span>
+              </div>
+            }
+          </div>
+          {/* <AnimatedCircularProgressBar min={0} max={10} value={7.6} gaugePrimaryColor="black" gaugeSecondaryColor="gray" className="w-20 h-20" /> */}
         </div>
-        {/* <AnimatedCircularProgressBar min={0} max={10} value={7.6} gaugePrimaryColor="black" gaugeSecondaryColor="gray" className="w-20 h-20" /> */}
+        <div className="max-w-screen flex flex-wrap gap-2">
+          {data.genres.map((genre, index) => (
+            <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
+          ))}
+        </div>
+        <div className="flex items-center gap-3">
+          <MediaDataRow data={data} type={type} />
+        </div>
+        {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
+        <p className="opacity-85 max-w-140 w-screen line-clamp-5">{data.overview}</p>
       </div>
-      <div className="max-w-screen flex flex-wrap gap-2">
-        {data.genres.map((genre, index) => (
-          <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
-        ))}
-      </div>
-      <div className="flex items-center gap-3">
-        <MediaDataRow data={data} type={type} />
-      </div>
-      {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
-      <p className="opacity-85 max-w-140 w-screen line-clamp-5">{data.overview}</p>
     </div>
-    </>
   )
 }
 

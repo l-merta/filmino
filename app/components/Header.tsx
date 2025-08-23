@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
@@ -10,17 +11,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { LogOut } from "lucide-react";
 
+import FilminoFilmyLogo from "./../app/images/Filmino_filmy_logo.png";
+import FilminoSerialyLogo from "./../app/images/Filmino_serialy_logo.png";
+
 interface HeaderProps {
   active?: 'filmy' | 'serialy';
 }
 
 export default function Header({ active }: HeaderProps) {
   const { data: session } = useSession();
+  
+  const logoSrc = active === 'filmy' ? FilminoFilmyLogo : FilminoSerialyLogo;
 
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
       <div className="flex items-center space-x-5">
-        <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
+        <Link href={"/" + active} className="flex items-center space-x-3">
+          {/* <Image src={logoSrc} alt="Filmino logo" width={34} height={34} /> */}
+          <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
+        </Link>
         <Search />
       </div>
       <nav className="flex items-center space-x-4">
