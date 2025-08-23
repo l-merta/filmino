@@ -52,6 +52,17 @@ export interface MediaDetails {
   original_title: string;
   original_name: string;
   status: string;
+  seasons?: SeasonDetails[];
+}
+export interface SeasonDetails {
+  air_date: string;
+  episode_count: number;
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  vote_average: number;
 }
 
 export interface MediaImages {
