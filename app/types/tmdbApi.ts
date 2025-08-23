@@ -40,6 +40,8 @@ export interface MediaDetails {
   release_date: string;
   first_air_date: string;
   last_air_date: string;
+  last_episode_to_air?: EpisodeDetails;
+  next_episode_to_air?: EpisodeDetails;
   poster_path: string | null;
   backdrop_path: string | null;
   vote_average: number;
@@ -62,6 +64,21 @@ export interface SeasonDetails {
   overview: string;
   poster_path: string | null;
   season_number: number;
+  vote_average: number;
+}
+export interface EpisodeDetails {
+  id: number;
+  name: string;
+  overview: string;
+  runtime: number;
+  still_path: string;
+  air_date: string;
+  episode_number: number;
+  season_number: number;
+  episode_type: string;
+  crew: ActorDetails[];
+  guest_stars: ActorDetails[];
+  vote_count: number;
   vote_average: number;
 }
 
