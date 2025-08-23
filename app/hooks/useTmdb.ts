@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { GenreDetails, GenreList, MediaDetails, MediaImages, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
-import { Images } from "lucide-react";
+import { GenreList, MediaDetails, MediaImages, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);

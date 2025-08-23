@@ -19,7 +19,7 @@ export default function HledatFilmy({ query }: HledatFilmyProps) {
         <List 
           header={`Hledání '${decodedQuery}'`} 
           type='movie' 
-          fetchFunction={(params) => tmdb.get("/movie/search", { ...params, query: decodedQuery })} 
+          fetchFunction={(params) => tmdb.get("/search/movie", { ...params, query: decodedQuery })} 
           cardCount={20}
         />
       </main>
