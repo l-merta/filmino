@@ -54,7 +54,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
   )
   else return (
     <>
-    <div className="w-75/100 h-120 absolute right-0 top-20 flex items-center justify-center overflow-hidden">
+    <div className="w-75/100 h-130 absolute right-0 top-20 flex items-center justify-center overflow-hidden">
       {backdrop && <Image 
         src={tmdb.image(backdrop.file_path)}
         alt={'backdrop image'}
