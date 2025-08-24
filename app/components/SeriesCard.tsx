@@ -22,8 +22,10 @@ export function SkeletonCard() {
 }
 
 export function SeriesCard({ details, tvId }: CardProps) {
+  const sNumber = "s" + (details ? details.season_number.toString().padStart(2, '0') : "00");
+
   if (details) return (
-    <Link href={'/serialy/' + tvId + '/s' + details.season_number} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
+    <Link href={'/serialy/' + tvId + '/' + sNumber} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative flex items-center justify-center">
         <Image 
           src={tmdb.image(details.poster_path || "")} 

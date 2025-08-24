@@ -46,7 +46,7 @@ export function MovieActorCard({ details }: CardProps) {
 
 export function TvActorCard({ details }: CardProps) {
   if (details) return (
-    <Link href={'/filmy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
+    <Link href={'/herci/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative flex items-center justify-center">
         <Image 
           src={tmdb.image(details.profile_path || "")} 

@@ -73,8 +73,8 @@ export const tmdbMovie = {
 
 // TV list endpoints
 export const tmdbTv = {
-  Details: (id: number) => {
-    return useTmdbQuery<MediaDetails>(`/tv/${id}`);
+  Details: (id: number, config: Params = {}) => {
+    return useTmdbQuery<MediaDetails>(`/tv/${id}`, { ...config });
   },
   Images: (id: number, config: Params = {}) => {
     return useTmdbQuery<MediaImages>(`/tv/${id}/images`, { ...config });

@@ -88,15 +88,15 @@ export default function Video({
 
   if (video) {
     return (
-      <div className="w-full aspect-video flex !items-center justify-center hover:cursor-pointer group" onClick={videoOnClick}>
-        {!playing && <Play size={60} className="mb-25 opacity-0 group-hover:opacity-80 transition-opacity duration-200" />}
+      <div className="w-full h-full flex !items-center justify-center hover:cursor-pointer group" onClick={videoOnClick}>
+        {!playing && <Play size={60} className="mb-0 opacity-0 group-hover:opacity-80 transition-opacity duration-200" />}
         {playing && (
           <iframe
             src={`https://www.youtube.com/embed/${video.key}?autoplay=1&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1`}
             title={video.name}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            className="w-full h-full"
+            className="w-full h-full scale-120"
           />
         )}
       </div>
