@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
+import { GenreList, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -75,6 +75,9 @@ export const tmdbMovie = {
 export const tmdbTv = {
   Details: (id: number, config: Params = {}) => {
     return useTmdbQuery<MediaDetails>(`/tv/${id}`, { ...config });
+  },
+  Season: (id: number, seasonId: number, config: Params = {}) => {
+    return useTmdbQuery<SeasonDetails>(`/tv/${id}/season/${seasonId}`, { ...config });
   },
   Images: (id: number, config: Params = {}) => {
     return useTmdbQuery<MediaImages>(`/tv/${id}/images`, { ...config });
