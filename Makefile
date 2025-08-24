@@ -1,2 +1,2 @@
-include database.mk
-include docker.mk
+include ./Makefiles/database.mk
+include ./Makefiles/docker.mk

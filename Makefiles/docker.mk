@@ -12,6 +12,14 @@ up-dev:
 	make prisma-generate
 	make migrate-deploy
 
+## Start development environment without filmino fe
+up-dev-light:
+	$(COMPOSE_DEV) down --remove-orphans
+	$(COMPOSE_DEV) up --build -d --scale filmino=0
+	make prisma-generate
+	make migrate-deploy
+	cd app && npm run dev
+
 ## Stop development environment
 down-dev:
 	$(COMPOSE_DEV) down

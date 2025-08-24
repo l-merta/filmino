@@ -1,6 +1,6 @@
 services:
-  app:
-    container_name: app
+  filmino:
+    container_name: filmino-app
     build:
       context: .
       dockerfile: Dockerfile.app.dev
@@ -18,7 +18,7 @@ services:
 
   db:
     image: postgres:16-alpine
-    container_name: postgres_db
+    container_name: filmino-db
     restart: always
     ports:
       - "5200:5432"
@@ -31,7 +31,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
+    container_name: filmino-pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
