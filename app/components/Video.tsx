@@ -23,8 +23,6 @@ export default function Video({
   const { data: videos, isLoading, error } = useTmdbQuery<MediaVideos>(`/${type}/${id}/videos`, { include_video_language: 'en,null' });
   const { data: mediaDetails } = useTmdbQuery<MediaDetails>(`/${type}/${id}`);
 
-  console.log('Videos data:', videos);
-
   // Listen for YouTube player messages
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -81,11 +79,9 @@ export default function Video({
   };
 
   const video = selectBestVideo(videos?.results || []);
-  console.log('Selected video:', video);
 
   const videoOnClick = () => {
     setPlaying(prev => {
-      console.log('Video playing:', !prev);
       return !prev
     });
   }

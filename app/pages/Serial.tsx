@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
 import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
+import MediaList from "@/sections/MediaList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
 
@@ -35,17 +36,25 @@ export default function Serial() {
         <MediaHero data={data} type='tv' />
         {data && <SeriesList header="Série" tvId={data.id} />}
         <div className="">
-          {data && data.last_episode_to_air && 
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
-                <EpisodeCard details={data.next_episode_to_air} tvId={data.id} />
-                <EpisodeCard details={data.last_episode_to_air} tvId={data.id} />
-              </div>
-            </div>
-          }
+          {data && (
+            data.next_episode_to_air ? (
+              <List header="Nejnovější epizoda">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
+                  <EpisodeCard details={data.next_episode_to_air} tvId={data.id} />
+                </div>
+              </List>
+            ) :
+            (data.last_episode_to_air && 
+              <List header="Poslední epizoda">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
+                  <EpisodeCard details={data.last_episode_to_air} tvId={data.id} />
+                </div>
+              </List>
+            )
+          )}
         </div>
         {data && <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />}
-        {data && <List header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />}
+        {data && <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />}
       </main>
     </div>
   )

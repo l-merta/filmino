@@ -4,7 +4,7 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import Header from "@/components/Header";
 import GenreList from "@/sections/GenreList";
-import List from "@/sections/List";
+import List from "@/sections/MediaList";
 
 interface ZanrSerialyProps {
   genreId: number;

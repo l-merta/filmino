@@ -5,7 +5,7 @@ import { tmdb } from "@/hooks/useTmdb";
 import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
 import ActorList from "@/sections/ActorList";
-import List from "@/sections/List";
+import List from "@/sections/MediaList";
 
 export default function Film() {
   const params = useParams();

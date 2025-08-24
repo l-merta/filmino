@@ -3,7 +3,7 @@
 import { tmdb } from "@/hooks/useTmdb";
 
 import Header from "@/components/Header";
-import List from "@/sections/List";
+import List from "@/sections/MediaList";
 
 interface HledatFilmyProps {
   query: string;

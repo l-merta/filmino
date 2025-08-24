@@ -2,8 +2,9 @@
 
 import React from "react";
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import List from "@/sections/List";
 import SeriesCard from "@/components/SeriesCard";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 import { tmdb } from "@/hooks/useTmdb";
 
@@ -29,12 +30,7 @@ export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
   }
 
   return (
-    <div className="z-4">
-      <div className="flex items-center gap-3 mb-4 opacity-90">
-        {icon}
-        <h2 className="font-bold text-2xl">{header}</h2>
-        <span className="font-thin text-2xl">{data?.number_of_seasons}</span>
-      </div>
+    <List header={header} icon={icon}>
       <Carousel
         opts={{
           align: "start",
@@ -65,6 +61,6 @@ export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
         <CarouselPrevious className="ml-12 !top-5 size-10" />
         <CarouselNext className="mr-12 !top-5 size-10" />
       </Carousel>
-    </div>
+    </List>
   );
 }

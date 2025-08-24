@@ -24,8 +24,11 @@ export function SkeletonCard() {
 }
 
 export function EpisodeCard({ details, tvId }: CardProps) {
+  const sNumber = "s" + (details ? details.season_number.toString().padStart(2, '0') : "00");
+  const eNumber = "e" + (details ? details.episode_number.toString().padStart(2, '0') : "00");
+
   if (details) return (
-    <Link href={'/serialy/' + tvId + "/s" + details.season_number + "/e" + details.episode_number} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200 z-3">
+    <Link href={'/serialy/' + tvId + "/" + sNumber + "/" + eNumber} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200 z-3">
       <div className="w-full aspect-[16/9] relative flex items-center justify-center">
         <Image 
           src={tmdb.image(details.still_path || "")} 
@@ -39,7 +42,7 @@ export function EpisodeCard({ details, tvId }: CardProps) {
         <Skeleton className="w-full h-full rounded-md absolute z-1" />
       </div>
       <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{details.name}</span>
-      <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">s{details.season_number}e{details.episode_number}</span>
+      <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">{sNumber}{eNumber}</span>
     </Link>
   )
 }

@@ -5,7 +5,7 @@ import { tmdb } from "@/hooks/useTmdb";
 import Header from "@/components/Header";
 import Carousel from "@/sections/Carousel";
 import GenreList from "@/sections/GenreList";
-import List from "@/sections/List";
+import List from "@/sections/MediaList";
 
 import { Flame, Sparkles, Clapperboard } from "lucide-react";
 
