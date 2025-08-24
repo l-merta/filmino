@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import List from "@/sections/List";
 import SeriesCard from "@/components/SeriesCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 

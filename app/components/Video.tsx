@@ -94,7 +94,7 @@ export default function Video({
           <iframe
             src={`https://www.youtube.com/embed/${video.key}?autoplay=1&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1`}
             title={video.name}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; muted"
             allowFullScreen
             className="w-full h-full scale-120"
           />

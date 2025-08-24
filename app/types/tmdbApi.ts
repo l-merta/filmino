@@ -59,6 +59,7 @@ export interface MediaDetails {
 export interface SeasonDetails {
   air_date: string;
   episode_count: number;
+  episodes?: EpisodeDetails[];
   id: number;
   name: string;
   overview: string;

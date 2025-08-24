@@ -4,6 +4,7 @@ import { tmdb } from "@/hooks/useTmdb";
 
 import Header from "@/components/Header";
 import SeasonHero from "@/sections/SeasonHero";
+import EpisodesList from "@/sections/EpisodesList";
 
 export default function Season() {
   const params = useParams();
@@ -13,7 +14,7 @@ export default function Season() {
   const { data: tvData, error: tvError } = tmdb.tv.Details(Number(id));
   const { data: seasonData, error: seasonError } = tmdb.tv.Season(Number(id), seasonNumber);
 
-  console.log("data", tvData);
+  console.log("seasonData", seasonData, "tvData", tvData);
 
   if (!id || tvError || seasonError) {
     return (
@@ -31,6 +32,7 @@ export default function Season() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <SeasonHero tvData={tvData} seasonData={seasonData} />
+        <EpisodesList header="Epizody" tvId={tvData.id} seasonId={seasonData.season_number} />
       </main>
     </div>
   )
