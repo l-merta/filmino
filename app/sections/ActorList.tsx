@@ -55,6 +55,7 @@ export default function List({ header, icon, type, fetchFunction, cardCount }: L
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
+          (actorItems.length == 0 && <ActorCard key={'card-' + index} type={type} />) ||
           (index < actorItems.length && <ActorCard key={'card-' + index} type={type} details={actorItems[index]} />)
         ))}
       </div>

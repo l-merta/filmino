@@ -7,6 +7,7 @@ import MediaHero from "@/sections/MediaHero";
 import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
 
@@ -53,8 +54,16 @@ export default function Serial() {
             )
           )}
         </div>
-        {data && <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />}
-        {data && <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />}
+        {data ? 
+          <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />
+        :
+          <FakeList header="Herci" />
+        }
+        {data ? 
+          <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />
+        :
+          <FakeList header="Podobné seriály" />
+        }
       </main>
     </div>
   )
