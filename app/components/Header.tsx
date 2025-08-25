@@ -23,7 +23,7 @@ export default function Header({ active }: HeaderProps) {
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
       <div className="flex items-center space-x-5">
-        <Link href={"/" + active} className="flex items-center space-x-3">
+        <Link href={"/" + (active || "filmy")} className="flex items-center space-x-3">
           {/* <Image src={logoSrc} alt="Filmino logo" width={34} height={34} /> */}
           <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
         </Link>
