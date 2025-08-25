@@ -70,7 +70,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
             height={450}
             className="w-full max-w-55 h-fit rounded-md"
           />
-          <div className="w-fit pt-8 flex flex-col gap-2 relative">
+          <div className="w-fit pt-8 flex flex-col gap-4 relative">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>

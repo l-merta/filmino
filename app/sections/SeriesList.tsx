@@ -53,7 +53,7 @@ export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
             ))
           ) : (
             // Actual series data
-            data?.seasons?.slice(0, 20).map((series) => (
+            data?.seasons?.map((series) => (
               <CarouselItem key={`series-${series.id}`} className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
                 <div className="p-1">
                   <SeriesCard details={series} tvId={tvId} />

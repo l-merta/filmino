@@ -16,9 +16,12 @@ interface CardProps {
 export function SkeletonCard() {
   return (
     <div className="flex flex-col gap-2">
-      <Skeleton className="w-full aspect-[2/3]" />
-      <Skeleton className="w-full h-5" />
-      <Skeleton className="w-30 h-5" />
+      <Skeleton className="w-full aspect-[16/9]" />
+      <div className="flex justify-between">
+        <Skeleton className="w-40 h-4" />
+        <Skeleton className="w-10 h-4" />
+      </div>
+      <Skeleton className="w-10 h-4" />
     </div>
   );
 }
@@ -42,10 +45,10 @@ export function EpisodeCard({ details, tvId }: CardProps) {
         <Skeleton className="w-full h-full rounded-md absolute z-1" />
       </div>
       <div className="flex justify-between gap-1 mt-2">
-        <span className="font-bold text-[1.0rem] line-clamp-1">{details.name}</span>
-        <span className="font-semibold text-[1.0rem] opacity-60 white-space-nowrap">{sNumber}{eNumber}</span>
+        <span className="font-bold text-[0.9rem] line-clamp-1">{details.name}</span>
+        <span className="font-semibold text-[0.9rem] opacity-60 white-space-nowrap">{sNumber}{eNumber}</span>
       </div>
-      {details.runtime && <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">{details.runtime} min</span>}
+      {details.runtime && <span className="font-semibold text-[0.9rem] opacity-60 line-clamp-1">{details.runtime} min</span>}
     </Link>
   )
 }

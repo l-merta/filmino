@@ -4,7 +4,6 @@ import React from "react";
 import { tmdb } from "@/hooks/useTmdb";
 
 import EpisodeCard from "@/components/EpisodeCard";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
@@ -17,9 +16,10 @@ interface EpisodesListProps {
 }
 
 export default function EpisodesList({ header, icon, tvId, seasonId }: EpisodesListProps) {
-  const { data, isLoading, error } = tmdb.tv.Season(Number(tvId), Number(seasonId));
+  const { data, isLoading, error } = tmdb.tv.Season(Number(tvId), Number(seasonId), { language: 'en' });
+  const cardCountAdd = 16;
 
-  const [totalCardCount, setTotalCardCount] = React.useState(8);
+  const [totalCardCount, setTotalCardCount] = React.useState(cardCountAdd);
 
   if (error) {
     return (
@@ -42,13 +42,11 @@ export default function EpisodesList({ header, icon, tvId, seasonId }: EpisodesL
       </div>
       {isLoading ? (
         // Loading skeletons
-        Array.from({ length: 10 }).map((_, index) => (
-          <div key={`skeleton-${index}`} className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
-            <div className="p-1">
-              <EpisodeCard tvId={tvId} />
-            </div>
-          </div>
-        ))
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <EpisodeCard tvId={tvId} key={`skeleton-${index}`} />
+          ))}
+        </div>
       ) : (
         // Actual series data
         (data && data.episodes && data.episodes.length > 0 && <>
@@ -59,7 +57,7 @@ export default function EpisodesList({ header, icon, tvId, seasonId }: EpisodesL
           </div>
           {data.episodes.length > 0 && totalCardCount < data.episodes.length && 
             <div className="w-full flex justify-center align-middle">
-              <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{setTotalCardCount(prev => prev + 8)}}><Plus /></Button>
+              <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{setTotalCardCount(prev => prev + cardCountAdd)}}><Plus /></Button>
             </div>
           }
         </>)

@@ -34,22 +34,28 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
   const backdrop = images && (images.backdrops[0] || null);
   
   if (!data) return (
-    <div className="flex flex-col gap-4">
-      <Skeleton className="w-100 h-30" /> 
-      <div className="flex flex-wrap gap-2">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <Skeleton key={'genre-skeleton-' + index} className="w-20 h-8" />
-        ))}
+    <div className="mb-50">
+      <div className="backdrop-container w-75/100 h-130 absolute right-0 top-20 flex items-center justify-center overflow-hidden z-0">
+        <Skeleton className="w-full h-full" />
       </div>
-      <div className="flex flex-wrap gap-2">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton key={'data-row-skeleton-' + index} className="w-30 h-5" />
-        ))}
-      </div>
-      <div className="flex flex-col gap-2">
-        <Skeleton className="w-140 h-4" />
-        <Skeleton className="w-140 h-4" />
-        <Skeleton className="w-80 h-4" />
+      <div className="flex flex-col gap-4 relative z-2">
+        <div className="shadow bg-[var(--background-2)] max-w-120 w-full h-140 rounded-t-xl blur-2xl rotate-[345deg] absolute top-0 left-0 z-0 scale-150"></div>
+        <Skeleton className="w-120 h-30" /> 
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={'genre-skeleton-' + index} className="w-20 h-8" />
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton key={'data-row-skeleton-' + index} className="w-30 h-5" />
+          ))}
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="w-140 h-4" />
+          <Skeleton className="w-140 h-4" />
+          <Skeleton className="w-80 h-4" />
+        </div>
       </div>
     </div>
   )

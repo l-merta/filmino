@@ -52,6 +52,7 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
     <List header={header} icon={icon}>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
+          (mediaItems.length == 0 && <Card key={'card-' + index} details={mediaItems[index]} type={type} />) ||
           (index < mediaItems.length && <Card key={'card-' + index} details={mediaItems[index]} type={type} />)
         ))}
       </div>
