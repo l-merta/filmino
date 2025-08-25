@@ -1,4 +1,4 @@
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 import Link from "next/link";
 
 import { Button } from "./ui/button";

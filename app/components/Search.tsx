@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 import throttle from "lodash.throttle";
 
 import { Input } from "./ui/input";

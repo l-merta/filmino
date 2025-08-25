@@ -5,7 +5,7 @@ import React from "react";
 import SeriesCard from "@/components/SeriesCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 interface SeriesListProps {
   header: string;

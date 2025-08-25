@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useTmdbQuery } from "@/hooks/useTmdb";
+import { useTmdbQuery } from "@/lib/useTmdb";
 import { MediaVideos, MediaDetails, MediaVideoDetails } from "@/types/tmdbApi";
 //import { Skeleton } from "./ui/skeleton";
 

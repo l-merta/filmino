@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import Genre from "@/components/Genre";
 import Video from "@/components/Video";

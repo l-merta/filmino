@@ -1,6 +1,6 @@
 "use client";
 
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
 import GenreList from "@/sections/GenreList";

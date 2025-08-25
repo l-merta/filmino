@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
 import SeasonHero from "@/sections/SeasonHero";

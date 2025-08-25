@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import EpisodeCard from "@/components/EpisodeCard";
 import { Button } from "@/components/ui/button";

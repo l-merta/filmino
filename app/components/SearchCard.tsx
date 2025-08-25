@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { MediaDetails } from "@/types/tmdbApi";
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 interface SearchCardProps {
   data?: MediaDetails;

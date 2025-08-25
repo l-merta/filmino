@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import { Skeleton } from "./ui/skeleton";
 

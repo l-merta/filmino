@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { query } = await params;
 
   return {
-    title: `Hledání ${query}`,
+    title: `${query} - Filmino`,
     icons: {
       icon: "/images/Filmino_filmy_logo.png",
     },
