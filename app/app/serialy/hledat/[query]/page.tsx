@@ -8,6 +8,9 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   return {
     title: `Hledání ${query}`,
+    icons: {
+      icon: "/images/Filmino_serialy_logo.png",
+    },
   };
 }
 

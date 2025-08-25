@@ -11,17 +11,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { LogOut } from "lucide-react";
 
-import FilminoFilmyLogo from "./../app/images/Filmino_filmy_logo.png";
-import FilminoSerialyLogo from "./../app/images/Filmino_serialy_logo.png";
-
 interface HeaderProps {
   active?: 'filmy' | 'serialy';
 }
 
 export default function Header({ active }: HeaderProps) {
   const { data: session } = useSession();
-  
-  const logoSrc = active === 'filmy' ? FilminoFilmyLogo : FilminoSerialyLogo;
+
+  const logoSrc = active === 'filmy' ? "/images/Filmino_filmy_logo.png" : "/images/Filmino_serialy_logo.png";
 
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">
