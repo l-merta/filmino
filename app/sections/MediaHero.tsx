@@ -4,6 +4,7 @@ import { tmdb } from "@/lib/useTmdb";
 import Genre from "@/components/Genre";
 import Video from "@/components/Video";
 import Separator from "@/components/Separator";
+import DateFormat from "@/components/DateFormat";
 // import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -119,22 +120,10 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
 
 export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie' | 'tv' }) {
   const iconSize = 16;
-  let airDate;
-
-  if (type == 'movie') {
-    airDate = data.release_date.split('-')[0] || '';
-  } else if (type == 'tv') {
-    if (data.in_production)
-      airDate = data.first_air_date.split('-')[0] + ' - ' || '';
-    else if (data.first_air_date && data.last_air_date && data.first_air_date.split('-')[0] == data.last_air_date.split('-')[0])
-      airDate = data.first_air_date.split('-')[0] || '';
-    else
-      airDate = data.first_air_date.split('-')[0] + ' - ' + data.last_air_date.split('-')[0] || '';
-  }
 
   if (type == 'movie') return (
     <>
-    <span className="opacity-85">{airDate}</span>
+    <span className="opacity-85">{data.release_date.split('-')[0] || ''}</span>
     <Separator />
     {data.vote_count > 0 && 
       <>
@@ -153,7 +142,8 @@ export function MediaDataRow({ data, type }: { data: MediaDetails, type: 'movie'
   )
   else if (type == 'tv') return (
     <>
-    <span className="opacity-85">{airDate}</span>{data.vote_count > 0 && 
+    <span className="opacity-85"><DateFormat first_air_date={data.first_air_date} last_air_date={data.last_air_date} in_production={data.in_production} /></span>
+    {data.vote_count > 0 && 
       <>
       <Separator />
       <div className="flex items-center gap-2">

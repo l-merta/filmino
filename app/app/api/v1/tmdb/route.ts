@@ -52,7 +52,6 @@ export async function GET(request: NextRequest) {
 
     // Make the request to TMDB
     //console.log("Fetching", tmdbPath);
-    console.log("Full TMDB request URL:", axiosInstance.defaults.baseURL + tmdbPath);
     const response = await axiosInstance.get(tmdbPath, {
       params: finalParams,
     });

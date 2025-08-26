@@ -56,6 +56,7 @@ export function TvCard({ details }: CardProps) {
           width={300} 
           height={450} 
           className="w-full h-full object-cover rounded-md absolute z-3" 
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
         <Tv size={40} className="opacity-70 absolute z-2" />
         <Skeleton className="w-full h-full rounded-md absolute z-1" />

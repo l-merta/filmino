@@ -32,6 +32,7 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
 
       if (newTotalCardCount > mediaItems.length) {
         const result = await fetchFunction({ page, excluded_genres: [10767, 10764, 10763] });
+        //console.log("MediaList data", result);
         setTotalPages(result.total_pages || 0);
         if (page === 1) {
           setMediaItems(result.results || []);
