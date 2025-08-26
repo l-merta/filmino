@@ -4,7 +4,7 @@ import ZanrSerialy from "@/pages/ZanrSerialy";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { data: genre } = await tmdb.genre.Details(Number(id), 'movie');
+  const { data: genre } = await tmdb.genre.Details(Number(id), 'tv');
 
   if (genre) {
     return {
