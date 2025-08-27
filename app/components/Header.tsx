@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
@@ -18,7 +17,7 @@ interface HeaderProps {
 export default function Header({ active }: HeaderProps) {
   const { data: session } = useSession();
 
-  const logoSrc = active === 'filmy' ? "/images/Filmino_filmy_logo.png" : "/images/Filmino_serialy_logo.png";
+  //const logoSrc = active === 'filmy' ? "/images/Filmino_filmy_logo.png" : "/images/Filmino_serialy_logo.png";
 
   return (
     <header className="section-spacing flex items-center justify-between fixed top-0 !mx-auto">

@@ -20,7 +20,7 @@ export default function Video({
 }: VideoProps) {
   const [playing, setPlaying] = useState(false);
   
-  const { data: videos, isLoading, error } = useTmdbQuery<MediaVideos>(`/${type}/${id}/videos`, { include_video_language: 'en,null' });
+  const { data: videos } = useTmdbQuery<MediaVideos>(`/${type}/${id}/videos`, { include_video_language: 'en,null' });
   const { data: mediaDetails } = useTmdbQuery<MediaDetails>(`/${type}/${id}`);
 
   // Listen for YouTube player messages
