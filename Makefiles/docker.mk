@@ -28,6 +28,8 @@ down-dev:
 up-prod:
 	$(COMPOSE_PROD) down --remove-orphans
 	$(COMPOSE_PROD) up --build -d
+	make prisma-generate
+	make migrate-deploy
 
 ## Stop production environment
 down-prod:
