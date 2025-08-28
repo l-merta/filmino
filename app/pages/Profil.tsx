@@ -15,7 +15,7 @@ export default function Profil() {
     if (!session) {
       router.push("/prihlaseni");
       return;
-    }
+  }
   }, [session, status, router]);
 
   if (status === "loading") {
