@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import Header from "@/components/Header";
 
 export default function Profil() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() ?? {};
   const router = useRouter();
 
   useEffect(() => {

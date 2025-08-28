@@ -15,7 +15,7 @@ interface HeaderProps {
 }
 
 export default function Header({ active }: HeaderProps) {
-  const { data: session } = useSession();
+  const { data: session } = useSession() ?? {};
 
   //const logoSrc = active === 'filmy' ? "/images/Filmino_filmy_logo.png" : "/images/Filmino_serialy_logo.png";
 

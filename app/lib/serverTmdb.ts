@@ -30,7 +30,6 @@ export const tmdbMovie = {
 // TV list endpoints
 export const tmdbTv = {
   Details: (id: number, config: Params = {}) => {
-    console.log("Fetching TV details for ID:", id)
     return tmdbQuery<MediaDetails>(`/tv/${id}`, { ...config });
   },
   Season: (id: number, seasonId: number, config: Params = {}) => {

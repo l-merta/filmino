@@ -10,8 +10,9 @@ import EpisodesList from "@/sections/EpisodesList";
 
 export default function Season() {
   const params = useParams();
-  const id = params?.id as string;
-  const seasonNumber = Number((params?.season as string).slice(1));
+  const id = params?.id as string | undefined;
+  const seasonParam = params?.season as string | undefined;
+  const seasonNumber = seasonParam ? Number(seasonParam.slice(1)) : 1; // fallback
   
   const { data: tvData, error: tvError } = tmdb.tv.Details(Number(id));
   const { data: seasonData, error: seasonError } = tmdb.tv.Season(Number(id), seasonNumber);
