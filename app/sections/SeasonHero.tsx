@@ -66,7 +66,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
       <div className="flex justify-between items-start flex-wrap gap-10 relative z-5">
         <div className="flex gap-4 flex-wrap">
           {seasonData.poster_path && 
-            <div className="w-full max-w-40 h-fit aspect-[2/3] relative flex items-center justify-center">
+            <div className="w-full max-w-50 h-fit aspect-[2/3] relative flex items-center justify-center">
               <Image
                 src={tmdb.image(seasonData.poster_path || '')}
                 alt={seasonData.name + ' poster'}
