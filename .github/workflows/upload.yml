@@ -30,7 +30,8 @@ jobs:
         run: |
           docker buildx build --platform linux/arm64/v8 \
             -t lmerta/filmino-app:latest \
-            -f ./app/Dockerfile.app.prod --push .
+            -f Dockerfile.app.prod --push ./app
+
 
       - name: Deploy files to Raspberry Pi
         env:
