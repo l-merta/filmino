@@ -23,13 +23,17 @@ up-dev-light:
 ## Stop development environment
 down-dev:
 	$(COMPOSE_DEV) down
-
+	
 ## Start production environment
 up-prod:
 	$(COMPOSE_PROD) down --remove-orphans
 	$(COMPOSE_PROD) up --build -d
+	PRISMA_ENGINES_USE_BINARY_TARGETS=1 \
+	PRISMA_CLIENT_ENGINE_TYPE=binary \
+	PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 \
 	make prisma-generate
 	make migrate-deploy
+
 
 ## Stop production environment
 down-prod:
