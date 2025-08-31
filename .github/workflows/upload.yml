@@ -40,7 +40,7 @@ jobs:
       env:
         SSHPASS: ${{ secrets.SSH_PASSWORD }}
       run: |
-        sshpass -e rsync -avz --delete ./ root@mertalukas:/var/www/html/private/git/filmino
+        sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ mertalukas:/var/www/html/private/git/filmino
 
     - name: Export Environment Variables
       env:
