@@ -8,6 +8,7 @@ services:
     environment:
       - NODE_ENV=production
       - DB_URL_PRISMA=${DB_URL}
+      - PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
     env_file:
       - .env
 
