@@ -7,84 +7,84 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Install cloudflared
-      run: |
-        curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
-        chmod +x cloudflared
-        sudo mv cloudflared /usr/local/bin/
+      - name: Set up Docker Buildx
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --use
+          docker buildx inspect --bootstrap
 
-    - name: Create .ssh directory
-      run: mkdir -p ~/.ssh
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Install sshpass and rsync
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y sshpass rsync
+      - name: Build ARM64 images and push
+        run: |
+          docker buildx build --platform linux/arm64/v8 \
+            -t yourdockerhubusername/filmino-app:latest \
+            -f Dockerfile.app.prod --push .
+          docker buildx build --platform linux/arm64/v8 \
+            -t yourdockerhubusername/filmino-db:latest \
+            -f ./db/Dockerfile --push .
+          docker buildx build --platform linux/arm64/v8 \
+            -t yourdockerhubusername/filmino-pgadmin:latest \
+            -f ./pgadmin/Dockerfile --push .
 
-    - name: Configure SSH
-      run: |
-        echo "Host mertalukas
-          HostName ssh.mertalukas.cz
-          User root
-          ProxyCommand cloudflared access ssh --hostname %h --service-token-id ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_SECRET }}
-        " >> ~/.ssh/config
+      - name: Deploy files to Raspberry Pi
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ root@mertalukas:/var/www/html/private/git/filmino
 
-    - name: Deploy project files
-      env:
-        SSHPASS: ${{ secrets.SSH_PASSWORD }}
-      run: |
-        sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ mertalukas:/var/www/html/private/git/filmino
+      - name: Create .env file on server
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PORT: ${{ secrets.DB_PORT_INT }}
+          DB_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_INT }}/${{ secrets.DB_NAME }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXT_PUBLIC_BASE_API_URL: ${{ secrets.NEXT_PUBLIC_BASE_API_URL }}
+          NEXT_PUBLIC_BASE_HOST_URL: ${{ secrets.NEXT_PUBLIC_BASE_HOST_URL }}
+          PGADMIN_DEFAULT_EMAIL: ${{ secrets.PGADMIN_DEFAULT_EMAIL }}
+          PGADMIN_DEFAULT_PASSWORD: ${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          TMDB_API_READ_KEY: ${{ secrets.TMDB_API_READ_KEY }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no root@mertalukas "cat > /var/www/html/private/git/filmino/app/.env <<EOL
+          DB_HOST=${DB_HOST}
+          DB_USER=${DB_USER}
+          DB_PASSWORD=${DB_PASSWORD}
+          DB_NAME=${DB_NAME}
+          DB_PORT=${DB_PORT}
+          DB_URL=${DB_URL}
+          GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+          GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+          NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+          NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL}
+          NEXT_PUBLIC_BASE_HOST_URL=${NEXT_PUBLIC_BASE_HOST_URL}
+          PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+          PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+          TMDB_API_KEY=${TMDB_API_KEY}
+          TMDB_API_READ_KEY=${TMDB_API_READ_KEY}
+          EOL"
 
-    - name: Create .env file on server
-      env:
-        SSHPASS: ${{ secrets.SSH_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-        DB_PORT_INT: ${{ secrets.DB_PORT_INT }}
-        DB_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_INT }}/${{ secrets.DB_NAME }}
-        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-        NEXT_PUBLIC_BASE_API_URL: ${{ secrets.NEXT_PUBLIC_BASE_API_URL }}
-        NEXT_PUBLIC_BASE_HOST_URL: ${{ secrets.NEXT_PUBLIC_BASE_HOST_URL }}
-        PGADMIN_DEFAULT_EMAIL: ${{ secrets.PGADMIN_DEFAULT_EMAIL }}
-        PGADMIN_DEFAULT_PASSWORD: ${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
-        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-        TMDB_API_READ_KEY: ${{ secrets.TMDB_API_READ_KEY }}
-      run: |
-        sshpass -e ssh -o StrictHostKeyChecking=no mertalukas "cat > /var/www/html/private/git/filmino/app/.env <<EOL
-        DB_HOST=${DB_HOST}
-        DB_USER=${DB_USER}
-        DB_PASSWORD=${DB_PASSWORD}
-        DB_NAME=${DB_NAME}
-        DB_PORT=${DB_PORT}
-        DB_PORT_INT=${DB_PORT_INT}
-        DB_URL=${DB_URL}
-        GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-        GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-        NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-        NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL}
-        NEXT_PUBLIC_BASE_HOST_URL=${NEXT_PUBLIC_BASE_HOST_URL}
-        PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-        PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-        TMDB_API_KEY=${TMDB_API_KEY}
-        TMDB_API_READ_KEY=${TMDB_API_READ_KEY}
-        EOL"
-
-    - name: Run make up-prod
-      env:
-        SSHPASS: ${{ secrets.SSH_PASSWORD }}
-      run: |
-        sshpass -e ssh -o StrictHostKeyChecking=no root@mertalukas "
-          cd /var/www/html/private/git/filmino && make up-prod
-        "
+      - name: Run make up-prod on Raspberry Pi
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no root@mertalukas "
+            cd /var/www/html/private/git/filmino && make up-prod
+          "
