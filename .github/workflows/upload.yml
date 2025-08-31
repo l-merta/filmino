@@ -26,13 +26,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build ARM64 images and push
+      - name: Build ARM64 app image and push
         run: |
           docker buildx build --platform linux/arm64/v8 \
             -t lmerta/filmino-app:latest \
-            -f Dockerfile.app.prod --push ./app
-
-
+            -f Dockerfile.app.prod \
+            --push \
+            .
+        working-directory: ./app
+        
       - name: Deploy files to Raspberry Pi
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
