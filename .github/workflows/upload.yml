@@ -34,12 +34,12 @@ jobs:
             --push \
             .
         working-directory: ./app
-        
+         
       - name: Deploy files to Raspberry Pi
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ root@mertalukas:/var/www/html/private/git/filmino
+          sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ mertalukas:/var/www/html/private/git/filmino
 
       - name: Create .env file on server
         env:
