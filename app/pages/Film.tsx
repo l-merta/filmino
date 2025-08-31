@@ -1,10 +1,14 @@
+"use client";
+
 import { useParams } from "next/navigation";
 
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
-import List from "@/sections/List";
+import ActorList from "@/sections/ActorList";
+import MediaList from "@/sections/MediaList";
+import FakeList from "@/sections/FakeList";
 
 export default function Film() {
   const params = useParams();
@@ -30,7 +34,16 @@ export default function Film() {
       <Header active="filmy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='movie' />
-        {data && <List header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/similar", params)} />}
+        {data ? 
+          <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/credits", params)} />
+        :
+          <FakeList header="Herci" />
+        }
+        {data ? 
+          <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/recommendations", params)} />
+        :
+          <FakeList header="Podobné filmy" />
+        }
       </main>
     </ div>
   )

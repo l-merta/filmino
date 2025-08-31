@@ -29,10 +29,8 @@ export async function GET(request: NextRequest) {
     let excludedGenres: number[] = [];
     
     searchParams.forEach((value, key) => {
-      console.log(`Search param: ${key} = ${value}`);
       if (key !== "path") {
         if (key === "excluded_genres") {
-          console.log("Excluded genres in params:", JSON.parse(value));
           // Parse excluded_genres as array of numbers
           try {
             excludedGenres = JSON.parse(value);
@@ -53,6 +51,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Make the request to TMDB
+    //console.log("Fetching", tmdbPath);
     const response = await axiosInstance.get(tmdbPath, {
       params: finalParams,
     });
@@ -61,8 +60,6 @@ export async function GET(request: NextRequest) {
 
     if (responseData.results) {
       // Filter results if excluded_genres is provided and response has results array
-      console.log("Excluded genres:", excludedGenres);
-      console.log("Results before genre filtering:", responseData.results.length);
       if (excludedGenres.length > 0 && responseData.results && Array.isArray(responseData.results)) {
         responseData = {
           ...responseData,
@@ -75,7 +72,6 @@ export async function GET(request: NextRequest) {
           })
         };
       }
-      console.log("Results after genre filtering:", responseData.results.length);
     }
 
     return NextResponse.json(responseData);

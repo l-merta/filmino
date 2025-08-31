@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { tmdbGet } from "@/lib/apiClient";
-import { GenreDetails, GenreList, MediaDetails, MediaImages, MediaList, Params, TmdbHookReturn } from "@/types/tmdbApi";
-import { Images } from "lucide-react";
+import { GenreList, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -40,6 +39,8 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
   return { data, isLoading, error, refetch };
 }
 
+export { useTmdbQuery };
+
 // Movie list endpoints
 export const tmdbMovie = {
   Details: (id: number, config: Params = {}) => {
@@ -72,8 +73,11 @@ export const tmdbMovie = {
 
 // TV list endpoints
 export const tmdbTv = {
-  Details: (id: number) => {
-    return useTmdbQuery<MediaDetails>(`/tv/${id}`);
+  Details: (id: number, config: Params = {}) => {
+    return useTmdbQuery<MediaDetails>(`/tv/${id}`, { ...config });
+  },
+  Season: (id: number, seasonId: number, config: Params = {}) => {
+    return useTmdbQuery<SeasonDetails>(`/tv/${id}/season/${seasonId}`, { ...config });
   },
   Images: (id: number, config: Params = {}) => {
     return useTmdbQuery<MediaImages>(`/tv/${id}/images`, { ...config });

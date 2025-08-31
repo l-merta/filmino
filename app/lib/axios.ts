@@ -4,5 +4,6 @@ export const axiosInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3",
   headers: {
     Authorization: `Bearer ${process.env.TMDB_API_READ_KEY}`,
+    "Content-Type": "application/json;charset=utf-8",
   },
 });

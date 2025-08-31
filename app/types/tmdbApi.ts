@@ -4,6 +4,7 @@ export interface Params {
   language?: string;
   region?: string;
   with_genres?: string;
+  without_genres?: string;
   sort_by?: string;
   primary_release_date_gte?: string;
   primary_release_date_lte?: string;
@@ -11,7 +12,8 @@ export interface Params {
   release_date_lte?: string;
   vote_average_gte?: number;
   vote_average_lte?: number;
-  vote_count_gte?: number;
+  ["vote_count.gte"]?: number;
+  ["vote_count.lte"]?: number;
   with_runtime_gte?: number;
   with_runtime_lte?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,6 +32,7 @@ export interface MediaDetails {
   title: string;
   name: string;
   overview: string;
+  in_production: boolean;
   tagline: string;
   runtime: number | null;
   number_of_seasons: number | null;
@@ -37,6 +40,8 @@ export interface MediaDetails {
   release_date: string;
   first_air_date: string;
   last_air_date: string;
+  last_episode_to_air?: EpisodeDetails;
+  next_episode_to_air?: EpisodeDetails;
   poster_path: string | null;
   backdrop_path: string | null;
   vote_average: number;
@@ -49,6 +54,33 @@ export interface MediaDetails {
   original_title: string;
   original_name: string;
   status: string;
+  seasons?: SeasonDetails[];
+}
+export interface SeasonDetails {
+  air_date: string;
+  episode_count: number;
+  episodes?: EpisodeDetails[];
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  season_number: number;
+  vote_average: number;
+}
+export interface EpisodeDetails {
+  id: number;
+  name: string;
+  overview: string;
+  runtime: number;
+  still_path: string;
+  air_date: string;
+  episode_number: number;
+  season_number: number;
+  episode_type: string;
+  crew: ActorDetails[];
+  guest_stars: ActorDetails[];
+  vote_count: number;
+  vote_average: number;
 }
 
 export interface MediaImages {
@@ -65,6 +97,43 @@ export interface MediaImageDetails {
   vote_average: number;
   vote_count: number;
   iso_639_1: string | null,
+}
+
+export interface MediaVideos {
+  id: number;
+  results: MediaVideoDetails[];
+}
+export interface MediaVideoDetails {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  site: string;
+  size: number;
+  type: "Behind the Scenes" | "Bloopers" | "Clip" | "Featurette" | "Teaser" | "Trailer";
+  official: boolean;
+  published_at: string;
+}
+
+export interface ActorList {
+  cast: ActorDetails[];
+}
+export interface ActorDetails {
+  id: number;
+  gender: number;
+  adult: boolean;
+  name: string;
+  original_name: string;
+  character: string;
+  roles: CharacterDetails[];
+  popularity: number;
+  profile_path: string | null;
+}
+export interface CharacterDetails {
+  credit_id: string;
+  character: string;
+  episode_count: number;
 }
 
 export interface GenreList {

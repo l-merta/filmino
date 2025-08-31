@@ -1,10 +1,10 @@
 "use client";
 
-import { tmdb } from "@/hooks/useTmdb";
+import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
 import GenreList from "@/sections/GenreList";
-import List from "@/sections/List";
+import List from "@/sections/MediaList";
 
 interface ZanrFilmyProps {
   genreId: number;
@@ -29,7 +29,7 @@ export default function ZanrFilmy({ genreId }: ZanrFilmyProps) {
         <List 
           header={genreData ? `${genreData.name}` : ''} 
           type='movie' 
-          fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, with_genres: genreId })} 
+          fetchFunction={(params) => tmdb.get("/discover/movie", { ...params, with_genres: genreId, "vote_count.gte": 200 })} 
           cardCount={20}
         />
       </main>
