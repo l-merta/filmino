@@ -29,14 +29,8 @@ jobs:
       - name: Build ARM64 images and push
         run: |
           docker buildx build --platform linux/arm64/v8 \
-            -t yourdockerhubusername/filmino-app:latest \
-            -f Dockerfile.app.prod --push .
-          docker buildx build --platform linux/arm64/v8 \
-            -t yourdockerhubusername/filmino-db:latest \
-            -f ./db/Dockerfile --push .
-          docker buildx build --platform linux/arm64/v8 \
-            -t yourdockerhubusername/filmino-pgadmin:latest \
-            -f ./pgadmin/Dockerfile --push .
+            -t lmerta/filmino-app:latest \
+            -f ./app/Dockerfile.app.prod --push .
 
       - name: Deploy files to Raspberry Pi
         env:
