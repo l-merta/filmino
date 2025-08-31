@@ -14,6 +14,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/
+
+      - name: Create .ssh directory
+        run: |
+          mkdir -p ~/.ssh
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Configure SSH
+        run: |
+          echo "Host mertalukas
+            HostName ssh.mertalukas.cz
+            User root
+            ProxyCommand cloudflared access ssh --hostname %h --service-token-id ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_SECRET }}
+          " >> ~/.ssh/config
+
       - name: Set up Docker Buildx
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -60,7 +83,7 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TMDB_API_READ_KEY: ${{ secrets.TMDB_API_READ_KEY }}
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no root@mertalukas "cat > /var/www/html/private/git/filmino/app/.env <<EOL
+          sshpass -e ssh -o StrictHostKeyChecking=no mertalukas "cat > /var/www/html/private/git/filmino/app/.env <<EOL
           DB_HOST=${DB_HOST}
           DB_USER=${DB_USER}
           DB_PASSWORD=${DB_PASSWORD}
@@ -82,6 +105,6 @@ jobs:
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no root@mertalukas "
+          sshpass -e ssh -o StrictHostKeyChecking=no mertalukas "
             cd /var/www/html/private/git/filmino && make up-prod
           "
