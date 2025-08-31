@@ -12,12 +12,16 @@ COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
 
-# Generate Prisma client
-RUN npx prisma generate --schema=./prisma/schema.prisma
-
-# Copy source and build
+# Copy source
 COPY . .
 RUN rm -rf .next
+
+# Generate Prisma client inside container for ARM64
+ENV PRISMA_CLIENT_ENGINE_TYPE=binary
+ENV PRISMA_ENGINES_USE_BINARY_TARGETS=1
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
 RUN npm run build
 
 
