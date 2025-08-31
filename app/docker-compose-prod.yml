@@ -1,17 +1,10 @@
 services:
   filmino:
     container_name: filmino-app
-    build:
-      context: .
-      dockerfile: Dockerfile.app.prod
-      platforms:
-        - linux/arm64/v8
+    image: lmerta/filmino-app:latest
+    platform: linux/arm64/v8
     ports:
       - "6050:5100"
-    volumes:
-      - .:/app
-      - /node_modules
-      - /.next
     environment:
       - NODE_ENV=production
       - DB_URL_PRISMA=${DB_URL}
@@ -44,7 +37,6 @@ services:
       - "6052:80"
     depends_on:
       - db
-
 
 volumes:
   db_data:
