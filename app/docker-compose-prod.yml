@@ -17,7 +17,7 @@ services:
       - .env
 
   db:
-    image: postgres:16-alpine
+    image: postgres:16
     container_name: filmino-db
     restart: always
     ports:

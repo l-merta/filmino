@@ -51,6 +51,7 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_PORT_INT: ${{ secrets.DB_PORT_INT }}
+        DB_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_INT }}/${{ secrets.DB_NAME }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -68,6 +69,7 @@ jobs:
         DB_NAME=${DB_NAME}
         DB_PORT=${DB_PORT}
         DB_PORT_INT=${DB_PORT_INT}
+        DB_URL=${DB_URL}
         GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
         GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
         NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
