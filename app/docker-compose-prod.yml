@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.app.prod
+      platforms:
+        - linux/arm64/v8
     ports:
       - "6050:5100"
     volumes:
@@ -18,6 +20,7 @@ services:
 
   db:
     image: postgres:16
+    platform: linux/arm64/v8
     container_name: filmino-db
     restart: always
     ports:
@@ -31,6 +34,7 @@ services:
 
   pgadmin:
     image: elestio/pgadmin
+    platform: linux/arm64/v8
     container_name: filmino-pgadmin
     restart: unless-stopped
     environment:
