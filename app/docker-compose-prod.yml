@@ -11,6 +11,8 @@ services:
       - PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
     env_file:
       - .env
+    depends_on:
+      - db
 
   db:
     image: postgres:16

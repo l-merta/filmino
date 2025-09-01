@@ -33,7 +33,7 @@ up-prod:
 #	PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 \
 #	make prisma-generate
 #	make migrate-deploy
-	$(COMPOSE_PROD) exec -T app npx prisma migrate deploy --schema=./prisma/schema.prisma
+	$(COMPOSE_PROD) exec -T filmino npx prisma migrate deploy --schema=./prisma/schema.prisma
 
 
 ## Stop production environment
