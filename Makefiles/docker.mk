@@ -32,7 +32,8 @@ up-prod:
 #	PRISMA_CLIENT_ENGINE_TYPE=binary \
 #	PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 \
 #	make prisma-generate
-	make migrate-deploy
+#	make migrate-deploy
+	$(COMPOSE_PROD) exec -T app npx prisma migrate deploy --schema=./prisma/schema.prisma
 
 
 ## Stop production environment
