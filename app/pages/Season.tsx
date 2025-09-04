@@ -8,6 +8,8 @@ import Header from "@/components/Header";
 import SeasonHero from "@/sections/SeasonHero";
 import EpisodesList from "@/sections/EpisodesList";
 
+import ErrorPage from "./Error";
+
 export default function Season() {
   const params = useParams();
   const id = params?.id as string | undefined;
@@ -20,14 +22,7 @@ export default function Season() {
   console.log("seasonData", seasonData, "tvData", tvData);
 
   if (!id || tvError || seasonError) {
-    return (
-      <div className="page-serialy">
-        <Header active='serialy' />
-        <main className="main-container section-spacing">
-          <h1>Tv not found</h1>
-        </main>
-      </div>
-    );
+    return <ErrorPage code={404} title="Série nenalezena" message="Omlouváme se, ale požadovaná série nebyla nalezena." type="tv" />;
   }
 
   if (tvData && seasonData) return (

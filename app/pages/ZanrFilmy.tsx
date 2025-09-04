@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import GenreList from "@/sections/GenreList";
 import List from "@/sections/MediaList";
 
+import ErrorPage from "./Error";
+
 interface ZanrFilmyProps {
   genreId: number;
 }
@@ -13,14 +15,8 @@ interface ZanrFilmyProps {
 export default function ZanrFilmy({ genreId }: ZanrFilmyProps) {
   const { data: genreData, error: genreError } = tmdb.genre.Details(genreId, 'movie');
 
-  if (genreError) return (
-      <div className="page-filmy">
-      <Header active="filmy" />
-      <main className="main-container section-spacing">
-        <div>Error loading genre: {genreError.message}</div>
-      </main>
-    </div>
-  );
+  if (genreError) return <ErrorPage code={404} title="Žánr nenalezen" message="Omlouváme se, ale požadovaný žánr nebyl nalezen." type="movie" />;
+
   return (
     <div className="page-filmy">
       <Header active="filmy" />
