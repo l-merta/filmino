@@ -10,6 +10,8 @@ import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
 import FakeList from "@/sections/FakeList";
 
+import ErrorPage from "./Error";
+
 export default function Film() {
   const params = useParams();
   const id = params?.id as string;
@@ -19,14 +21,7 @@ export default function Film() {
   console.log("data", data);
 
   if (!id || error) {
-    return (
-      <div className="page-filmy">
-        <Header active='filmy' />
-        <main className="main-container section-spacing">
-          <h1>Movie not found</h1>
-        </main>
-      </div>
-    );
+    return <ErrorPage code={404} title="Film nenalezen" message="Omlouváme se, ale požadovaný film nebyl nalezen." type="movie" />;
   }
 
   return (

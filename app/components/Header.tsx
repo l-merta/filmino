@@ -55,7 +55,7 @@ export default function Header({ active }: HeaderProps) {
             </Link>
             <Button
               onClick={() => signOut({ callbackUrl: "/prihlaseni" })}
-              className=""
+              className="button-outline"
               variant="outline"
             >
               <LogOut />

@@ -13,6 +13,8 @@ import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
 
+import ErrorPage from "./Error";
+
 export default function Serial() {
   const params = useParams();
   const id = params?.id as string;
@@ -22,14 +24,7 @@ export default function Serial() {
   console.log("data", data);
 
   if (!id || error) {
-    return (
-      <div className="page-serialy">
-        <Header active='serialy' />
-        <main className="main-container section-spacing">
-          <h1>Tv not found</h1>
-        </main>
-      </div>
-    );
+    return <ErrorPage code={404} title="Seriál nenalezen" message="Omlouváme se, ale požadovaný seriál nebyl nalezen." type="tv" />;
   }
   
   return (
