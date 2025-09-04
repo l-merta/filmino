@@ -1,5 +1,5 @@
-import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { apiClient, tmdbGet } from "@/lib/apiClient";
+import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn } from "@/types/tmdbApi";
 
 async function tmdbQuery<T>(endpoint: string, params: Params = {}): Promise<TmdbHookReturn<T>> {
   try {
@@ -67,10 +67,23 @@ export const tmdbImage = {
   },
 }
 
+export const tmdbLinks = {
+  getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    const { data } = await apiClient.get<{ url: string; type: string }[]>(
+      "/links",
+      {
+        params: { type, linkType, ...variables },
+      }
+    );
+    return data;
+  },
+};
+
 export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
   genre: tmdbGenre,
   image: tmdbImage.getImage,
+  links: tmdbLinks.getLinks,
 };

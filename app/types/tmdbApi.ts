@@ -144,6 +144,14 @@ export interface GenreDetails {
   name: string;
 }
 
+export interface LinkVariables {
+  title?: string;
+  title_cz?: string;
+  year?: number;
+  seasonCode?: string;
+  episodeCode?: string;
+}
+
 export interface TmdbHookReturn<T> {
   data: T | null;
   isLoading: boolean;

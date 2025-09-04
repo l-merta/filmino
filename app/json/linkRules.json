@@ -1,0 +1,33 @@
+{
+  "movie": 
+  [
+    {
+      "domain": ["www.bombuj.si"],
+      "rules": {
+        "main": "https://[domain]/online-film-[title_cz](-[year])"
+      }
+    },
+    {
+      "domain": ["film.kukaj.io"],
+      "rules": {
+        "main": "https://[domain]/[title_cz]"
+      }
+    }
+  ],
+  "tv": [
+    {
+      "domain": ["svetserialu.io"],
+      "rules": {
+        "main": "https://[domain]/serial/[title]",
+        "episode": "/[seasonCode][episodeCode]"
+      }
+    },
+    {
+      "domain": ["www.najserialy.io"],
+      "rules": {
+        "main": "https://[domain]/serial/[title](-[year])/[seasonCode][episodeCode]",
+        "episode": "main"
+      }
+    }
+  ]
+}
