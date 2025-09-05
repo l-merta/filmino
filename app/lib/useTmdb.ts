@@ -129,7 +129,7 @@ export const tmdbImage = {
 
 export const tmdbLinks = {
   getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
-    const { data } = await apiClient.get<{ url: string; type: string }[]>(
+    const { data } = await apiClient.get<{ domain: string; url: string }[]>(
       "/links",
       {
         params: { type, linkType, ...variables },

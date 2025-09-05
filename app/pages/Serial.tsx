@@ -9,6 +9,7 @@ import MediaHero from "@/sections/MediaHero";
 import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import LinksList from "@/sections/LinksList";
 import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
@@ -36,6 +37,11 @@ export default function Serial() {
           <SeriesList header="Série" tvId={data.id} />
         :
           <FakeList header="Série" length={4} className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" />
+        }
+        {data && 
+          <div>
+            <LinksList data={data} type='tv' linkType='main' />
+          </div>
         }
         <div className="">
           {data && (
