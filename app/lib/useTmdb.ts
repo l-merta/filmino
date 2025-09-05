@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { apiClient, tmdbGet } from "@/lib/apiClient";
+import { GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -127,10 +127,23 @@ export const tmdbImage = {
   },
 }
 
+export const tmdbLinks = {
+  getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    const { data } = await apiClient.get<{ url: string; type: string }[]>(
+      "/links",
+      {
+        params: { type, linkType, ...variables },
+      }
+    );
+    return data;
+  },
+};
+
 export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  links: tmdbLinks.getLinks,
   genre: tmdbGenre,
   image: tmdbImage.getImage,
 };
