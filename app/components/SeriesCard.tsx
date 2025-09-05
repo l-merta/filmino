@@ -10,7 +10,7 @@ import { Tv } from "lucide-react";
 
 interface CardProps {
   details?: SeasonDetails;
-  tvId: number;
+  tvId?: number;
 }
 
 export function SkeletonCard() {
@@ -46,6 +46,6 @@ export function SeriesCard({ details, tvId }: CardProps) {
 }
 
 export default function ActorCard({ details, tvId }: CardProps) {
-  if (!details) return <SkeletonCard />
+  if (!details || !tvId) return <SkeletonCard />
   if (details) return <SeriesCard details={details} tvId={tvId} />
 }

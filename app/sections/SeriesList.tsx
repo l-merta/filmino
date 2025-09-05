@@ -10,7 +10,7 @@ import { tmdb } from "@/lib/useTmdb";
 interface SeriesListProps {
   header: string;
   icon?: React.ReactNode;
-  tvId: number;
+  tvId?: number;
 }
 
 export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
@@ -18,13 +18,7 @@ export default function SeriesList({ header, icon, tvId }: SeriesListProps) {
 
   if (error) {
     return (
-      <div className="z-4">
-        <div className="flex items-center gap-3 mb-4 opacity-90">
-          {icon}
-          <h2 className="font-bold text-2xl">{header}</h2>
-        </div>
-        <div className="text-red-500">Error loading series: {error.message}</div>
-      </div>
+      <></>
     );
   }
 

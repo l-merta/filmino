@@ -32,7 +32,11 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='tv' />
-        {data && <SeriesList header="Série" tvId={data.id} />}
+        {data ? 
+          <SeriesList header="Série" tvId={data.id} />
+        :
+          <FakeList header="Série" length={4} className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" />
+        }
         <div className="">
           {data && (
             data.next_episode_to_air ? (
