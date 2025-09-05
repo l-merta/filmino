@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import LinksList from "@/sections/LinksList";
 import FakeList from "@/sections/FakeList";
 
 import ErrorPage from "./Error";
@@ -29,6 +30,11 @@ export default function Film() {
       <Header active="filmy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='movie' />
+        {data && 
+          <div className="flex gap-8 z-5">
+            <LinksList data={data} type='movie' linkType='main' />
+          </div>
+        }
         {data ? 
           <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/credits", params)} />
         :

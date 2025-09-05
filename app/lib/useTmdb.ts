@@ -22,7 +22,17 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
       try {
         setIsLoading(true);
         setError(null);
-        const result = await tmdbGet<T>(endpoint, params);
+        
+        let result: T;
+        if (endpoint === "/links") {
+          // Use direct API call for links endpoint
+          const { data: apiData } = await apiClient.get<T>(endpoint, { params });
+          result = apiData;
+        } else {
+          // Use TMDB proxy for other endpoints
+          result = await tmdbGet<T>(endpoint, params);
+        }
+        
         setData(result);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('An error occurred'));
@@ -129,13 +139,20 @@ export const tmdbImage = {
 
 export const tmdbLinks = {
   getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
-    const { data } = await apiClient.get<{ domain: string; url: string }[]>(
+    const { data } = await apiClient.get<{ results: { domain: string; url: string }[] }>(
       "/links",
       {
         params: { type, linkType, ...variables },
       }
     );
-    return data;
+    return data.results;
+  },
+  useLinks: (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    // Create endpoint path for the hook
+    const endpoint = "/links";
+    const params = { type, linkType, ...variables };
+    
+    return useTmdbQuery<{ results: { domain: string; favicon: string; url: string }[] }>(endpoint, params);
   },
 };
 
@@ -144,6 +161,7 @@ export const tmdb = {
   movie: tmdbMovie,
   tv: tmdbTv,
   links: tmdbLinks.getLinks,
+  useLinks: tmdbLinks.useLinks,
   genre: tmdbGenre,
   image: tmdbImage.getImage,
 };

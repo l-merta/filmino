@@ -33,15 +33,15 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='tv' />
+        {data && 
+          <div className="flex gap-8 z-5">
+            <LinksList data={{ ...data, seasonCode: "s01", episodeCode: "e01" }} type='tv' linkType='main' />
+          </div>
+        }
         {data ? 
           <SeriesList header="Série" tvId={data.id} />
         :
           <FakeList header="Série" length={4} className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" />
-        }
-        {data && 
-          <div>
-            <LinksList data={data} type='tv' linkType='main' />
-          </div>
         }
         <div className="">
           {data && (

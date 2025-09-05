@@ -4,6 +4,7 @@ import rulesJson from "@/json/linkRules.json";
 
 interface SiteRule {
   domain: string[];
+  favicon: string;
   rules: Record<string, string>;
 }
 
@@ -115,6 +116,11 @@ async function isValidLink(url: string, domain: string): Promise<boolean> {
   }
 }
 
+// build favicon url
+function getFavicon(domain: string): string {
+  return `https://${domain}/favicon.ico`;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type") as "movie" | "tv";
@@ -130,7 +136,7 @@ export async function GET(req: NextRequest) {
     }
   });
 
-  const results: { domain: string; url: string }[] = [];
+  const results: { domain: string; url: string, favicon: string }[] = [];
 
   for (const site of rules[type] || []) {
     const baseRule = site.rules["main"];
@@ -157,7 +163,7 @@ export async function GET(req: NextRequest) {
       try {
         console.log("Checking link:", url);
         if (await isValidLink(url, site.domain[0])) {
-          results.push({ domain: site.domain[0], url });
+          results.push({ domain: site.domain[0], url, favicon: site.favicon });
         }
       } catch {
         // ignore errors

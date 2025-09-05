@@ -3,12 +3,14 @@
   [
     {
       "domain": ["www.bombuj.si"],
+      "favicon": "https://www.bombuj.si/images/favicon.png",
       "rules": {
         "main": "https://[domain]/online-film-[title_cz](-[year])"
       }
     },
     {
       "domain": ["film.kukaj.io"],
+      "favicon": "",
       "rules": {
         "main": "https://[domain]/[title_cz]"
       }
@@ -17,6 +19,7 @@
   "tv": [
     {
       "domain": ["svetserialu.io"],
+      "favicon": "https://svetserialu.io/assets/img/icons/favicon.ico",
       "rules": {
         "main": "https://[domain]/serial/[title]",
         "episode": "/[seasonCode][episodeCode]"
@@ -24,6 +27,7 @@
     },
     {
       "domain": ["www.najserialy.io"],
+      "favicon": "https://www.najserialy.io/images/favicon.ico",
       "rules": {
         "main": "https://[domain]/serial/[title](-[year])/[seasonCode][episodeCode]",
         "episode": "main"
