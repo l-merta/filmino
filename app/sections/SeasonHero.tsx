@@ -143,7 +143,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
 export function MediaDataRow({ data }: { data: SeasonDetails }) {
   return (
     <>
-    {data.episodes && data.episodes[0].air_date && 
+    {data.episodes && data.episodes[0] && data.episodes[0].air_date && 
       <>
       <DateFormat first_air_date={data.episodes[0].air_date} last_air_date={data.episodes[data.episodes.length - 1].air_date} in_production={false} />
       <Separator />

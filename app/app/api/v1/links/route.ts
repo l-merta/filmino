@@ -5,7 +5,7 @@ import rulesJson from "@/json/linkRules.json";
 interface SiteRule {
   domain: string[];
   favicon: string;
-  rules: Record<string, string>;
+  rules: Record<string, string[]>;
 }
 
 type LinkRules = {
@@ -116,11 +116,6 @@ async function isValidLink(url: string, domain: string): Promise<boolean> {
   }
 }
 
-// build favicon url
-function getFavicon(domain: string): string {
-  return `https://${domain}/favicon.ico`;
-}
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type") as "movie" | "tv";
@@ -139,34 +134,68 @@ export async function GET(req: NextRequest) {
   const results: { domain: string; url: string, favicon: string }[] = [];
 
   for (const site of rules[type] || []) {
-    const baseRule = site.rules["main"];
-    const baseUrls = buildUrls(baseRule, { ...vars, domain: site.domain[0] });
+    for (const mainRule of site.rules.main) {
+      const baseUrls = buildUrls(mainRule, { ...vars, domain: site.domain[0] });
 
-    for (let url of baseUrls) {
-      // Handle sub-rule (episode, season, etc.)
-      if (linkType !== "main") {
-        const subRule = site.rules[linkType];
-        if (subRule) {
-          if (subRule === "main") {
-            console.log("Sub-rule points to main, skipping");
-            // already handled
-          } else {
-            const extras = buildUrls(subRule, { ...vars, domain: site.domain[0] });
-            if (extras.length > 0) {
-              // append each variation
-              url = url + extras[0]; // if multiple, could loop
+      for (const baseUrl of baseUrls) {
+        if (linkType !== "main") {
+          const subRule = site.rules[linkType];
+          if (subRule) {
+            // Normalize to array (in case JSON is inconsistent)
+            const subRules = Array.isArray(subRule) ? subRule : [subRule];
+
+            // Loop through *all* subRule patterns
+            for (const subRulePattern of subRules) {
+              // If subRule points back to main, skip
+              if (subRulePattern === "main") {
+                //console.log("Sub-rule points to main, skipping");
+                continue;
+              }
+
+              const extras = buildUrls(subRulePattern, {
+                ...vars,
+                domain: site.domain[0],
+              });
+
+              for (const extra of extras) {
+                const finalUrl = baseUrl + extra;
+
+                try {
+                  if (results.find(r => r.url === finalUrl)) { continue; } // skip duplicates
+
+                  console.log("Checking link:", finalUrl);
+
+                  if (await isValidLink(finalUrl, site.domain[0])) {
+                    results.push({
+                      domain: site.domain[0],
+                      url: finalUrl,
+                      favicon: site.favicon,
+                    });
+                  }
+                } catch {
+                  // ignore errors
+                }
+              }
             }
           }
-        }
-      }
+        } else {
+          // MAIN rules only
+          try {
+            if (results.find(r => r.url === baseUrl)) { continue; } // skip duplicates
 
-      try {
-        console.log("Checking link:", url);
-        if (await isValidLink(url, site.domain[0])) {
-          results.push({ domain: site.domain[0], url, favicon: site.favicon });
+            console.log("Checking link:", baseUrl);
+
+            if (await isValidLink(baseUrl, site.domain[0])) {
+              results.push({
+                domain: site.domain[0],
+                url: baseUrl,
+                favicon: site.favicon,
+              });
+            }
+          } catch {
+            // ignore errors
+          }
         }
-      } catch {
-        // ignore errors
       }
     }
   }
