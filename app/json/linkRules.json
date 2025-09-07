@@ -35,7 +35,7 @@
       "favicon": "https://svetserialu.io/assets/img/icons/favicon.ico",
       "rules": {
         "main": [
-          "https://[domain]/serial/[title]"
+          "https://[domain]/serial/[title](-[year])"
         ],
         "episode": [
           "/[seasonCode][episodeCode]"
