@@ -29,7 +29,7 @@ export default function Film() {
   return (
     <div className="page-filmy">
       <Header active="filmy" />
-      <main className="main-container section-spacing pt-30 relative">
+      <main className="main-container section-spacing pt-25 relative">
         <MediaHero data={data} type='movie' />
         {data ? 
           <div className="flex gap-8 z-5">

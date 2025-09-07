@@ -10,6 +10,7 @@ import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
 import LinksList from "@/sections/LinksList";
+import CompanyList from "@/sections/CompaniesList";
 import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
@@ -32,7 +33,7 @@ export default function Serial() {
   return (
     <div className="page-serialy">
       <Header active="serialy" />
-      <main className="main-container section-spacing pt-30 relative">
+      <main className="main-container section-spacing pt-25 relative">
         <MediaHero data={data} type='tv' />
         {data ? 
           <div className="flex gap-8 z-5">
@@ -68,6 +69,9 @@ export default function Serial() {
             )
           )}
         </div>
+        <List header="Produkční společnosti">
+          <CompanyList companies={data?.production_companies} />
+        </List>
         {data ? 
           <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />
         :

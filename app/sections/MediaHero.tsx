@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { tmdb } from "@/lib/useTmdb";
 
+import { Button } from "@/components/ui/button";
 import Genre from "@/components/Genre";
 import Video from "@/components/Video";
 import Separator from "@/components/Separator";
@@ -10,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { MediaDetails } from "@/types/tmdbApi";
 
-import { Timer, Star } from "lucide-react";
+import { Timer, Star, Play } from "lucide-react";
 
 interface MediaHeroProps {
   data: MediaDetails | null;
@@ -57,6 +59,9 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
           <Skeleton className="w-140 h-4" />
           <Skeleton className="w-80 h-4" />
         </div>
+        {type == "tv" && 
+          <Skeleton className="w-35 h-10" />
+        }
       </div>
     </div>
   )
@@ -113,6 +118,14 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         </div>
         {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
         <p className="opacity-85 max-w-140 w-screen line-clamp-5">{data.overview}</p>
+        {type == "tv" && data.number_of_episodes && data.number_of_episodes > 0 && (
+          <Link href={`/serialy/${data.id}/s01/e01`}>
+            <Button variant='outline' className="w-fit flex items-center gap-2">
+              <Play />
+              Začít sledovat
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   )

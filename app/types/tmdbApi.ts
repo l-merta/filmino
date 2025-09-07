@@ -55,6 +55,7 @@ export interface MediaDetails {
   original_name: string;
   status: string;
   seasons?: SeasonDetails[];
+  production_companies: CompanyDetails[];
 }
 export interface SeasonDetails {
   air_date: string;
@@ -81,6 +82,13 @@ export interface EpisodeDetails {
   guest_stars: ActorDetails[];
   vote_count: number;
   vote_average: number;
+}
+
+export interface CompanyDetails {
+  id: number;
+  logo_path: string | null;
+  name: string;
+  origin_country: string;
 }
 
 export interface MediaImages {
