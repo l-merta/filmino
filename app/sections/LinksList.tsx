@@ -26,8 +26,8 @@ export default function LinksList({ data, type, linkType }: LinkProps) {
       title_cz: data.title || data.name, 
       title_without_the: TitleWithoutWord(data.original_title || data.original_name, "the"),
       year: Number(data.release_date?.split("-")[0]) || Number(data.first_air_date?.split("-")[0]),
-      //seasonCode: data.seasonCode,
-      //episodeCode: data.episodeCode
+      seasonCode: data.seasonCode,
+      episodeCode: data.episodeCode
     }
   );
 

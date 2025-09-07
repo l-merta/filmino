@@ -6,6 +6,7 @@ interface SiteRule {
   domain: string[];
   favicon: string;
   disabled: boolean;
+  last_resort: boolean;
   rules: Record<string, string[]>;
 }
 
@@ -135,8 +136,8 @@ export async function GET(req: NextRequest) {
   const results: { domain: string; url: string, favicon: string }[] = [];
 
   for (const site of rules[type] || []) {
-    if (site.disabled) { continue; }
-    
+    if (site.disabled || (site.last_resort && results.length > 0)) { continue; }
+
     for (const mainRule of site.rules.main) {
       const baseUrls = buildUrls(mainRule, { ...vars, domain: site.domain[0] });
 
