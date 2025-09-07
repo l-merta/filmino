@@ -108,7 +108,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
           </div>
           {/* <AnimatedCircularProgressBar min={0} max={10} value={7.6} gaugePrimaryColor="black" gaugeSecondaryColor="gray" className="w-20 h-20" /> */}
         </div>
-        <div className="max-w-screen flex flex-wrap gap-2">
+        <div className="max-w-140 flex flex-wrap gap-2">
           {data.genres.map((genre, index) => (
             <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
           ))}
