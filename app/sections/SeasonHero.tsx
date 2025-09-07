@@ -70,8 +70,8 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
               <Image
                 src={tmdb.image(seasonData.poster_path || '')}
                 alt={seasonData.name + ' poster'}
-                width={1080}
-                height={450}
+                width={200}
+                height={300}
                 className="w-full h-fit rounded-md object-cover"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
