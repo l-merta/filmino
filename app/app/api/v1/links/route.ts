@@ -138,6 +138,8 @@ export async function GET(req: NextRequest) {
       const baseUrls = buildUrls(mainRule, { ...vars, domain: site.domain[0] });
 
       for (const baseUrl of baseUrls) {
+        if (results.map(r => r.domain).includes(site.domain[0])) { continue; } // Skip found domains
+
         if (linkType !== "main") {
           const subRule = site.rules[linkType];
           if (subRule) {

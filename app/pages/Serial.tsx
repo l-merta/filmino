@@ -13,6 +13,7 @@ import LinksList from "@/sections/LinksList";
 import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import ErrorPage from "./Error";
 
@@ -33,9 +34,15 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-30 relative">
         <MediaHero data={data} type='tv' />
-        {data && 
+        {data ? 
           <div className="flex gap-8 z-5">
             <LinksList data={{ ...data, seasonCode: "s01", episodeCode: "e01" }} type='tv' linkType='main' />
+          </div>
+        :
+          <div className="flex gap-8 z-5">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
+            ))}
           </div>
         }
         {data ? 

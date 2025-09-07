@@ -48,8 +48,8 @@
       "rules": {
         "main": [
           "https://[domain]/serial(y)/[title](-[year])",
-          "https://[domain]/serial(y)/[title_cz](-[year])",
-          "https://[domain]/serial(y)/sk-[title]-cz-[title_cz](-[year])"
+          "https://[domain]/serial(y)/[title_cz]",
+          "https://[domain]/serial(y)/sk-[title]-cz-[title_cz]"
         ],
         "episode": [
           "/[seasonCode][episodeCode]"
