@@ -5,6 +5,7 @@ import rulesJson from "@/json/linkRules.json";
 interface SiteRule {
   domain: string[];
   favicon: string;
+  disabled: boolean;
   rules: Record<string, string[]>;
 }
 
@@ -134,6 +135,8 @@ export async function GET(req: NextRequest) {
   const results: { domain: string; url: string, favicon: string }[] = [];
 
   for (const site of rules[type] || []) {
+    if (site.disabled) { continue; }
+    
     for (const mainRule of site.rules.main) {
       const baseUrls = buildUrls(mainRule, { ...vars, domain: site.domain[0] });
 
