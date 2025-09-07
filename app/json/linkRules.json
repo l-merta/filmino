@@ -86,8 +86,10 @@
       "rules": {
         "main": [
           "https://[domain]/cz/serial/[title](-[year])",
+          "https://[domain]/cz/serial/[title_cz](-[year])",
           "https://[domain]/cz/serial/[title_without_the](-[year])",
           "https://[domain]/cz/episode/[title](-[year])",
+          "https://[domain]/cz/episode/[title_cz](-[year])",
           "https://[domain]/cz/episode/[title_without_the](-[year])"
         ],
         "episode": [

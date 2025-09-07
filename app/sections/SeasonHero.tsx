@@ -107,7 +107,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
             {seasonData.overview && <p className="opacity-85 max-w-160 w-full line-clamp-8">{seasonData.overview}</p>}
           </div>
         </div>
-        <div className="flex gap-2 pt-8">
+        <div className="pt-8 flex gap-2">
           {tvData.seasons && (
             <>
               <Button 
