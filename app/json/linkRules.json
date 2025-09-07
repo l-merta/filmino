@@ -49,6 +49,7 @@
         "main": [
           "https://[domain]/serial(y)/[title](-[year])",
           "https://[domain]/serial(y)/[title_cz]",
+          "https://[domain]/serial(y)/[title_without_the]",
           "https://[domain]/serial(y)/sk-[title]-cz-[title_cz]"
         ],
         "episode": [
@@ -62,7 +63,9 @@
       "rules": {
         "main": [
           "https://[domain]/cz/serial/[title](-[year])",
-          "https://[domain]/cz/episode/[title](-[year])"
+          "https://[domain]/cz/serial/[title_without_the](-[year])",
+          "https://[domain]/cz/episode/[title](-[year])",
+          "https://[domain]/cz/episode/[title_without_the](-[year])"
         ],
         "episode": [
           "-[seasonCode][episodeCode]"

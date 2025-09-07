@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
   // Collect all vars from query params
   const vars: Record<string, string> = {};
   searchParams.forEach((value, key) => {
-    if (["title", "title_cz"].includes(key)) {
+    if (["title", "title_cz", "title_without_the"].includes(key)) {
       vars[key] = slugify(value);
     } else {
       vars[key] = value;

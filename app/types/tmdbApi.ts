@@ -147,6 +147,7 @@ export interface GenreDetails {
 export interface LinkVariables {
   title?: string;
   title_cz?: string;
+  title_without_the?: string;
   year?: number;
   seasonCode?: string;
   episodeCode?: string;
