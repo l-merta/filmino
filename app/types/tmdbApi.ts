@@ -44,6 +44,7 @@ export interface MediaDetails {
   next_episode_to_air?: EpisodeDetails;
   poster_path: string | null;
   backdrop_path: string | null;
+  belongs_to_collection: CollectionDetails | null;
   vote_average: number;
   vote_count: number;
   popularity: number;
@@ -56,6 +57,14 @@ export interface MediaDetails {
   status: string;
   seasons?: SeasonDetails[];
   production_companies: CompanyDetails[];
+}
+export interface CollectionDetails {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  parts: MediaDetails[];
 }
 export interface SeasonDetails {
   air_date: string;

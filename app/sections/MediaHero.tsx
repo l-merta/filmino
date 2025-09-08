@@ -127,12 +127,14 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
               </Button>
             </Link>
           )}
-          <Link href={`/serialy/${data.id}/s01/e01`} className="pointer-events-none">
-            <Button variant='default' className="w-fit flex items-center gap-2" disabled>
-              <Monitor />
-              Pokračovat ve sledování
-            </Button>
-          </Link>
+          {type == "tv" &&
+            <Link href={`/serialy/${data.id}/s01/e01`} className="pointer-events-none">
+              <Button variant='default' className="w-fit flex items-center gap-2" disabled>
+                <Monitor />
+                Pokračovat ve sledování
+              </Button>
+            </Link>
+          }
         </div>
       </div>
     </div>
