@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { apiClient, tmdbGet } from "@/lib/apiClient";
-import { GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { CollectionDetails, GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -110,6 +110,20 @@ export const tmdbTv = {
   },
 };
 
+export const tmdbCollection = {
+  Details: (id: number) => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<CollectionDetails>(`/collection/${id}`);
+    const collectionData = data || null;
+
+    return {
+      data: collectionData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
+}
+
 export const tmdbGenre = {
   Movie: (config: Params = {}) => {
     return useTmdbQuery<GenreList>("/genre/movie/list", { ...config });
@@ -129,7 +143,7 @@ export const tmdbGenre = {
       refetch
     };
   },
-}
+};
 
 export const tmdbImage = {
   getImage: (path: string) => {
@@ -160,6 +174,7 @@ export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  collection: tmdbCollection,
   links: tmdbLinks.getLinks,
   useLinks: tmdbLinks.useLinks,
   genre: tmdbGenre,
