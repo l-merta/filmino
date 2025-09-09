@@ -69,9 +69,9 @@ export default function Serial() {
             )
           )}
         </div>
-        <List header="Produkční společnosti">
+        {/* <List header="Produkční společnosti">
           <CompanyList companies={data?.production_companies} />
-        </List>
+        </List> */}
         {data ? 
           <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />
         :

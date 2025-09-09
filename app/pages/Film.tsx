@@ -6,10 +6,12 @@ import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
 import MediaHero from "@/sections/MediaHero";
+import List from "@/sections/List";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
 import LinksList from "@/sections/LinksList";
 import FakeList from "@/sections/FakeList";
+import Card from "@/components/Card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import ErrorPage from "./Error";
@@ -41,6 +43,13 @@ export default function Film() {
               <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
             ))}
           </div>
+        }
+        {data && data.belongs_to_collection && 
+          <List header="Nejnovější epizoda">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
+              <Card collectionDetails={data.belongs_to_collection} />
+            </div>
+          </List>
         }
         {data ? 
           <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/credits", params)} />
