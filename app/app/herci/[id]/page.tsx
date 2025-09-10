@@ -1,15 +1,15 @@
 import { tmdb } from "@/lib/serverTmdb";
 
-import Kolekce from "@/pages/Kolekce";
+import Herec from "@/pages/Herec";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { data: collection } = await tmdb.collection.Details(Number(id));
+  const { data: actor } = await tmdb.actor.Details(Number(id));
 
-  if (collection) {
+  if (actor) {
     return {
-      title: `${collection.name} - Filmino`,
-      description: "Objevte filmy v kolekci " + collection.name,
+      title: `${actor.name} - Filmino`,
+      description: "Objevte filmy a seriály s hercem " + actor.name,
       icons: {
         icon: "/images/Filmino_filmy_logo.png",
       },
@@ -20,5 +20,5 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  return <Kolekce collectionId={parseInt(id)} />;
+  return <Herec id={parseInt(id)} />;
 }

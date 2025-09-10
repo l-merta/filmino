@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { apiClient, tmdbGet } from "@/lib/apiClient";
-import { CollectionDetails, GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { CollectionDetails, GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, PersonDetails, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -124,6 +124,20 @@ export const tmdbCollection = {
   },
 }
 
+export const tmdbActor = {
+  Details: (id: number) => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<PersonDetails>(`/person/${id}`);
+    const actorData = data || null;
+
+    return {
+      data: actorData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
+}
+
 export const tmdbGenre = {
   Movie: (config: Params = {}) => {
     return useTmdbQuery<GenreList>("/genre/movie/list", { ...config });
@@ -174,6 +188,7 @@ export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  actor: tmdbActor,
   collection: tmdbCollection,
   links: tmdbLinks.getLinks,
   useLinks: tmdbLinks.useLinks,

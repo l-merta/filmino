@@ -152,6 +152,23 @@ export interface CharacterDetails {
   character: string;
   episode_count: number;
 }
+export interface PersonDetails {
+  id: number;
+  name: string;
+  also_known_as: string[];
+  biography: string;
+  birthday: string;
+  deathday: string | null;
+  gender: number;
+  place_of_birth: string;
+  profile_path: string | null;
+  popularity: number;
+}
+export interface ActorMediaDetails {
+  id: number;
+  cast: MediaDetails[];
+  crew: MediaDetails[];
+}
 
 export interface GenreList {
   genres: GenreDetails[];
