@@ -91,7 +91,7 @@ export function CollectionCard({ collectionDetails }: CardProps) {
 }
 
 export default function Card({ type, details, collectionDetails }: CardProps) {
-  if (!details) return <SkeletonCard />
+  if (!details && !collectionDetails) return <SkeletonCard />
   if (!details && collectionDetails) return <CollectionCard collectionDetails={collectionDetails} />
   if (type == 'movie') return <MovieCard details={details} />
   if (type == 'tv') return <TvCard details={details} />

@@ -45,7 +45,7 @@ export default function Film() {
           </div>
         }
         {data && data.belongs_to_collection && 
-          <List header="Nejnovější epizoda">
+          <List header="Kolekce">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
               <Card collectionDetails={data.belongs_to_collection} />
             </div>
