@@ -15,7 +15,7 @@ interface CardProps {
 
 export function SkeletonCard() {
   return (
-    <div className="w-full flex gap-4">
+    <div className="!w-full flex gap-4">
       <Skeleton className="w-15 h-15 rounded-full" />
       <div className="flex flex-col gap-4 w-full">
         <Skeleton className="w-35 h-5" />
@@ -35,7 +35,10 @@ export function ReviewCard({ details }: CardProps) {
         </Avatar>
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <span className="font-semibold">{details.author}</span>
+        <div className="flex gap-2 items-center">
+          <span className="font-semibold">{details.author}</span>
+          <span className="opacity-80">{details.updated_at}</span>
+        </div>
         <p className="line-clamp-5 opacity-80">{details.content}</p>
       </div>
     </div>

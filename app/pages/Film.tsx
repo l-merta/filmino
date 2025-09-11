@@ -9,6 +9,8 @@ import MediaHero from "@/sections/MediaHero";
 import List from "@/sections/List";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import ReviewList from "@/sections/ReviewList";
+import ReviewCard from "@/components/ReviewCard";
 import LinksList from "@/sections/LinksList";
 import FakeList from "@/sections/FakeList";
 import Card from "@/components/Card";
@@ -52,15 +54,12 @@ export default function Film() {
           </List>
         }
         {data ? 
-          <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/credits", params)} />
+          <ReviewList header="Recenze" fetchFunction={(params) => tmdb.get("/movie/"+id+"/reviews", { ...params, language: data.original_language })} />
         :
-          <FakeList header="Herci" />
+          <FakeList header="Recenze" length={4} className="grid-cols-none flex flex-wrap gap-8" card={<ReviewCard />} />
         }
-        {data ? 
-          <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+data.id+"/recommendations", params)} />
-        :
-          <FakeList header="Podobné filmy" />
-        }
+        <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/credits", params)} />
+        <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/recommendations", params)} />
       </main>
     </ div>
   )

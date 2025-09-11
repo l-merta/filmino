@@ -12,6 +12,7 @@ import MediaList from "@/sections/MediaList";
 import LinksList from "@/sections/LinksList";
 //import CompanyList from "@/sections/CompaniesList";
 import ReviewList from "@/sections/ReviewList";
+import { ReviewCard } from "@/components/ReviewCard";
 import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
@@ -74,20 +75,12 @@ export default function Serial() {
           <CompanyList companies={data?.production_companies} />
         </List> */}
         {data ? 
-          <ReviewList header="Recenze" fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/reviews", { ...params, language: data.original_language })} />
+          <ReviewList header="Recenze" fetchFunction={(params) => tmdb.get("/tv/"+id+"/reviews", { ...params, language: data.original_language })} />
         :
-          <FakeList header="Recenze" />
+          <FakeList header="Recenze" length={4} className="no-grid flex flex-wrap gap-8" card={<ReviewCard />} />
         }
-        {data ? 
-          <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />
-        :
-          <FakeList header="Herci" />
-        }
-        {data ? 
-          <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />
-        :
-          <FakeList header="Podobné seriály" />
-        }
+        <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/aggregate_credits", params)} />
+        <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/recommendations", params)} />
       </main>
     </div>
   )
