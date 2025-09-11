@@ -54,7 +54,7 @@ export default function Film() {
           </List>
         }
         {data ? 
-          <ReviewList header="Recenze" fetchFunction={(params) => tmdb.get("/movie/"+id+"/reviews", { ...params, language: data.original_language })} />
+          <ReviewList header="Recenze" cardCount={5} fetchFunction={(params) => tmdb.get("/movie/"+id+"/reviews", { ...params, language: data.original_language })} />
         :
           <FakeList header="Recenze" length={4} className="grid-cols-none flex flex-wrap gap-8" card={<ReviewCard />} />
         }

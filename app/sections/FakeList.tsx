@@ -17,7 +17,7 @@ export default function List({ header, icon, className, length, card }: ListProp
         {icon}
         <h2 className="font-bold text-2xl">{header}</h2>
       </div>
-      <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8 " + (className || "")}>
+      <div className={(className || "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8")}>
         {Array.from({ length: length || 10 }).map((_, index) => (
           (!card ? 
             <Card key={'card-' + index} type='movie' />

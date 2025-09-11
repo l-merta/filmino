@@ -20,8 +20,11 @@ interface ListProps {
 export default function MediaList({ header, icon, fetchFunction, cardCount }: ListProps) {
   const [reviewItems, setReviewItems] = useState<ReviewDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(cardCount || 5);
+
+  const [error, setError] = useState<Error | null>(null);
   
   const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
 
   const fetchData = async (page: number = 1, increaseCardCount: boolean = true) => {
     try {
@@ -31,7 +34,11 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
 
       if (newTotalCardCount > reviewItems.length) {
         const result = await fetchFunction({ page });
+        if (!result) {
+          setError(result as unknown as Error);
+        }
         setTotalPages(result.total_pages || 0);
+        setTotalResults(result.total_results || 0);
         if (page === 1) {
           setReviewItems(result.results || []);
         } else {
@@ -48,6 +55,8 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
     fetchData(1, false);
   }, []);
 
+  if (error) return null;
+
   return (
     <List header={header} icon={icon}>
       <div className="flex flex-wrap gap-8">
@@ -56,7 +65,7 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
           (index < reviewItems.length && <ReviewCard key={'card-' + index} details={reviewItems[index]} />)
         ))}
       </div>
-      {reviewItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">
+      {reviewItems.length > 0 && totalCardCount < totalResults && <div className="w-full flex justify-center align-middle">
         <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{fetchData(Math.floor(totalCardCount / 20) + 1)}}><Plus /></Button>
       </div>}
     </List>
