@@ -33,8 +33,6 @@ export default function LinksList({ data, type, linkType }: LinkProps) {
 
   const links = response?.results || [];
 
-  console.log(links);
-
   if (!isLoading && !error && links.length !== 0) return (
     <>
     {links.map(link => (

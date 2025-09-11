@@ -58,6 +58,28 @@ export interface MediaDetails {
   seasons?: SeasonDetails[];
   production_companies: CompanyDetails[];
 }
+export interface ReviewList {
+  id: number;
+  page: number;
+  results: ReviewDetails[];
+  total_pages: number;
+  total_results: number;
+}
+export interface ReviewDetails {
+  id: string;
+  author: string;
+  author_details: AuthorDetails;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  url: string;
+}
+export interface AuthorDetails {
+  name: string;
+  username: string;
+  avatar_path: string | null;
+  rating: string | null;
+}
 export interface CollectionDetails {
   id: number;
   name: string;
