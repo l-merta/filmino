@@ -50,7 +50,7 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
 
   return (
     <List header={header} icon={icon}>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-8">
         {Array.from({ length: totalCardCount }).map((_, index) => (
           (reviewItems.length == 0 && <ReviewCard key={'card-' + index} details={reviewItems[index]} />) ||
           (index < reviewItems.length && <ReviewCard key={'card-' + index} details={reviewItems[index]} />)
