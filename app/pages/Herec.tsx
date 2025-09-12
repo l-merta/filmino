@@ -21,6 +21,7 @@ export default function Herec({ id }: HerecProps) {
     <div className="page-filmy">
       <Header />
       <main className="main-container section-spacing">
+        <h1 className="text-2xl font-bold mb-4">{actorData?.name}</h1>
         {actorData ? 
           <ActorMediaList header="Filmy" type='movie' fetchFunction={(params) => tmdb.get("/person/" + actorData.id + "/movie_credits", params)} />
         :
