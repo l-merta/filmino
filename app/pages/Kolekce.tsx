@@ -13,7 +13,7 @@ interface KolekceProps {
 }
 
 export default function Kolekce({ collectionId }: KolekceProps) {
-  const { data: collectionData, isLoading, error: collectionError } = tmdb.collection.Details(collectionId);
+  const { data: collectionData, error: collectionError } = tmdb.collection.Details(collectionId);
 
   if (collectionError) return <ErrorPage code={404} title="Kolekce nenalezena" message="Omlouváme se, ale požadovaná kolekce nebyla nalezena." type="movie" />;
 

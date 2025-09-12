@@ -1,13 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
 import { tmdb } from "@/lib/useTmdb";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "./ui/skeleton";
 
 import { ReviewDetails } from "@/types/tmdbApi";
-
-import { Tv } from "lucide-react";
 
 interface CardProps {
   details?: ReviewDetails;

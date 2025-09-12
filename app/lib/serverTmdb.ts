@@ -1,5 +1,5 @@
 import { apiClient, tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn, CollectionDetails, ActorDetails, PersonDetails } from "@/types/tmdbApi";
+import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn, CollectionDetails, PersonDetails } from "@/types/tmdbApi";
 
 async function tmdbQuery<T>(endpoint: string, params: Params = {}): Promise<TmdbHookReturn<T>> {
   try {
