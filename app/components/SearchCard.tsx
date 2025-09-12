@@ -25,7 +25,7 @@ export default function SearchCard({ data, link }: SearchCardProps) {
           alt={'poster image'}
           width={200} 
           height={600} 
-          className="w-auto h-full rounded-md absolute z-2" 
+          className="w-auto h-full rounded-md absolute z-3" 
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
         <Tv size={30} className="opacity-70 absolute z-2" />
