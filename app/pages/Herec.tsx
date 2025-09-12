@@ -3,7 +3,7 @@
 import { tmdb } from "@/lib/useTmdb";
 
 import Header from "@/components/Header";
-import MediaList from "@/sections/ActorMediaList";
+import ActorMediaList from "@/sections/ActorMediaList";
 import FakeList from "@/sections/FakeList";
 
 import ErrorPage from "./Error";
@@ -22,12 +22,12 @@ export default function Herec({ id }: HerecProps) {
       <Header />
       <main className="main-container section-spacing">
         {actorData ? 
-          <MediaList header="Filmy" type='movie' fetchFunction={(params) => tmdb.get("/person/" + actorData.id + "/movie_credits", params)} />
+          <ActorMediaList header="Filmy" type='movie' fetchFunction={(params) => tmdb.get("/person/" + actorData.id + "/movie_credits", params)} />
         :
           <FakeList header="Filmy" />
         }
         {actorData ? 
-          <MediaList header="Seriály" type='tv' fetchFunction={(params) => tmdb.get("/person/" + actorData.id + "/tv_credits", params)} />
+          <ActorMediaList header="Seriály" type='tv' fetchFunction={(params) => tmdb.get("/person/" + actorData.id + "/tv_credits", params)} />
         :
           <FakeList header="Seriály" />
         }

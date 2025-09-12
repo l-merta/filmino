@@ -51,7 +51,7 @@ export default function Serial() {
         {data ? 
           <SeriesList header="Série" tvId={data.id} />
         :
-          <FakeList header="Série" length={4} className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" />
+          <FakeList header="Série" length={4} className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 gap-y-8 " />
         }
         <div className="">
           {data && (
@@ -75,7 +75,7 @@ export default function Serial() {
           <CompanyList companies={data?.production_companies} />
         </List> */}
         {data ? 
-          <ReviewList header="Recenze" fetchFunction={(params) => tmdb.get("/tv/"+id+"/reviews", { ...params, language: data.original_language })} />
+          <ReviewList header="Recenze" cardCount={4} fetchFunction={(params) => tmdb.get("/tv/"+id+"/reviews", { ...params, language: data.original_language })} />
         :
           <FakeList header="Recenze" length={4} className="no-grid flex flex-wrap gap-8" card={<ReviewCard />} />
         }

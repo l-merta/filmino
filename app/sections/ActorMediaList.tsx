@@ -35,9 +35,12 @@ export default function ActorMediaList({ header, icon, type, fetchFunction, card
         //console.log("MediaList data", result);
         setTotalPages(Math.floor(result.cast.length / 20) || 0);
         if (page === 1) {
-          setMediaItems(result.cast || []);
+          setMediaItems((result.cast || []).sort((a, b) => b.popularity - a.popularity));
         } else {
-          setMediaItems(prev => [...prev, ...(result.cast || [])]);
+          setMediaItems(prev => [
+            ...prev,
+            ...(result.cast || []).sort((a, b) => b.popularity - a.popularity)
+          ]);
         }
       }
     } catch (error) {
