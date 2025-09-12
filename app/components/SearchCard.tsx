@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import { tmdb } from "@/lib/useTmdb";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { Tv } from "lucide-react";
+
 import { MediaDetails } from "@/types/tmdbApi";
-import { tmdb } from "@/lib/useTmdb";
 
 interface SearchCardProps {
   data?: MediaDetails;
@@ -17,15 +19,17 @@ export default function SearchCard({ data, link }: SearchCardProps) {
 
   if (data) return (
     <Link href={`/${link}/${data.id}`} className="w-full h-30 p-[0.3rem] !px-2 flex items-center gap-3 hover:scale-98 transition-transform duration-200">
-      <div className="h-full aspect-[2/3] relative">
+      <div className="h-full aspect-[2/3] flex justify-center items-center relative">
         <Image 
           src={tmdb.image(data.poster_path || "")}
           alt={'poster image'}
           width={200} 
           height={600} 
           className="w-auto h-full rounded-md absolute z-2" 
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
-        <Skeleton className="h-full aspect-[2/3]" />
+        <Tv size={30} className="opacity-70 absolute z-2" />
+        <Skeleton className="w-full h-full rounded-md absolute z-1" />
       </div>
       <div className="flex flex-col gap-0.5">
         <span className="font-bold text-[0.8rem] mt-2 line-clamp-1">{original_name}</span>
