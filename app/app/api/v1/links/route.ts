@@ -100,7 +100,6 @@ async function isValidLink(url: string, domain: string): Promise<boolean> {
     // 3xx → check Location header
     if (res.status >= 300 && res.status < 400) {
       const location = res.headers.get("location");
-      console.log("Redirected to:", location);
       if (!location) return false;
 
       // Redirected to homepage → invalid
@@ -169,8 +168,6 @@ export async function GET(req: NextRequest) {
                 try {
                   if (results.find(r => r.url === finalUrl)) { continue; } // skip duplicates
 
-                  console.log("Checking link:", finalUrl);
-
                   if (await isValidLink(finalUrl, site.domain[0])) {
                     results.push({
                       domain: site.domain[0],
@@ -188,8 +185,6 @@ export async function GET(req: NextRequest) {
           // MAIN rules only
           try {
             if (results.find(r => r.url === baseUrl)) { continue; } // skip duplicates
-
-            console.log("Checking link:", baseUrl);
 
             if (await isValidLink(baseUrl, site.domain[0])) {
               results.push({

@@ -21,7 +21,7 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
   const [reviewItems, setReviewItems] = useState<ReviewDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(cardCount || 5);
 
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | boolean>(false);
   
   const [totalPages, setTotalPages] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
@@ -34,8 +34,8 @@ export default function MediaList({ header, icon, fetchFunction, cardCount }: Li
 
       if (newTotalCardCount > reviewItems.length) {
         const result = await fetchFunction({ page });
-        if (!result) {
-          setError(result as unknown as Error);
+        if (result.total_results == 0) {
+          setError(true);
         }
         setTotalPages(result.total_pages || 0);
         setTotalResults(result.total_results || 0);

@@ -16,11 +16,14 @@ interface ListProps {
   type: "movie" | "tv";
   fetchFunction: (params?: Params) => Promise<MediaListTypes>;
   cardCount?: number;
+  fallback?: React.ReactNode;
 }
 
-export default function MediaList({ header, icon, type, fetchFunction, cardCount }: ListProps) {
+export default function MediaList({ header, icon, type, fetchFunction, cardCount, fallback }: ListProps) {
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(cardCount || 10);
+  
+    const [error, setError] = useState<Error | boolean>(false);
   
   const [totalPages, setTotalPages] = useState(0);
 
@@ -33,6 +36,9 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
       if (newTotalCardCount > mediaItems.length) {
         const result = await fetchFunction({ page, excluded_genres: [10767, 10764, 10763] });
         //console.log("MediaList data", result);
+        if (result.total_results == 0) {
+          setError(true);
+        }
         setTotalPages(result.total_pages || 0);
         if (page === 1) {
           setMediaItems(result.results || []);
@@ -48,6 +54,8 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
   useEffect(() => {
     fetchData(1, false);
   }, []);
+
+  if (error) return (fallback || null);
 
   return (
     <List header={header} icon={icon}>

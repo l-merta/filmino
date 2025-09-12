@@ -80,7 +80,9 @@ export default function Serial() {
           <FakeList header="Recenze" length={4} className="no-grid flex flex-wrap gap-8" card={<ReviewCard />} />
         }
         <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/aggregate_credits", params)} />
-        <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/recommendations", params)} />
+        <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/recommendations", params)} fallback={
+          <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/similar", params)} />
+        } />
       </main>
     </div>
   )

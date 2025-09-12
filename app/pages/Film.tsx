@@ -59,7 +59,11 @@ export default function Film() {
           <FakeList header="Recenze" length={4} className="grid-cols-none flex flex-wrap gap-8" card={<ReviewCard />} />
         }
         <ActorList header="Herci" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/credits", params)} />
-        <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/recommendations", params)} />
+        <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/recommendations", params)} 
+          fallback={
+            <MediaList header="Podobné filmy" type='movie' fetchFunction={(params) => tmdb.get("/movie/"+id+"/similar", params)} />
+          } 
+        />
       </main>
     </ div>
   )
