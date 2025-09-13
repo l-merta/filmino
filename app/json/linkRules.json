@@ -8,7 +8,8 @@
       "last_resort": false,
       "rules": {
         "main": [
-          "https://[domain]/online-film-[title_cz](-[year])"
+          "https://[domain]/online-film-[title_cz](-[year])",
+          "https://[domain]/online-film-[title](-[year])"
         ]
       }
     },
