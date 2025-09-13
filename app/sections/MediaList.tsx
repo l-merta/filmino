@@ -23,9 +23,10 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(cardCount || 10);
   
-    const [error, setError] = useState<Error | boolean>(false);
+  const [error, setError] = useState<Error | boolean>(false);
   
   const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
 
   const fetchData = async (page: number = 1, increaseCardCount: boolean = true) => {
     try {
@@ -40,6 +41,7 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
           setError(true);
         }
         setTotalPages(result.total_pages || 0);
+        setTotalResults(result.total_results || 0);
         if (page === 1) {
           setMediaItems(result.results || []);
         } else {
@@ -65,7 +67,7 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
           (index < mediaItems.length && <Card key={'card-' + index} details={mediaItems[index]} type={type} />)
         ))}
       </div>
-      {mediaItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">
+      {mediaItems.length > 0 && totalCardCount < totalResults && <div className="w-full flex justify-center align-middle">
         <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{fetchData(Math.floor(totalCardCount / 20) + 1)}}><Plus /></Button>
       </div>}
     </List>

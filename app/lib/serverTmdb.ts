@@ -1,5 +1,5 @@
 import { apiClient, tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn, CollectionDetails, PersonDetails } from "@/types/tmdbApi";
+import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn, CollectionDetails, PersonDetails, CompanyDetails } from "@/types/tmdbApi";
 
 async function tmdbQuery<T>(endpoint: string, params: Params = {}): Promise<TmdbHookReturn<T>> {
   try {
@@ -52,6 +52,12 @@ export const tmdbActor = {
   },
 }
 
+export const tmdbCompany = {
+  Details: (id: number) => {
+    return tmdbQuery<CompanyDetails>(`/company/${id}`);
+  },
+}
+
 export const tmdbGenre = {
   Movie: (config: Params = {}) => {
     return tmdbQuery<GenreList>("/genre/movie/list", { ...config });
@@ -98,6 +104,7 @@ export const tmdb = {
   collection: tmdbCollection,
   genre: tmdbGenre,
   actor: tmdbActor,
+  company: tmdbCompany,
   image: tmdbImage.getImage,
   links: tmdbLinks.getLinks,
 };

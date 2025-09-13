@@ -191,6 +191,16 @@ export interface ActorMediaDetails {
   cast: MediaDetails[];
   crew: MediaDetails[];
 }
+export interface CompanyDetails {
+  id: number;
+  name: string;
+  description: string;
+  headquarters: string;
+  homepage: string | null;
+  logo_path: string | null;
+  origin_country: string;
+  parent_company: CompanyDetails | null;
+}
 
 export interface GenreList {
   genres: GenreDetails[];
