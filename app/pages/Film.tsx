@@ -9,6 +9,7 @@ import MediaHero from "@/sections/MediaHero";
 import List from "@/sections/List";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import CompanyList from "@/sections/CompaniesList";
 import ReviewList from "@/sections/ReviewList";
 import ReviewCard from "@/components/ReviewCard";
 import LinksList from "@/sections/LinksList";
@@ -53,6 +54,9 @@ export default function Film() {
             </div>
           </List>
         }
+        <List header="Produkční společnosti">
+          <CompanyList companies={data?.production_companies} />
+        </List>
         {data ? 
           <ReviewList header="Recenze" cardCount={4} fetchFunction={(params) => tmdb.get("/movie/"+id+"/reviews", { ...params, language: data.original_language })} />
         :

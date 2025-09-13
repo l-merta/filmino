@@ -10,7 +10,7 @@ import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
 import LinksList from "@/sections/LinksList";
-//import CompanyList from "@/sections/CompaniesList";
+import CompanyList from "@/sections/CompaniesList";
 import ReviewList from "@/sections/ReviewList";
 import { ReviewCard } from "@/components/ReviewCard";
 import FakeList from "@/sections/FakeList";
@@ -71,9 +71,9 @@ export default function Serial() {
             )
           )}
         </div>
-        {/* <List header="Produkční společnosti">
+        <List header="Produkční společnosti">
           <CompanyList companies={data?.production_companies} />
-        </List> */}
+        </List>
         {data ? 
           <ReviewList header="Recenze" cardCount={4} fetchFunction={(params) => tmdb.get("/tv/"+id+"/reviews", { ...params, language: data.original_language })} />
         :

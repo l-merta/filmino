@@ -16,7 +16,7 @@ export default function Company({ data }: CompanyProps) {
       <Image
         src={tmdb.image(data.logo_path)}
         alt={data.name + ' logo'}
-        className="w-full max-w-55 h-full max-h-18 object-contain dark:brightness-150"
+        className="sticker w-full max-w-55 h-full max-h-18 object-contain"
         width={200}
         height={100}
       />
