@@ -43,7 +43,7 @@ jobs:
 
       - name: Deploy files to home server
         run: |
-          rsync -az -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
+          rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
 
       - name: Create .env file on server
         env:
