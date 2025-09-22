@@ -17,25 +17,26 @@ services:
       - .env
 
   db:
-    image: postgres:16-alpine
+    image: mysql:8.0
     container_name: filmino-db
     restart: always
     ports:
-      - "5200:5432"
+      - "5200:3306"
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: filmino-pgadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: filmino-phpmyadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5300:80"
     depends_on:

@@ -13,56 +13,39 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Install cloudflared
-        run: |
-          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
-          chmod +x cloudflared
-          sudo mv cloudflared /usr/local/bin/
-
-      - name: Create .ssh directory
-        run: |
-          mkdir -p ~/.ssh
-
-      - name: Install sshpass
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-
-      - name: Configure SSH
-        run: |
-          echo "Host mertalukas
-            HostName ssh.mertalukas.cz
-            User root
-            ProxyCommand cloudflared access ssh --hostname %h --service-token-id ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.CLOUDFLARE_SERVICE_TOKEN_SECRET }}
-          " >> ~/.ssh/config
-
-      - name: Set up Docker Buildx
-        run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx create --use
-          docker buildx inspect --bootstrap
-
+        
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build ARM64 app image and push
-        run: |
-          docker buildx build --platform linux/arm64/v8 \
-            -t lmerta/filmino-app:latest \
-            -f Dockerfile.app.prod \
-            --push \
-            .
-        working-directory: ./app
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          file: ./app/Dockerfile.app.prod
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/filmino:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache,mode=max
          
-      - name: Deploy files to Raspberry Pi
+      - name: Setup SSH key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy files to home server
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -e rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ mertalukas:/var/www/html/private/git/filmino
+          rsync -az -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
 
       - name: Create .env file on server
         env:
@@ -83,7 +66,7 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TMDB_API_READ_KEY: ${{ secrets.TMDB_API_READ_KEY }}
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no mertalukas "cat > /var/www/html/private/git/filmino/app/.env <<EOL
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mertalukas.cz "cat > /www/deploy/filmino/app/.env <<EOL
           DB_HOST=${DB_HOST}
           DB_USER=${DB_USER}
           DB_PASSWORD=${DB_PASSWORD}
@@ -104,10 +87,10 @@ jobs:
           TMDB_API_READ_KEY=${TMDB_API_READ_KEY}
           EOL"
 
-      - name: Run make up-prod on Raspberry Pi
+      - name: Run make up-prod on home server
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no mertalukas "
-            cd /var/www/html/private/git/filmino && make up-prod
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mertalukas.cz "
+            cd /www/deploy/filmino && make up-prod
           "
