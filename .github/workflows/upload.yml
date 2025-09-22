@@ -32,6 +32,9 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/filmino-app:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino-app:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino-app:buildcache,mode=max
+          build-args: |
+            NEXT_PUBLIC_BASE_HOST_URL=${{ secrets.NEXT_PUBLIC_BASE_HOST_URL }}
+            NEXT_PUBLIC_BASE_API_URL=${{ secrets.NEXT_PUBLIC_BASE_API_URL }}
          
       - name: Setup SSH key
         env:
