@@ -68,6 +68,7 @@ jobs:
           DB_NAME=${DB_NAME}
           DB_PORT=${DB_PORT}
           DB_URL=${DB_URL}
+          DB_URL_PRISMA=${DB_URL}
           PRISMA_ENGINES_USE_BINARY_TARGETS=1
           PRISMA_CLIENT_ENGINE_TYPE=binary
           PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
