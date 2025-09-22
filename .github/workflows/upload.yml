@@ -29,9 +29,9 @@ jobs:
           context: ./app
           file: ./app/Dockerfile.app.prod
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/filmino:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache,mode=max
+          tags: ${{ secrets.DOCKER_USERNAME }}/filmino-app:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino-app:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino-app:buildcache,mode=max
          
       - name: Setup SSH key
         env:
