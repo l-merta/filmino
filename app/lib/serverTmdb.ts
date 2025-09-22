@@ -1,5 +1,5 @@
-import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { apiClient, tmdbGet } from "@/lib/apiClient";
+import { GenreList, MediaDetails, MediaImages, Params, SeasonDetails, LinkVariables, TmdbHookReturn, CollectionDetails, PersonDetails, CompanyDetails } from "@/types/tmdbApi";
 
 async function tmdbQuery<T>(endpoint: string, params: Params = {}): Promise<TmdbHookReturn<T>> {
   try {
@@ -40,6 +40,24 @@ export const tmdbTv = {
   },
 };
 
+export const tmdbCollection = {
+  Details: (id: number) => {
+    return tmdbQuery<CollectionDetails>(`/collection/${id}`);
+  },
+}
+
+export const tmdbActor = {
+  Details: (id: number) => {
+    return tmdbQuery<PersonDetails>(`/person/${id}`);
+  },
+}
+
+export const tmdbCompany = {
+  Details: (id: number) => {
+    return tmdbQuery<CompanyDetails>(`/company/${id}`);
+  },
+}
+
 export const tmdbGenre = {
   Movie: (config: Params = {}) => {
     return tmdbQuery<GenreList>("/genre/movie/list", { ...config });
@@ -67,10 +85,26 @@ export const tmdbImage = {
   },
 }
 
+export const tmdbLinks = {
+  getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    const { data } = await apiClient.get<{ url: string; type: string }[]>(
+      "/links",
+      {
+        params: { type, linkType, ...variables },
+      }
+    );
+    return data;
+  },
+};
+
 export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  collection: tmdbCollection,
   genre: tmdbGenre,
+  actor: tmdbActor,
+  company: tmdbCompany,
   image: tmdbImage.getImage,
+  links: tmdbLinks.getLinks,
 };

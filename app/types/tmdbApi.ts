@@ -44,6 +44,7 @@ export interface MediaDetails {
   next_episode_to_air?: EpisodeDetails;
   poster_path: string | null;
   backdrop_path: string | null;
+  belongs_to_collection: CollectionDetails | null;
   vote_average: number;
   vote_count: number;
   popularity: number;
@@ -55,6 +56,37 @@ export interface MediaDetails {
   original_name: string;
   status: string;
   seasons?: SeasonDetails[];
+  production_companies: CompanyDetails[];
+}
+export interface ReviewList {
+  id: number;
+  page: number;
+  results: ReviewDetails[];
+  total_pages: number;
+  total_results: number;
+}
+export interface ReviewDetails {
+  id: string;
+  author: string;
+  author_details: AuthorDetails;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  url: string;
+}
+export interface AuthorDetails {
+  name: string;
+  username: string;
+  avatar_path: string | null;
+  rating: string | null;
+}
+export interface CollectionDetails {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  parts: MediaDetails[];
 }
 export interface SeasonDetails {
   air_date: string;
@@ -81,6 +113,13 @@ export interface EpisodeDetails {
   guest_stars: ActorDetails[];
   vote_count: number;
   vote_average: number;
+}
+
+export interface CompanyDetails {
+  id: number;
+  logo_path: string | null;
+  name: string;
+  origin_country: string;
 }
 
 export interface MediaImages {
@@ -135,6 +174,33 @@ export interface CharacterDetails {
   character: string;
   episode_count: number;
 }
+export interface PersonDetails {
+  id: number;
+  name: string;
+  also_known_as: string[];
+  biography: string;
+  birthday: string;
+  deathday: string | null;
+  gender: number;
+  place_of_birth: string;
+  profile_path: string | null;
+  popularity: number;
+}
+export interface ActorMediaDetails {
+  id: number;
+  cast: MediaDetails[];
+  crew: MediaDetails[];
+}
+export interface CompanyDetails {
+  id: number;
+  name: string;
+  description: string;
+  headquarters: string;
+  homepage: string | null;
+  logo_path: string | null;
+  origin_country: string;
+  parent_company: CompanyDetails | null;
+}
 
 export interface GenreList {
   genres: GenreDetails[];
@@ -142,6 +208,15 @@ export interface GenreList {
 export interface GenreDetails {
   id: number;
   name: string;
+}
+
+export interface LinkVariables {
+  title?: string;
+  title_cz?: string;
+  title_without_the?: string;
+  year?: number;
+  seasonCode?: string;
+  episodeCode?: string;
 }
 
 export interface TmdbHookReturn<T> {

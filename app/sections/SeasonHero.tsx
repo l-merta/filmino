@@ -70,8 +70,8 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
               <Image
                 src={tmdb.image(seasonData.poster_path || '')}
                 alt={seasonData.name + ' poster'}
-                width={1080}
-                height={450}
+                width={200}
+                height={300}
                 className="w-full h-fit rounded-md object-cover"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
@@ -107,7 +107,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
             {seasonData.overview && <p className="opacity-85 max-w-160 w-full line-clamp-8">{seasonData.overview}</p>}
           </div>
         </div>
-        <div className="flex gap-2 pt-8">
+        <div className="pt-8 flex gap-2">
           {tvData.seasons && (
             <>
               <Button 
@@ -143,7 +143,7 @@ export default function MediaHero({ tvData, seasonData }: MediaHeroProps) {
 export function MediaDataRow({ data }: { data: SeasonDetails }) {
   return (
     <>
-    {data.episodes && data.episodes[0].air_date && 
+    {data.episodes && data.episodes[0] && data.episodes[0].air_date && 
       <>
       <DateFormat first_air_date={data.episodes[0].air_date} last_air_date={data.episodes[data.episodes.length - 1].air_date} in_production={false} />
       <Separator />

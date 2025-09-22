@@ -4,13 +4,14 @@ import { tmdb } from "@/lib/useTmdb";
 
 import { Skeleton } from "./ui/skeleton";
 
-import { MediaDetails } from "@/types/tmdbApi";
+import { MediaDetails, CollectionDetails } from "@/types/tmdbApi";
 
 import { Tv } from "lucide-react";
 
 interface CardProps {
   type?: "movie" | "tv";
   details?: MediaDetails;
+  collectionDetails?: CollectionDetails;
 }
 
 export function SkeletonCard() {
@@ -69,8 +70,29 @@ export function TvCard({ details }: CardProps) {
   )
 }
 
-export default function Card({ type, details }: CardProps) {
-  if (!details) return <SkeletonCard />
+export function CollectionCard({ collectionDetails }: CardProps) {
+  if (collectionDetails) return (
+    <Link href={'/filmy/kolekce/' + collectionDetails.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
+      <div className="w-full aspect-[2/3] relative flex items-center justify-center">
+        <Image 
+          src={tmdb.image(collectionDetails.poster_path || collectionDetails.backdrop_path || "")} 
+          alt={collectionDetails.name} 
+          width={300} 
+          height={450} 
+          className="w-full h-full object-cover rounded-md absolute z-3"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+        <Tv size={40} className="opacity-70 absolute z-2" />
+        <Skeleton className="w-full h-full rounded-md absolute z-1" />
+      </div>
+      <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{collectionDetails.name}</span>
+    </Link>
+  )
+}
+
+export default function Card({ type, details, collectionDetails }: CardProps) {
+  if (!details && !collectionDetails) return <SkeletonCard />
+  if (!details && collectionDetails) return <CollectionCard collectionDetails={collectionDetails} />
   if (type == 'movie') return <MovieCard details={details} />
   if (type == 'tv') return <TvCard details={details} />
 }

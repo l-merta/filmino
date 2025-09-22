@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { tmdb } from "@/lib/useTmdb";
 
+import { Button } from "@/components/ui/button";
 import Genre from "@/components/Genre";
 import Video from "@/components/Video";
 import Separator from "@/components/Separator";
@@ -10,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { MediaDetails } from "@/types/tmdbApi";
 
-import { Timer, Star } from "lucide-react";
+import { Timer, Star, Play, Monitor } from "lucide-react";
 
 interface MediaHeroProps {
   data: MediaDetails | null;
@@ -57,6 +59,9 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
           <Skeleton className="w-140 h-4" />
           <Skeleton className="w-80 h-4" />
         </div>
+        {type == "tv" && 
+          <Skeleton className="w-35 h-10" />
+        }
       </div>
     </div>
   )
@@ -103,7 +108,7 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
           </div>
           {/* <AnimatedCircularProgressBar min={0} max={10} value={7.6} gaugePrimaryColor="black" gaugeSecondaryColor="gray" className="w-20 h-20" /> */}
         </div>
-        <div className="max-w-screen flex flex-wrap gap-2">
+        <div className="max-w-140 flex flex-wrap gap-2">
           {data.genres.map((genre, index) => (
             <Genre key={'genre-id-' + genre + index} name={genre.name} link={`/${type == 'movie' ? 'filmy' : 'serialy'}/zanr/${genre.id}`} />
           ))}
@@ -113,6 +118,24 @@ export default function MediaHero({ data, type }: MediaHeroProps) {
         </div>
         {data.tagline && <p className="opacity-85 font-semibold max-w-140 w-screen">{data.tagline}</p>}
         <p className="opacity-85 max-w-140 w-screen line-clamp-5">{data.overview}</p>
+        <div className="flex items-center gap-3">
+          {type == "tv" && data.number_of_episodes && data.number_of_episodes > 0 && (
+            <Link href={`/serialy/${data.id}/s01/e01`}>
+              <Button variant='outline' className="w-fit flex items-center gap-2">
+                <Play />
+                Začít sledovat
+              </Button>
+            </Link>
+          )}
+          {type == "tv" &&
+            <Link href={`/serialy/${data.id}/s01/e01`} className="pointer-events-none">
+              <Button variant='default' className="w-fit flex items-center gap-2" disabled>
+                <Monitor />
+                Pokračovat ve sledování
+              </Button>
+            </Link>
+          }
+        </div>
       </div>
     </div>
   )

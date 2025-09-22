@@ -9,9 +9,16 @@ import MediaHero from "@/sections/MediaHero";
 import SeriesList from "@/sections/SeriesList";
 import ActorList from "@/sections/ActorList";
 import MediaList from "@/sections/MediaList";
+import LinksList from "@/sections/LinksList";
+import CompanyList from "@/sections/CompaniesList";
+import ReviewList from "@/sections/ReviewList";
+import { ReviewCard } from "@/components/ReviewCard";
 import FakeList from "@/sections/FakeList";
 import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import ErrorPage from "./Error";
 
 export default function Serial() {
   const params = useParams();
@@ -22,22 +29,30 @@ export default function Serial() {
   console.log("data", data);
 
   if (!id || error) {
-    return (
-      <div className="page-serialy">
-        <Header active='serialy' />
-        <main className="main-container section-spacing">
-          <h1>Tv not found</h1>
-        </main>
-      </div>
-    );
+    return <ErrorPage code={404} title="Seriál nenalezen" message="Omlouváme se, ale požadovaný seriál nebyl nalezen." type="tv" />;
   }
   
   return (
     <div className="page-serialy">
       <Header active="serialy" />
-      <main className="main-container section-spacing pt-30 relative">
+      <main className="main-container section-spacing pt-25 relative">
         <MediaHero data={data} type='tv' />
-        {data && <SeriesList header="Série" tvId={data.id} />}
+        {data ? 
+          <div className="flex gap-8 z-5">
+            <LinksList data={{ ...data, seasonCode: "s01", episodeCode: "e01" }} type='tv' linkType='main' />
+          </div>
+        :
+          <div className="flex gap-8 z-5">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
+            ))}
+          </div>
+        }
+        {data ? 
+          <SeriesList header="Série" tvId={data.id} />
+        :
+          <FakeList header="Série" length={4} className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 gap-y-8 " />
+        }
         <div className="">
           {data && (
             data.next_episode_to_air ? (
@@ -56,16 +71,18 @@ export default function Serial() {
             )
           )}
         </div>
+        <List header="Produkční společnosti">
+          <CompanyList companies={data?.production_companies} />
+        </List>
         {data ? 
-          <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/aggregate_credits", params)} />
+          <ReviewList header="Recenze" cardCount={4} fetchFunction={(params) => tmdb.get("/tv/"+id+"/reviews", { ...params, language: data.original_language })} />
         :
-          <FakeList header="Herci" />
+          <FakeList header="Recenze" length={4} className="no-grid flex flex-wrap gap-8" card={<ReviewCard />} />
         }
-        {data ? 
-          <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+data.id+"/recommendations", params)} />
-        :
-          <FakeList header="Podobné seriály" />
-        }
+        <ActorList header="Herci" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/aggregate_credits", params)} />
+        <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/recommendations", params)} fallback={
+          <MediaList header="Podobné seriály" type='tv' fetchFunction={(params) => tmdb.get("/tv/"+id+"/similar", params)} />
+        } />
       </main>
     </div>
   )

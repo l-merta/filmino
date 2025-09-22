@@ -14,7 +14,7 @@ export default function Search() {
     () =>
       throttle((value: string) => {
         setSearch(value);
-        console.log("search", value);
+        //console.log("search", value);
       }, 800),
     []
   );

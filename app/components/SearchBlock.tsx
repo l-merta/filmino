@@ -21,22 +21,33 @@ export default function SearchBlock({ search, fetchFunction, link, typeName }: S
   const showResults = 4;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const result = await fetchFunction({ query: search });
-        console.log("Search results:", result);
-        setMediaItems(result.results || []);
-        setResultsLength(result.total_results || 0);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  let isCurrent = true; // flag for stale results
 
-    fetchData();
-  }, [search, fetchFunction]);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const result = await fetchFunction({ query: search });
+
+      // Only update state if this is the latest fetch
+      if (!isCurrent) return;
+
+      setMediaItems(result.results || []);
+      setResultsLength(result.total_results || 0);
+    } catch (error) {
+      if (!isCurrent) return;
+      console.error("Error fetching data:", error);
+    } finally {
+      if (isCurrent) setIsLoading(false);
+    }
+  };
+
+  fetchData();
+
+  // cleanup function marks this fetch as obsolete
+  return () => {
+    isCurrent = false;
+  };
+}, [search, fetchFunction]);
 
   if (!isLoading) return (
     <div className="w-80 bg-[var(--background)] flex flex-col gap-1 rounded-b-md pb-1.5 pointer-events-auto z-6">

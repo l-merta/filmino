@@ -1,0 +1,116 @@
+{
+  "movie": 
+  [
+    {
+      "domain": ["www.bombuj.si"],
+      "favicon": "https://www.bombuj.si/images/favicon.png",
+      "disabled": false,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/online-film-[title_cz](-[year])",
+          "https://[domain]/online-film-[title](-[year])"
+        ]
+      }
+    },
+    {
+      "domain": ["film.kukaj.io"],
+      "favicon": "",
+      "disabled": true,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/[title_cz]"
+        ]
+      }
+    },
+    {
+      "domain": ["www.sledujfilmy.io"],
+      "favicon": "https://www.sledujfilmy.io/assets/img/favicon2.ico",
+      "disabled": false,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/filmy/[title](-[year])"
+        ]
+      }
+    },
+    {
+      "domain": ["prehrajto.cz"],
+      "favicon": "https://prehrajto.cz/front/img/favicon/favicon.png",
+      "disabled": false,
+      "last_resort": true,
+      "rules": {
+        "main": [
+          "https://[domain]/hledej/[title]"
+        ]
+      }
+    }
+  ],
+  "tv": [
+    {
+      "domain": ["svetserialu.io"],
+      "favicon": "https://svetserialu.io/assets/img/icons/favicon.ico",
+      "disabled": false,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/serial/[title](-[year])"
+        ],
+        "episode": [
+          "/[seasonCode][episodeCode]"
+        ]
+      }
+    },
+    {
+      "domain": ["www.najserialy.io"],
+      "favicon": "https://www.najserialy.io/images/favicon.ico",
+      "disabled": false,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/serial(y)/[title](-[year])",
+          "https://[domain]/serial(y)/[title_cz]",
+          "https://[domain]/serial(y)/[title_without_the]",
+          "https://[domain]/serial(y)/sk-[title]-cz-[title_cz]"
+        ],
+        "episode": [
+          "/[seasonCode][episodeCode]"
+        ]
+      }
+    },
+    {
+      "domain": ["serialy.sx"],
+      "favicon": "https://serialy.sx/theme/images/favicon-57.png",
+      "disabled": false,
+      "last_resort": false,
+      "rules": {
+        "main": [
+          "https://[domain]/cz/serial/[title](-[year])",
+          "https://[domain]/cz/serial/[title_cz](-[year])",
+          "https://[domain]/cz/serial/[title_without_the](-[year])",
+          "https://[domain]/cz/episode/[title](-[year])",
+          "https://[domain]/cz/episode/[title_cz](-[year])",
+          "https://[domain]/cz/episode/[title_without_the](-[year])"
+        ],
+        "episode": [
+          "-[seasonCode][episodeCode]"
+        ]
+      }
+    },
+    {
+      "domain": ["prehrajto.cz"],
+      "favicon": "https://prehrajto.cz/front/img/favicon/favicon.png",
+      "disabled": false,
+      "last_resort": true,
+      "rules": {
+        "main": [
+          "https://[domain]/hledej/[title]"
+        ],
+        "episode": [
+          "-[seasonCode][episodeCode]"
+        ]
+      }
+    }
+  ]
+}

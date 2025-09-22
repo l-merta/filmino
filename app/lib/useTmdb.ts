@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { tmdbGet } from "@/lib/apiClient";
-import { GenreList, MediaDetails, MediaImages, MediaList, Params, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
+import { apiClient, tmdbGet } from "@/lib/apiClient";
+import { CollectionDetails, CompanyDetails, GenreList, LinkVariables, MediaDetails, MediaImages, MediaList, Params, PersonDetails, SeasonDetails, TmdbHookReturn } from "@/types/tmdbApi";
 
 function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<T> {
   const [data, setData] = useState<T | null>(null);
@@ -22,7 +22,17 @@ function useTmdbQuery<T>(endpoint: string, params: Params = {}): TmdbHookReturn<
       try {
         setIsLoading(true);
         setError(null);
-        const result = await tmdbGet<T>(endpoint, params);
+        
+        let result: T;
+        if (endpoint === "/links") {
+          // Use direct API call for links endpoint
+          const { data: apiData } = await apiClient.get<T>(endpoint, { params });
+          result = apiData;
+        } else {
+          // Use TMDB proxy for other endpoints
+          result = await tmdbGet<T>(endpoint, params);
+        }
+        
         setData(result);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('An error occurred'));
@@ -100,6 +110,48 @@ export const tmdbTv = {
   },
 };
 
+export const tmdbCollection = {
+  Details: (id: number) => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<CollectionDetails>(`/collection/${id}`);
+    const collectionData = data || null;
+
+    return {
+      data: collectionData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
+}
+
+export const tmdbActor = {
+  Details: (id: number) => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<PersonDetails>(`/person/${id}`);
+    const actorData = data || null;
+
+    return {
+      data: actorData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
+}
+
+export const tmdbCompany = {
+  Details: (id: number) => {
+    const { data, isLoading, error, refetch } = useTmdbQuery<CompanyDetails>(`/company/${id}`);
+    const companyData = data || null;
+
+    return {
+      data: companyData,
+      isLoading,
+      error,
+      refetch
+    };
+  },
+}
+
 export const tmdbGenre = {
   Movie: (config: Params = {}) => {
     return useTmdbQuery<GenreList>("/genre/movie/list", { ...config });
@@ -119,7 +171,7 @@ export const tmdbGenre = {
       refetch
     };
   },
-}
+};
 
 export const tmdbImage = {
   getImage: (path: string) => {
@@ -128,10 +180,34 @@ export const tmdbImage = {
   },
 }
 
+export const tmdbLinks = {
+  getLinks: async (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    const { data } = await apiClient.get<{ results: { domain: string; url: string }[] }>(
+      "/links",
+      {
+        params: { type, linkType, ...variables },
+      }
+    );
+    return data.results;
+  },
+  useLinks: (type: "movie" | "tv", linkType: string, variables: LinkVariables) => {
+    // Create endpoint path for the hook
+    const endpoint = "/links";
+    const params = { type, linkType, ...variables };
+    
+    return useTmdbQuery<{ results: { domain: string; favicon: string; url: string }[] }>(endpoint, params);
+  },
+};
+
 export const tmdb = {
   get: tmdbGet,
   movie: tmdbMovie,
   tv: tmdbTv,
+  actor: tmdbActor,
+  company: tmdbCompany,
+  collection: tmdbCollection,
+  links: tmdbLinks.getLinks,
+  useLinks: tmdbLinks.useLinks,
   genre: tmdbGenre,
   image: tmdbImage.getImage,
 };

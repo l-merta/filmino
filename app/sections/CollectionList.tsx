@@ -8,25 +8,21 @@ import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
-import { MediaList as MediaListTypes, MediaDetails, Params } from "@/types/tmdbApi";
+import { CollectionDetails, MediaDetails, Params } from "@/types/tmdbApi";
 
 interface ListProps {
   header: string;
   icon?: React.ReactNode;
   type: "movie" | "tv";
-  fetchFunction: (params?: Params) => Promise<MediaListTypes>;
+  fetchFunction: (params?: Params) => Promise<CollectionDetails>;
   cardCount?: number;
-  fallback?: React.ReactNode;
 }
 
-export default function MediaList({ header, icon, type, fetchFunction, cardCount, fallback }: ListProps) {
+export default function MediaList({ header, icon, type, fetchFunction, cardCount }: ListProps) {
   const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
   const [totalCardCount, setTotalCardCount] = useState(cardCount || 10);
   
-  const [error, setError] = useState<Error | boolean>(false);
-  
   const [totalPages, setTotalPages] = useState(0);
-  const [totalResults, setTotalResults] = useState(0);
 
   const fetchData = async (page: number = 1, increaseCardCount: boolean = true) => {
     try {
@@ -35,17 +31,13 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
       setTotalCardCount(newTotalCardCount);
 
       if (newTotalCardCount > mediaItems.length) {
-        const result = await fetchFunction({ page, excluded_genres: [10767, 10764, 10763] });
+        const result = await fetchFunction({ page });
         //console.log("MediaList data", result);
-        if (result.total_results == 0) {
-          setError(true);
-        }
-        setTotalPages(result.total_pages || 0);
-        setTotalResults(result.total_results || 0);
+        setTotalPages(Math.floor(result.parts.length / 20) || 0);
         if (page === 1) {
-          setMediaItems(result.results || []);
+          setMediaItems(result.parts || []);
         } else {
-          setMediaItems(prev => [...prev, ...(result.results || [])]);
+          setMediaItems(prev => [...prev, ...(result.parts || [])]);
         }
       }
     } catch (error) {
@@ -57,8 +49,6 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
     fetchData(1, false);
   }, []);
 
-  if (error) return (fallback || null);
-
   return (
     <List header={header} icon={icon}>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">
@@ -67,7 +57,7 @@ export default function MediaList({ header, icon, type, fetchFunction, cardCount
           (index < mediaItems.length && <Card key={'card-' + index} details={mediaItems[index]} type={type} />)
         ))}
       </div>
-      {mediaItems.length > 0 && totalCardCount < totalResults && <div className="w-full flex justify-center align-middle">
+      {mediaItems.length > 0 && (Math.floor(totalCardCount / 20)) < totalPages && <div className="w-full flex justify-center align-middle">
         <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" onClick={()=>{fetchData(Math.floor(totalCardCount / 20) + 1)}}><Plus /></Button>
       </div>}
     </List>

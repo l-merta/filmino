@@ -144,10 +144,23 @@
     @apply bg-[var(--background-2)] py-4 px-10 z-10;
   }
   .main-container {
-    @apply bg-[var(--background-2)] min-h-screen py-10 pt-30 flex flex-col gap-12;
+    @apply bg-[var(--background-2)] min-h-screen py-10 pt-30 flex flex-col gap-18;
   }
   .button-outline {
     @apply hover:!border-[var(--color-main)] !transition-colors duration-200;
+  }
+  .sticker {
+    --sticker-color: rgba(255, 255, 255, 0.7);
+
+    filter:
+      drop-shadow(2px 0 0 var(--sticker-color))
+      drop-shadow(-2px 0 0 var(--sticker-color))
+      drop-shadow(0 2px 0 var(--sticker-color))
+      drop-shadow(0 -2px 0 var(--sticker-color))
+      drop-shadow(1px 1px 0 var(--sticker-color))
+      drop-shadow(-1px -1px 0 var(--sticker-color))
+      drop-shadow(-1px 1px 0 var(--sticker-color))
+      drop-shadow(1px -1px 0 var(--sticker-color));
   }
 
   @media (max-width: 639px) {
