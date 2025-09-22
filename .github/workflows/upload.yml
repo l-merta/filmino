@@ -30,7 +30,6 @@ jobs:
           file: ./app/Dockerfile.app.prod
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filmino:latest
-          platforms: linux/amd64
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache,mode=max
          
