@@ -30,6 +30,7 @@ jobs:
           file: ./app/Dockerfile.app.prod
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/filmino:latest
+          platforms: linux/amd64
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/filmino:buildcache,mode=max
          
@@ -47,13 +48,12 @@ jobs:
 
       - name: Create .env file on server
         env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_PORT: ${{ secrets.DB_PORT_INT }}
-          DB_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_INT }}/${{ secrets.DB_NAME }}
+          DB_URL: mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT_INT }}/${{ secrets.DB_NAME }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -82,8 +82,6 @@ jobs:
           EOL"
 
       - name: Run make up-prod on home server
-        env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mertalukas.cz "
             cd /www/deploy/filmino && make up-prod
