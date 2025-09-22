@@ -42,8 +42,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
       - name: Deploy files to home server
-        env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
           rsync -az -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
 
@@ -61,8 +59,6 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXT_PUBLIC_BASE_API_URL: ${{ secrets.NEXT_PUBLIC_BASE_API_URL }}
           NEXT_PUBLIC_BASE_HOST_URL: ${{ secrets.NEXT_PUBLIC_BASE_HOST_URL }}
-          PGADMIN_DEFAULT_EMAIL: ${{ secrets.PGADMIN_DEFAULT_EMAIL }}
-          PGADMIN_DEFAULT_PASSWORD: ${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TMDB_API_READ_KEY: ${{ secrets.TMDB_API_READ_KEY }}
         run: |
@@ -81,8 +77,6 @@ jobs:
           NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
           NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL}
           NEXT_PUBLIC_BASE_HOST_URL=${NEXT_PUBLIC_BASE_HOST_URL}
-          PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-          PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
           TMDB_API_KEY=${TMDB_API_KEY}
           TMDB_API_READ_KEY=${TMDB_API_READ_KEY}
           EOL"
