@@ -83,6 +83,30 @@ export const tmdbImage = {
   getImage: (path: string) => {
     return `https://image.tmdb.org/t/p/original/${path}`;
   },
+  getMetaImage: (backdrop_path: string | null, poster_path: string | null, type: 'movie' | 'tv') => {
+    let imagePath = "";
+    let dimensions = { width: 0, height: 0 };
+
+    if (backdrop_path) {
+      imagePath = `https://image.tmdb.org/t/p/original${backdrop_path}`;
+      dimensions = { width: 1280, height: 720 };
+    } 
+    else if (poster_path) {
+      imagePath = `https://image.tmdb.org/t/p/original${poster_path}`;
+      dimensions = { width: 500, height: 750 };
+    } 
+    else {
+      return {
+        imagePath: type === "tv" ? "/images/Filmino_serialy_logo.png" : "/images/Filmino_filmy_logo.png",
+        dimensions: { width: 300, height: 300 }
+      };
+    }
+
+    return {
+      imagePath,
+      dimensions
+    };
+  },
 }
 
 export const tmdbLinks = {
@@ -106,5 +130,6 @@ export const tmdb = {
   actor: tmdbActor,
   company: tmdbCompany,
   image: tmdbImage.getImage,
+  metadataImage: tmdbImage.getMetaImage,
   links: tmdbLinks.getLinks,
 };
