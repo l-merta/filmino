@@ -28,12 +28,9 @@ down-dev:
 up-prod:
 	$(COMPOSE_PROD) down --remove-orphans
 	$(COMPOSE_PROD) up --build -d
-  make prisma-generate
-  make migrate-deploy
-#	PRISMA_ENGINES_USE_BINARY_TARGETS=1 \
-#	PRISMA_CLIENT_ENGINE_TYPE=binary \
-#	PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 \
-##	$(COMPOSE_PROD) exec -T filmino npx prisma migrate deploy --schema=./prisma/schema.prisma
+	make prisma-generate
+	make migrate-deploy
+#	$(COMPOSE_PROD) exec -T filmino npx prisma migrate deploy --schema=./prisma/schema.prisma
 
 
 ## Stop production environment
