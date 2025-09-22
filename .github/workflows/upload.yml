@@ -83,6 +83,14 @@ jobs:
 
       - name: Run make up-prod on home server
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mertalukas.cz "
-            cd /www/deploy/filmino && make up-prod
-          "
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mertalukas.cz << EOF
+            cd /www/deploy/filmino
+
+            echo "⬇️ Pulling images from Docker Hub..."
+            cd app
+            docker compose -f docker-compose-prod.yml pull
+            cd ..
+
+            echo "♻️ Restarting services..."
+            sudo make up-prod
+          EOF
