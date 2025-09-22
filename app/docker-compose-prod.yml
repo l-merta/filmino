@@ -2,7 +2,6 @@ services:
   filmino:
     container_name: filmino-app
     image: lmerta/filmino-app:latest
-    platform: linux/arm64/v8
     ports:
       - "6050:5100"
     environment:
