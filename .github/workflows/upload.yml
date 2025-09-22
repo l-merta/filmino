@@ -46,7 +46,7 @@ jobs:
 
       - name: Deploy files to home server
         run: |
-          rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
+          rsync -az --delete --exclude 'node_modules/' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ deploy@mertalukas.cz:/www/deploy/filmino
 
       - name: Create .env file on server
         env:
