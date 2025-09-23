@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       description,
       icons: {
         icon: "/images/Filmino_serialy_logo.png",
-    },
+      },
       openGraph: {
         title,
         description,
