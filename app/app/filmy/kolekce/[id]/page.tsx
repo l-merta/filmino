@@ -7,11 +7,35 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { data: collection } = await tmdb.collection.Details(Number(id));
 
   if (collection) {
+    const title = `${collection.name} - Filmino`;
+    const description = collection.overview ?? "Zjisti více informací o kolekci na Filmino.";
+    const image = tmdb.metadataImage(collection.backdrop_path, collection.poster_path, "movie");
+
     return {
-      title: `${collection.name} - Filmino`,
-      description: "Objevte filmy v kolekci " + collection.name,
+      title,
+      description,
       icons: {
         icon: "/images/Filmino_filmy_logo.png",
+      },
+      openGraph: {
+        title,
+        description,
+        type: "website",
+        url: `https://filmino.mertalukas.cz/filmy/kolekce/${id}`,
+        images: [
+          {
+            url: image.imagePath,
+            width: image.dimensions.width,
+            height: image.dimensions.height,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [image.imagePath],
       },
     };
   }
