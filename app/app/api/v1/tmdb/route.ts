@@ -30,16 +30,11 @@ export async function GET(request: NextRequest) {
     
     searchParams.forEach((value, key) => {
       if (key !== "path") {
-        if (key === "excluded_genres") {
-          // Parse excluded_genres as array of numbers
-          try {
-            excludedGenres = JSON.parse(value);
-          } catch {
-            // If parsing fails, try splitting by comma
-            excludedGenres = value.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
-          }
+        const cleanKey = key.replace(/\[\]$/, ""); // strip trailing []
+        if (cleanKey === "excluded_genres") {
+          excludedGenres.push(parseInt(value, 10));
         } else {
-          params[key] = value;
+          params[cleanKey] = value;
         }
       }
     });
