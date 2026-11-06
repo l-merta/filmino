@@ -37,7 +37,7 @@ export default function Header({ active }: HeaderProps) {
         Seriály
       </Link>
       {session && (
-        <Link href="/kolekce" className={(pathname?.startsWith("/kolekce") ? "text-[var(--color-main)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
+        <Link href="/profil" className={(pathname === "/profil" || pathname?.startsWith("/kolekce") ? "text-[var(--color-main)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Kolekce
         </Link>
       )}
@@ -123,7 +123,7 @@ export default function Header({ active }: HeaderProps) {
                 <span className="truncate">{session.user.username}</span>
               </Link>
               <Link href="/profil" className="flex items-center gap-3 opacity-80"><User size={18} /> Profil</Link>
-              <Link href="/kolekce" className="flex items-center gap-3 opacity-80"><FolderHeart size={18} /> Moje kolekce</Link>
+              <Link href="/profil" className="flex items-center gap-3 opacity-80"><FolderHeart size={18} /> Moje kolekce</Link>
               <Link href="/nastaveni" className="flex items-center gap-3 opacity-80"><Settings size={18} /> Nastavení účtu</Link>
               <button onClick={() => signOut({ callbackUrl: "/prihlaseni" })} className="flex items-center gap-3 opacity-80 text-left cursor-pointer">
                 <LogOut size={18} /> Odhlásit se

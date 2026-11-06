@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
-import MojeKolekce from "@/pages/MojeKolekce";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Moje kolekce - Filmino",
-  icons: { icon: "/images/Filmino_filmy_logo.png" },
-};
-
+// The old "My collections" page now lives on the profile page.
 export default function Page() {
-  return <MojeKolekce />;
+  redirect("/profil");
 }

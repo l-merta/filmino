@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Check, Clock, Globe, Lock, Settings, UserCheck, UserPlus, X } from "lucide-react";
+import { Check, Clock, Globe, Lock, Plus, Settings, UserCheck, UserPlus, X } from "lucide-react";
 
 import Header from "@/components/Header";
 import List from "@/sections/List";
@@ -12,12 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/components/UserAvatar";
 import CollectionTile, { CollectionGrid } from "@/components/collections/CollectionTile";
+import CreateCollectionDialog from "@/components/collections/CreateCollectionDialog";
 import { errorMessage, plural, usersApi, type CollectionSummary, type ProfileResponse, type PublicUser } from "@/lib/collections";
 
 import ErrorPage from "./Error";
 
-function Section({ header, items, showOwner }: { header: string; items?: CollectionSummary[]; showOwner?: boolean }) {
-  if (!items || items.length === 0) return null;
+function Section({ header, items, showOwner, empty }: { header: string; items?: CollectionSummary[]; showOwner?: boolean; empty?: string }) {
+  if (!items || items.length === 0) {
+    if (!empty) return null;
+    return <List header={header}><p className="opacity-70">{empty}</p></List>;
+  }
   return (
     <List header={header}>
       <CollectionGrid>
@@ -68,6 +72,7 @@ export default function Uzivatel({ id, share }: { id?: string; share?: string | 
   const [data, setData] = useState<ProfileResponse | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const load = useCallback(async () => {
     if (!userId) return;
@@ -129,7 +134,10 @@ export default function Uzivatel({ id, share }: { id?: string; share?: string | 
               </div>
               <div className="flex gap-2 sm:ml-auto">
                 {data.isSelf ? (
-                  <Link href="/nastaveni"><Button variant="outline" className="button-outline"><Settings /> Nastavení účtu</Button></Link>
+                  <>
+                    <Button onClick={() => setCreateOpen(true)}><Plus /> Nová kolekce</Button>
+                    <Link href="/nastaveni"><Button variant="outline" className="button-outline"><Settings /> Nastavení účtu</Button></Link>
+                  </>
                 ) : session?.user ? (
                   <Button variant={data.viewerFollow === "NONE" ? "default" : "outline"} onClick={follow}>
                     <FollowIcon /> {followLabel[data.viewerFollow]}
@@ -162,10 +170,14 @@ export default function Uzivatel({ id, share }: { id?: string; share?: string | 
         {data?.collections && (
           <>
             <Section header="Výchozí kolekce" items={data.collections.system} />
-            <Section header="Kolekce" items={data.collections.owned} />
-            <Section header="Přispívá do" items={data.collections.contributed} showOwner />
+            <Section
+              header={data.isSelf ? "Moje kolekce" : "Kolekce"}
+              items={data.collections.owned}
+              empty={data.isSelf ? "Zatím nemáte žádné vlastní kolekce. Vytvořte první tlačítkem „Nová kolekce“." : undefined}
+            />
+            <Section header={data.isSelf ? "Sdílené se mnou" : "Přispívá do"} items={data.collections.contributed} showOwner />
             {data.isSelf && <Section header="Organizační kolekce" items={data.collections.hidden} />}
-            {data.isSelf && <Section header="Sledované kolekce" items={data.collections.followed} showOwner />}
+            {data.isSelf && <Section header="Sledované kolekce" items={data.collections.followed} showOwner empty="Nesledujete žádné kolekce." />}
             {!data.isSelf &&
               data.collections.system.length + data.collections.owned.length + data.collections.contributed.length === 0 && (
                 <p className="opacity-70">Uživatel zatím nemá žádné veřejné kolekce.</p>
@@ -173,6 +185,7 @@ export default function Uzivatel({ id, share }: { id?: string; share?: string | 
           </>
         )}
       </main>
+      {data?.isSelf && <CreateCollectionDialog open={createOpen} onClose={() => setCreateOpen(false)} />}
     </div>
   );
 }

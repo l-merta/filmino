@@ -3,20 +3,39 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { collectionsApi, errorMessage, itemKey, type ItemStatus, type MediaRef, type SystemKind } from "@/lib/collections";
+import {
+  collectionsApi,
+  errorMessage,
+  itemKey,
+  plural,
+  type AddMode,
+  type CollectionSummary,
+  type ItemStatus,
+  type MediaRef,
+  type SystemKind,
+} from "@/lib/collections";
+
+/** An add that waits for the user to pick "whole collection" or "just its contents". */
+export type PendingAdd = { target: { collectionId: string } | { newName: string }; targetName: string };
 
 /**
  * Loads + changes which of my collections contain one item.
  * Pass `enabled = false` to wait (e.g. until a menu is opened).
+ *
+ * When the item is itself a collection, adding it first sets `pending`,
+ * and the UI asks the user how to add it (see AddModeDialog).
  */
 export function useItemStatus(ref: MediaRef | null, enabled = true) {
   const { data: session } = useSession() ?? {};
   const loggedIn = !!session?.user;
   const key = ref ? itemKey(ref) : null;
+  const isCollection = ref?.type === "collection";
 
   const [status, setStatus] = useState<ItemStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [pending, setPending] = useState<PendingAdd | null>(null);
 
   const load = useCallback(async () => {
     if (!key || !loggedIn) return;
@@ -35,29 +54,66 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
     if (enabled) load();
   }, [enabled, load]);
 
+  const setContains = useCallback(
+    (collectionId: string, value: boolean) =>
+      setStatus((s) =>
+        s && {
+          system: Object.fromEntries(
+            Object.entries(s.system).map(([k, v]) => [k, v && v.id === collectionId ? { ...v, contains: value } : v])
+          ),
+          collections: s.collections.map((c) => (c.id === collectionId ? { ...c, contains: value } : c)),
+        }
+      ),
+    []
+  );
+
+  const nameOf = useCallback(
+    (collectionId: string) =>
+      status?.collections.find((c) => c.id === collectionId)?.name ??
+      Object.entries(status?.system ?? {}).find(([, v]) => v?.id === collectionId)?.[0] ??
+      "kolekce",
+    [status]
+  );
+
+  /** Adds `ref` to a collection with the chosen mode. */
+  const add = useCallback(
+    async (collectionId: string, mode: AddMode) => {
+      if (!ref) return;
+      setNotice(null);
+      if (mode === "whole") setContains(collectionId, true); // optimistic
+      try {
+        const res = await collectionsApi.addItem(collectionId, ref, mode);
+        if (mode === "contents") {
+          const n = res?.added ?? 0;
+          setNotice(n > 0 ? `Přidáno: ${plural(n, "položka", "položky", "položek")} z kolekce` : "Všechny položky už v kolekci jsou");
+        }
+      } catch (err) {
+        if (mode === "whole") setContains(collectionId, false); // undo
+        setError(errorMessage(err));
+      }
+    },
+    [ref, setContains]
+  );
+
   /** Adds or removes the item from a collection, updating the UI right away. */
   const toggle = useCallback(
     async (collectionId: string, contains: boolean) => {
       if (!ref || !key) return;
-      const apply = (value: boolean) =>
-        setStatus((s) =>
-          s && {
-            system: Object.fromEntries(
-              Object.entries(s.system).map(([k, v]) => [k, v && v.id === collectionId ? { ...v, contains: value } : v])
-            ),
-            collections: s.collections.map((c) => (c.id === collectionId ? { ...c, contains: value } : c)),
-          }
-        );
-      apply(!contains); // optimistic
+      if (!contains && isCollection) {
+        // Ask first: the whole collection, or only what's inside it?
+        setPending({ target: { collectionId }, targetName: nameOf(collectionId) });
+        return;
+      }
+      if (!contains) return add(collectionId, "whole");
+      setContains(collectionId, false);
       try {
-        if (contains) await collectionsApi.removeItem(collectionId, key);
-        else await collectionsApi.addItem(collectionId, ref);
+        await collectionsApi.removeItem(collectionId, key);
       } catch (err) {
-        apply(contains); // undo
+        setContains(collectionId, true);
         setError(errorMessage(err));
       }
     },
-    [ref, key]
+    [ref, key, isCollection, add, nameOf, setContains]
   );
 
   const toggleSystem = useCallback(
@@ -68,16 +124,17 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
     [status, toggle]
   );
 
-  const createWithItem = useCallback(
-    async (name: string) => {
+  const createAndAdd = useCallback(
+    async (name: string, mode: AddMode): Promise<CollectionSummary | undefined> => {
       if (!ref) return;
       try {
-        const created = await collectionsApi.create({ name, item: ref });
+        const created = await collectionsApi.create(mode === "whole" ? { name, item: ref } : { name });
+        if (mode === "contents") await add(created.id, "contents");
         setStatus((s) =>
           s && {
             ...s,
             collections: [
-              { id: created.id, name: created.name, isPublic: created.isPublic, showInLists: created.showInLists, shared: false, contains: true },
+              { id: created.id, name: created.name, isPublic: created.isPublic, showInLists: created.showInLists, shared: false, contains: mode === "whole" },
               ...s.collections,
             ],
           }
@@ -87,8 +144,32 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
         setError(errorMessage(err));
       }
     },
-    [ref]
+    [ref, add]
   );
 
-  return { loggedIn, status, loading, error, reload: load, toggle, toggleSystem, createWithItem };
+  /** Creates a new collection containing this item (asks first when the item is a collection). */
+  const createWithItem = useCallback(
+    async (name: string) => {
+      if (isCollection) {
+        setPending({ target: { newName: name }, targetName: name });
+        return { pending: true } as const;
+      }
+      return createAndAdd(name, "whole");
+    },
+    [isCollection, createAndAdd]
+  );
+
+  /** Called by AddModeDialog with the user's answer (null = cancel). */
+  const resolvePending = useCallback(
+    async (mode: AddMode | null) => {
+      const p = pending;
+      setPending(null);
+      if (!p || !mode) return;
+      if ("collectionId" in p.target) await add(p.target.collectionId, mode);
+      else await createAndAdd(p.target.newName, mode);
+    },
+    [pending, add, createAndAdd]
+  );
+
+  return { loggedIn, status, loading, error, notice, pending, resolvePending, reload: load, toggle, toggleSystem, createWithItem };
 }

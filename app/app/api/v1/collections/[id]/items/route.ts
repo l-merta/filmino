@@ -2,22 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { handle, readJson, requireUserId, HttpError } from "@/lib/server/http";
-import { containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
+import { addCollectionContents, containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 /**
  * POST /api/v1/collections/:id/items
- * Body: { item: ItemInput }  — adds a movie / show / season / episode / collection.
+ * Body: { item: ItemInput, mode?: "whole" | "contents" }
+ * Adds a movie / show / season / episode / collection.
+ * For a collection, mode "contents" copies its items instead of nesting the collection itself.
  */
 export const POST = handle(async (req: NextRequest, { params }: Ctx) => {
   const { id } = await params;
   const userId = await requireUserId();
   await requireCollectionAccess(id, userId, "edit");
 
-  const body = await readJson<{ item?: ItemInput }>(req);
+  const body = await readJson<{ item?: ItemInput; mode?: "whole" | "contents" }>(req);
   if (!body.item) throw new HttpError(400, "Chybí položka");
   const data = itemInputToData(body.item);
+
+  if (body.mode === "contents") {
+    if (!data.childCollectionId) throw new HttpError(400, "Obsah lze přidat jen z kolekce");
+    const added = await addCollectionContents(data.childCollectionId, id, userId);
+    return NextResponse.json({ added }, { status: 201 });
+  }
 
   if (data.childCollectionId) {
     if (data.childCollectionId === id) throw new HttpError(400, "Kolekci nelze přidat samu do sebe");

@@ -1,6 +1,9 @@
 // Client-side helpers + types for collections, profiles and share links.
 import { apiClient, apiDelete, apiGet, apiPost } from "@/lib/apiClient";
 
+/** When adding a collection into another one: nest the whole collection, or copy just its items. */
+export type AddMode = "whole" | "contents";
+
 export type SystemKind = "FAVORITES" | "WATCHED" | "WATCHLIST";
 
 /** Something that can be put in a collection. */
@@ -165,7 +168,8 @@ export type ProfileResponse = {
 
 export const collectionsApi = {
   itemStatus: (key: string) => apiGet<ItemStatus>("/me/item-status", { key }),
-  addItem: (collectionId: string, item: MediaRef) => apiPost(`/collections/${collectionId}/items`, { item }),
+  addItem: (collectionId: string, item: MediaRef, mode?: AddMode) =>
+    apiPost<{ added?: number }>(`/collections/${collectionId}/items`, { item, mode }),
   removeItem: (collectionId: string, key: string) =>
     apiDelete(`/collections/${collectionId}/items?key=${encodeURIComponent(key)}`),
   create: (body: { name: string; description?: string; isPublic?: boolean; showInLists?: boolean; item?: MediaRef }) =>

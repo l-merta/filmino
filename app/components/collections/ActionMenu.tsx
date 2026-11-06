@@ -11,6 +11,7 @@ import { useItemStatus } from "@/hooks/useItemStatus";
 import type { MediaRef } from "@/lib/collections";
 
 import AddToCollectionDialog from "./AddToCollectionDialog";
+import AddModeDialog from "./AddModeDialog";
 import { SYSTEM_BUTTONS } from "./MediaActions";
 
 export type ExtraAction = { label: string; icon?: React.ReactNode; onClick: () => void; destructive?: boolean };
@@ -145,12 +146,16 @@ export default function ActionMenu({ item, className, extraActions }: Props) {
               </button>
             ))}
             {state.error && <p className="px-3 py-1 text-xs text-destructive">{state.error}</p>}
+            {state.notice && <p className="px-3 py-1 text-xs opacity-75">{state.notice}</p>}
           </div>,
           document.body
         )}
 
       {session?.user && (
         <AddToCollectionDialog open={dialogOpen} onClose={() => setDialogOpen(false)} title={item.title} state={state} />
+      )}
+      {session?.user && (
+        <AddModeDialog state={state} title={item.title} />
       )}
     </>
   );

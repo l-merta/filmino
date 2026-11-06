@@ -10,6 +10,7 @@ import { useItemStatus } from "@/hooks/useItemStatus";
 import type { MediaRef, SystemKind } from "@/lib/collections";
 
 import AddToCollectionDialog from "./AddToCollectionDialog";
+import AddModeDialog from "./AddModeDialog";
 
 export const SYSTEM_BUTTONS: { kind: SystemKind; label: string; activeLabel: string; icon: typeof Heart }[] = [
   { kind: "FAVORITES", label: "Oblíbené", activeLabel: "V oblíbených", icon: Heart },
@@ -63,7 +64,9 @@ export default function MediaActions({ item, className }: Props) {
         <FolderPlus />
         <span>Přidat do kolekce</span>
       </Button>
+      {state.notice && !dialogOpen && <span className="text-sm opacity-75">{state.notice}</span>}
       <AddToCollectionDialog open={dialogOpen} onClose={() => setDialogOpen(false)} title={item.title} state={state} />
+      <AddModeDialog state={state} title={item.title} />
     </div>
   );
 }

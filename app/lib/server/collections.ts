@@ -316,6 +316,47 @@ export const collectionSummaryInclude = {
   _count: { select: { items: true } },
 } satisfies Prisma.CollectionInclude;
 
+/**
+ * Copies every item of `sourceId` into `targetId` (instead of nesting the collection itself).
+ * Items already in the target are skipped, and so are nested collections that would create a loop.
+ * Returns how many items were added.
+ */
+export async function addCollectionContents(sourceId: string, targetId: string, userId: string): Promise<number> {
+  if (sourceId === targetId) throw new HttpError(400, "Kolekci nelze přidat samu do sebe");
+  await requireCollectionAccess(sourceId, userId, "view");
+
+  const items = await prisma.collectionItem.findMany({ where: { collectionId: sourceId }, orderBy: { createdAt: "asc" } });
+
+  const safe = [];
+  for (const i of items) {
+    if (i.childCollectionId) {
+      if (i.childCollectionId === targetId) continue;
+      if (await containsCollection(i.childCollectionId, targetId)) continue;
+    }
+    safe.push(i);
+  }
+
+  const res = await prisma.collectionItem.createMany({
+    data: safe.map((i) => ({
+      collectionId: targetId,
+      type: i.type,
+      itemKey: i.itemKey,
+      tmdbId: i.tmdbId,
+      seasonNumber: i.seasonNumber,
+      episodeNumber: i.episodeNumber,
+      childCollectionId: i.childCollectionId,
+      title: i.title,
+      subtitle: i.subtitle,
+      posterPath: i.posterPath,
+      year: i.year,
+      addedById: userId,
+    })),
+    skipDuplicates: true,
+  });
+  if (res.count > 0) await prisma.collection.update({ where: { id: targetId }, data: { updatedAt: new Date() } });
+  return res.count;
+}
+
 /** Drops followed collections the user can no longer open (e.g. the share link was deleted). */
 export async function filterAccessibleFollows<T extends { collectionId: string }>(userId: string, follows: T[]): Promise<T[]> {
   const ok = await Promise.all(follows.map(async (f) => (await getCollectionAccess(f.collectionId, userId))?.canView ?? false));

@@ -68,7 +68,8 @@ export default function AddToCollectionDialog({ open, onClose, title, state }: P
         </Button>
       </form>
       {state.error && <p className="text-sm text-destructive mt-3">{state.error}</p>}
-      <Link href="/kolekce" className="block text-sm opacity-70 hover:opacity-100 mt-4" onClick={onClose}>
+      {state.notice && <p className="text-sm opacity-75 mt-3">{state.notice}</p>}
+      <Link href="/profil" className="block text-sm opacity-70 hover:opacity-100 mt-4" onClick={onClose}>
         Spravovat moje kolekce →
       </Link>
     </Modal>

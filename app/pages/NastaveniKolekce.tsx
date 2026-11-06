@@ -83,7 +83,7 @@ export default function NastaveniKolekce({ id }: { id: string }) {
     setMessage(null);
     try {
       await collectionsApi.removeContributor(id, userId);
-      if (userId === session?.user.id) return router.push("/kolekce");
+      if (userId === session?.user.id) return router.push("/profil");
       setData((d) => d && { ...d, contributors: d.contributors.filter((c) => c.id !== userId) });
     } catch (err) {
       setMessage({ type: "error", text: errorMessage(err) });
@@ -93,7 +93,7 @@ export default function NastaveniKolekce({ id }: { id: string }) {
   const deleteCollection = async () => {
     try {
       await collectionsApi.remove(id);
-      router.push("/kolekce");
+      router.push("/profil");
     } catch (err) {
       setMessage({ type: "error", text: errorMessage(err) });
     }
