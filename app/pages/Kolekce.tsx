@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import CollectionList from "@/sections/CollectionList";
 import FakeList from "@/sections/FakeList";
 
+import MediaActions from "@/components/collections/MediaActions";
+
 import ErrorPage from "./Error";
 
 interface KolekceProps {
@@ -21,6 +23,9 @@ export default function Kolekce({ collectionId }: KolekceProps) {
     <div className="page-filmy">
       <Header active="filmy" />
       <main className="main-container section-spacing">
+        {collectionData && (
+          <MediaActions item={{ type: "tmdb_collection", tmdbId: collectionData.id, title: collectionData.name, posterPath: collectionData.poster_path }} />
+        )}
         {collectionData ? 
           <CollectionList header={collectionData.name} type='movie' fetchFunction={(params) => tmdb.get("/collection/"+collectionId, params)} />
         :

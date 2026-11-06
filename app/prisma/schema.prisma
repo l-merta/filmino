@@ -15,8 +15,19 @@ model Users {
   emailVerified DateTime?
   password      String?  @db.VarChar(191)
   image         String?  @db.VarChar(191)
+  isPublic      Boolean  @default(true)
+  createdAt     DateTime @default(now())
   accounts      Account[]
   sessions      Session[]
+
+  ownedCollections   Collection[]            @relation("CollectionOwner")
+  contributions      CollectionContributor[]
+  collectionFollows  CollectionFollow[]
+  addedItems         CollectionItem[]        @relation("ItemAddedBy")
+  following          UserFollow[]            @relation("Follower")
+  followers          UserFollow[]            @relation("Following")
+  createdShareLinks  ShareLink[]             @relation("ShareLinkCreator")
+  profileShareLinks  ShareLink[]             @relation("ShareLinkProfile")
 }
 
 model Account {
@@ -51,4 +62,165 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// v0.2.2 - Collections, follows and share links
+// ---------------------------------------------------------------------------
+
+// The three built-in collections every user gets. Custom collections have system = null.
+enum SystemCollection {
+  FAVORITES
+  WATCHED
+  WATCHLIST
+}
+
+enum CollectionItemType {
+  MOVIE
+  TV
+  SEASON
+  EPISODE
+  COLLECTION      // another Filmino (user) collection
+  TMDB_COLLECTION // a TMDB movie collection (e.g. "Harry Potter Collection")
+}
+
+enum ContributorRole {
+  OWNER
+  EDITOR
+}
+
+enum FollowStatus {
+  PENDING
+  ACCEPTED
+}
+
+enum SharePurpose {
+  COLLECTION_VIEW   // read-only link to a collection
+  COLLECTION_INVITE // one-time invite to become a contributor
+  PROFILE_VIEW      // read-only link to a profile (bypasses private profile)
+}
+
+model Collection {
+  id           String            @id @default(cuid()) @db.VarChar(191)
+  name         String            @db.VarChar(191)
+  description  String?           @db.Text
+  system       SystemCollection?
+  isPublic     Boolean           @default(false)
+  // false = "organizational" collection: it is only meant to live inside other
+  // collections (e.g. a group of episodes) and is not listed on the profile or
+  // in the user's collection lists. It has nothing to do with permissions.
+  showInLists  Boolean           @default(true)
+  ownerId      String            @db.VarChar(191)
+  forkedFromId String?           @db.VarChar(191)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  owner        Users                   @relation("CollectionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  forkedFrom   Collection?             @relation("CollectionForks", fields: [forkedFromId], references: [id], onDelete: SetNull)
+  forks        Collection[]            @relation("CollectionForks")
+  items        CollectionItem[]        @relation("CollectionItems")
+  containedIn  CollectionItem[]        @relation("ChildCollection")
+  contributors CollectionContributor[]
+  follows      CollectionFollow[]
+  shareLinks   ShareLink[]
+
+  // MySQL allows many NULLs in a unique index, so this only stops duplicate
+  // system collections (one FAVORITES / WATCHED / WATCHLIST per user).
+  @@unique([ownerId, system])
+  @@index([ownerId])
+}
+
+model CollectionItem {
+  id                String             @id @default(cuid()) @db.VarChar(191)
+  collectionId      String             @db.VarChar(191)
+  type              CollectionItemType
+  // Unique identity of the item inside a collection, e.g. "movie:550",
+  // "season:1399:2", "episode:1399:2:5", "collection:<id>".
+  itemKey           String             @db.VarChar(191)
+  tmdbId            Int?
+  seasonNumber      Int?
+  episodeNumber     Int?
+  childCollectionId String?            @db.VarChar(191)
+  // Cached display data so a collection can be rendered without calling TMDB
+  title             String             @db.VarChar(255)
+  subtitle          String?            @db.VarChar(255)
+  posterPath        String?            @db.VarChar(255)
+  year              String?            @db.VarChar(32)
+  addedById         String?            @db.VarChar(191)
+  createdAt         DateTime           @default(now())
+
+  collection      Collection  @relation("CollectionItems", fields: [collectionId], references: [id], onDelete: Cascade)
+  childCollection Collection? @relation("ChildCollection", fields: [childCollectionId], references: [id], onDelete: Cascade)
+  addedBy         Users?      @relation("ItemAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@unique([collectionId, itemKey])
+  @@index([itemKey])
+  @@index([childCollectionId])
+}
+
+model CollectionContributor {
+  collectionId String          @db.VarChar(191)
+  userId       String          @db.VarChar(191)
+  role         ContributorRole @default(EDITOR)
+  createdAt    DateTime        @default(now())
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user       Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, userId])
+  @@index([userId])
+}
+
+model CollectionFollow {
+  userId       String   @db.VarChar(191)
+  collectionId String   @db.VarChar(191)
+  // Share link used to get access (for private collections). If that link is
+  // revoked the follower loses access again.
+  shareLinkId  String?  @db.VarChar(191)
+  createdAt    DateTime @default(now())
+
+  user       Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  shareLink  ShareLink? @relation(fields: [shareLinkId], references: [id], onDelete: SetNull)
+
+  @@id([userId, collectionId])
+  @@index([collectionId])
+}
+
+model UserFollow {
+  followerId  String       @db.VarChar(191)
+  followingId String       @db.VarChar(191)
+  status      FollowStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+
+  follower  Users @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following Users @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+}
+
+// One universal, revocable share link system. Add new purposes to SharePurpose
+// (and a target column if needed) to extend it.
+model ShareLink {
+  id            String       @id @default(cuid()) @db.VarChar(191)
+  token         String       @unique @db.VarChar(191)
+  purpose       SharePurpose
+  label         String?      @db.VarChar(191)
+  createdById   String       @db.VarChar(191)
+  collectionId  String?      @db.VarChar(191)
+  profileUserId String?      @db.VarChar(191)
+  maxUses       Int?
+  uses          Int          @default(0)
+  expiresAt     DateTime?
+  revokedAt     DateTime?
+  createdAt     DateTime     @default(now())
+
+  createdBy   Users              @relation("ShareLinkCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  collection  Collection?        @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  profileUser Users?             @relation("ShareLinkProfile", fields: [profileUserId], references: [id], onDelete: Cascade)
+  follows     CollectionFollow[]
+
+  @@index([collectionId])
+  @@index([profileUserId])
 }

@@ -17,6 +17,8 @@ import FakeList from "@/sections/FakeList";
 import Card from "@/components/Card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import MediaActions from "@/components/collections/MediaActions";
+
 import ErrorPage from "./Error";
 
 export default function Film() {
@@ -36,17 +38,20 @@ export default function Film() {
       <Header active="filmy" />
       <main className="main-container section-spacing pt-25 relative">
         <MediaHero data={data} type='movie' />
-        {data ? 
-          <div className="flex gap-8 z-5">
-            <LinksList data={data} type='movie' linkType='main' />
-          </div>
-        :
-          <div className="flex gap-8 z-5">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
-            ))}
-          </div>
-        }
+        <div className="flex flex-col gap-6 z-5">
+          <MediaActions item={data ? { type: "movie", tmdbId: data.id, title: data.title || data.original_title, posterPath: data.poster_path, year: data.release_date?.split('-')[0] || null } : null} />
+          {data ? 
+            <div className="flex flex-wrap gap-8 z-5">
+              <LinksList data={data} type='movie' linkType='main' />
+            </div>
+          :
+            <div className="flex gap-8 z-5">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
+              ))}
+            </div>
+          }
+        </div>
         {data && data.belongs_to_collection && 
           <List header="Kolekce">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 gap-y-8">

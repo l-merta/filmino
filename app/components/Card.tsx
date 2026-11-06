@@ -8,6 +8,8 @@ import { MediaDetails, CollectionDetails } from "@/types/tmdbApi";
 
 import { Tv } from "lucide-react";
 
+import ActionMenu from "@/components/collections/ActionMenu";
+
 interface CardProps {
   type?: "movie" | "tv";
   details?: MediaDetails;
@@ -26,6 +28,11 @@ export function SkeletonCard() {
 
 export function MovieCard({ details }: CardProps) {
   if (details) return (
+    <div className="relative group">
+    <ActionMenu
+      className="absolute top-2 right-2 z-10"
+      item={{ type: "movie", tmdbId: details.id, title: details.title || details.original_title, posterPath: details.poster_path, year: details.release_date?.split('-')[0] || null }}
+    />
     <Link href={'/filmy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative flex items-center justify-center">
         <Image 
@@ -41,14 +48,20 @@ export function MovieCard({ details }: CardProps) {
       </div>
       <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{details.original_title}</span>
       {details.original_title !== details.title && <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">{details.title}</span>}
-      <span className="font-semibold text-[1.0rem] opacity-60">{details.release_date.split('-')[0]}</span>
+      <span className="font-semibold text-[1.0rem] opacity-60">{details.release_date?.split('-')[0]}</span>
       {/* <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span> */}
     </Link>
+    </div>
   )
 }
 
 export function TvCard({ details }: CardProps) {
   if (details) return (
+    <div className="relative group">
+    <ActionMenu
+      className="absolute top-2 right-2 z-10"
+      item={{ type: "tv", tmdbId: details.id, title: details.name || details.original_name, posterPath: details.poster_path, year: details.first_air_date?.split('-')[0] || null }}
+    />
     <Link href={'/serialy/' + details.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative flex items-center justify-center">
         <Image 
@@ -64,14 +77,20 @@ export function TvCard({ details }: CardProps) {
       </div>
       <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{details.original_name}</span>
       {details.original_name !== details.name && <span className="font-semibold text-[1.0rem] opacity-60 line-clamp-1">{details.name}</span>}
-      <span className="font-semibold text-[1.0rem] opacity-60">{details.first_air_date.split('-')[0]}{details.last_air_date && (" - " + details.last_air_date.split('-')[0])}</span>
+      <span className="font-semibold text-[1.0rem] opacity-60">{details.first_air_date?.split('-')[0]}{details.last_air_date && (" - " + details.last_air_date.split('-')[0])}</span>
       {/* <span className="font-semibold text-[1.0rem] opacity-60">[{details.id}]</span> */}
     </Link>
+    </div>
   )
 }
 
 export function CollectionCard({ collectionDetails }: CardProps) {
   if (collectionDetails) return (
+    <div className="relative group">
+    <ActionMenu
+      className="absolute top-2 right-2 z-10"
+      item={{ type: "tmdb_collection", tmdbId: collectionDetails.id, title: collectionDetails.name, posterPath: collectionDetails.poster_path }}
+    />
     <Link href={'/filmy/kolekce/' + collectionDetails.id} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] relative flex items-center justify-center">
         <Image 
@@ -87,6 +106,7 @@ export function CollectionCard({ collectionDetails }: CardProps) {
       </div>
       <span className="font-bold text-[1.0rem] mt-2 line-clamp-1">{collectionDetails.name}</span>
     </Link>
+    </div>
   )
 }
 

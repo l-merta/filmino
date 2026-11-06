@@ -9,6 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+/** Where to go after login: ?callbackUrl=/some/path (only same-site paths are allowed). */
+function getCallbackUrl(): string {
+  if (typeof window === "undefined") return "/filmy";
+  const url = new URLSearchParams(window.location.search).get("callbackUrl");
+  return url && url.startsWith("/") && !url.startsWith("//") ? url : "/filmy";
+}
+
 interface LoginFormData {
   username: string;
   password: string;
@@ -53,8 +60,8 @@ export default function Prihlaseni() {
         setMessage({ type: "error", text: "Nesprávné uživatelské jméno nebo heslo" });
       } else {
         setMessage({ type: "success", text: "Přihlášení bylo úspěšné" });
-        // Redirect to /filmy after successful login
-        router.push("/filmy");
+        // Redirect back to where the user came from (or /filmy)
+        router.push(getCallbackUrl());
       }
       
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,7 +134,7 @@ export default function Prihlaseni() {
             type="button" 
             variant="outline" 
             className="w-full"
-            onClick={() => signIn("google", { callbackUrl: "/filmy" })}
+            onClick={() => signIn("google", { callbackUrl: getCallbackUrl() })}
           >
             Přihlásit se přes Google
           </Button>

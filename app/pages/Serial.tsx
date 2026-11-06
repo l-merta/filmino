@@ -18,6 +18,8 @@ import List from "@/sections/List";
 import { EpisodeCard } from "@/components/EpisodeCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import MediaActions from "@/components/collections/MediaActions";
+
 import ErrorPage from "./Error";
 
 export default function Serial() {
@@ -37,17 +39,20 @@ export default function Serial() {
       <Header active="serialy" />
       <main className="main-container section-spacing pt-25 relative">
         <MediaHero data={data} type='tv' />
-        {data ? 
-          <div className="flex gap-8 z-5">
-            <LinksList data={{ ...data, seasonCode: "s01", episodeCode: "e01" }} type='tv' linkType='main' />
-          </div>
-        :
-          <div className="flex gap-8 z-5">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
-            ))}
-          </div>
-        }
+        <div className="flex flex-col gap-6 z-5">
+          <MediaActions item={data ? { type: "tv", tmdbId: data.id, title: data.name || data.original_name, posterPath: data.poster_path, year: data.first_air_date?.split('-')[0] || null } : null} />
+          {data ? 
+            <div className="flex flex-wrap gap-8 z-5">
+              <LinksList data={{ ...data, seasonCode: "s01", episodeCode: "e01" }} type='tv' linkType='main' />
+            </div>
+          :
+            <div className="flex gap-8 z-5">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={'link-skeleton-' + index} className="w-32 h-6" />
+              ))}
+            </div>
+          }
+        </div>
         {data ? 
           <SeriesList header="Série" tvId={data.id} />
         :
@@ -58,14 +63,14 @@ export default function Serial() {
             data.next_episode_to_air ? (
               <List header="Nejnovější epizoda">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
-                  <EpisodeCard details={data.next_episode_to_air} tvId={data.id} />
+                  <EpisodeCard details={data.next_episode_to_air} tvId={data.id} tvName={data.name} />
                 </div>
               </List>
             ) :
             (data.last_episode_to_air && 
               <List header="Poslední epizoda">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
-                  <EpisodeCard details={data.last_episode_to_air} tvId={data.id} />
+                  <EpisodeCard details={data.last_episode_to_air} tvId={data.id} tvName={data.name} />
                 </div>
               </List>
             )

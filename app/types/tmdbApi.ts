@@ -225,3 +225,18 @@ export interface TmdbHookReturn<T> {
   error: Error | null;
   refetch: () => void;
 }
+export interface PersonSearchResult {
+  id: number;
+  name: string;
+  original_name?: string;
+  profile_path: string | null;
+  known_for_department?: string;
+  popularity: number;
+  known_for?: { id: number; title?: string; name?: string; media_type: string }[];
+}
+export interface PersonSearchList {
+  page: number;
+  results: PersonSearchResult[];
+  total_pages: number;
+  total_results: number;
+}
