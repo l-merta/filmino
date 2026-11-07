@@ -82,7 +82,7 @@ export default function Search({ className, autoFocus }: SearchProps) {
         >
           <SearchBlock search={search} link='filmy' typeName='filmy' fetchFunction={searchMovies} />
           <SearchBlock search={search} link='serialy' typeName='seriály' fetchFunction={searchTv} />
-          <SearchBlock search={search} link='herci' typeName='herce' fetchFunction={searchPeople} />
+          <SearchBlock search={search} link='herci' typeName='herce' label='herci' fetchFunction={searchPeople} />
         </div>
       )}
     </div>

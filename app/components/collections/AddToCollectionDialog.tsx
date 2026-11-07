@@ -105,7 +105,7 @@ export default function AddToCollectionDialog({ open, onClose, title, state }: P
         subtitle={`S položkou „${title}“`}
         externalError={state.error}
         onCreate={async (details) => {
-          const res = await state.createWithItem({ name: details.name, description: details.description, isPublic: details.isPublic });
+          const res = await state.createWithItem(details);
           return !!res;
         }}
       />

@@ -11,10 +11,12 @@ interface SearchBlockProps {
   fetchFunction: (params?: Params) => Promise<{ results?: SearchResult[]; total_results?: number }>;
   link: SearchLink;
   typeName: string;
+  /** Heading of the block, e.g. "Herci" (typeName is used in "Zobrazit všechny …") */
+  label?: string;
   onNavigate?: () => void;
 }
 
-export default function SearchBlock({ search, fetchFunction, link, typeName, onNavigate }: SearchBlockProps) {
+export default function SearchBlock({ search, fetchFunction, link, typeName, label, onNavigate }: SearchBlockProps) {
   const [mediaItems, setMediaItems] = useState<SearchResult[]>([]);
   const [resultsLength, setResultsLength] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +54,7 @@ export default function SearchBlock({ search, fetchFunction, link, typeName, onN
 
   if (!isLoading) return (
     <div className="w-full md:w-80 bg-[var(--background)] flex flex-col gap-1 rounded-md md:rounded-t-none pb-1.5 pointer-events-auto z-6" onClick={onNavigate}>
-      <span className="px-3 pt-2 text-xs uppercase tracking-wide opacity-60">{typeName}</span>
+      <span className="px-3 pt-2 text-xs uppercase tracking-wide opacity-60">{label ?? typeName}</span>
       {mediaItems.length > 0 ? 
         mediaItems.slice(0, showResults).map((item) => (
           <SearchCard key={item.id} link={link} data={item} />

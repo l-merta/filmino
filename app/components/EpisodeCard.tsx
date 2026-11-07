@@ -9,6 +9,7 @@ import { EpisodeDetails } from "@/types/tmdbApi";
 import { Tv } from "lucide-react";
 
 import ActionMenu from "@/components/collections/ActionMenu";
+import LibraryBadges from "@/components/collections/LibraryBadges";
 
 interface CardProps {
   details?: EpisodeDetails;
@@ -55,6 +56,7 @@ export function EpisodeCard({ details, tvId, tvName }: CardProps) {
         />
         <Tv size={40} className="opacity-70 absolute z-2" />
         <Skeleton className="w-full h-full rounded-md absolute z-1" />
+        <LibraryBadges mediaKey={`episode:${tvId}:${details.season_number}:${details.episode_number}`} className="absolute bottom-2 left-2 z-4" />
       </div>
       <div className="flex justify-between gap-1 mt-2">
         <span className="font-bold text-[0.9rem] line-clamp-1">{details.name}</span>

@@ -4,6 +4,7 @@ import { Bookmark, Eye, Folder, Globe, Heart, Lock, EyeOff } from "lucide-react"
 
 import { tmdb } from "@/lib/useTmdb";
 import type { CollectionSummary } from "@/lib/collections";
+import LibraryBadges from "./LibraryBadges";
 
 const SYSTEM_ICON = { FAVORITES: Heart, WATCHED: Eye, WATCHLIST: Bookmark };
 
@@ -45,6 +46,7 @@ export default function CollectionTile({ collection, showOwner, share }: Props) 
             <Icon size={12} /> {collection.itemCount ?? 0}
           </span>
         </div>
+        <LibraryBadges mediaKey={`collection:${collection.id}`} className="absolute bottom-2 left-2" />
         <div className="absolute top-2 right-2 flex gap-1">
           {!collection.showInLists && (
             <span className="rounded-full bg-black/60 p-1 text-white" title="Organizační kolekce (skrytá v seznamech)">

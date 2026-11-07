@@ -9,6 +9,7 @@ import { ITEM_TYPE_LABEL, itemHref, type CollectionItem, type MediaRef } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 
 import ActionMenu, { type ExtraAction } from "./ActionMenu";
+import LibraryBadges from "./LibraryBadges";
 
 interface Props {
   item: CollectionItem;
@@ -61,6 +62,7 @@ export default function CollectionItemCard({ item, onRemove, share }: Props) {
           <span className="absolute bottom-2 left-2 z-4 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white">
             {ITEM_TYPE_LABEL[item.type] ?? item.type}
           </span>
+          <LibraryBadges mediaKey={item.itemKey} className="absolute bottom-2 right-2 z-4" />
         </div>
         <span className="font-bold mt-2 line-clamp-1">{item.title}</span>
         {item.subtitle && <span className="font-semibold opacity-60 line-clamp-1">{item.subtitle}</span>}

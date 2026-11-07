@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+import { useLibrary } from "@/components/LibraryProvider";
+
 import {
   collectionsApi,
   errorMessage,
@@ -16,7 +18,7 @@ import {
 } from "@/lib/collections";
 
 /** An add that waits for the user to pick "whole collection" or "just its contents". */
-export type NewCollectionInput = { name: string; description?: string; isPublic?: boolean };
+export type NewCollectionInput = { name: string; description?: string; isPublic?: boolean; showInLists?: boolean };
 export type PendingAdd = { target: { collectionId: string } | { newCollection: NewCollectionInput }; targetName: string };
 
 /**
@@ -30,13 +32,15 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
   const { data: session } = useSession() ?? {};
   const loggedIn = !!session?.user;
   const key = ref ? itemKey(ref) : null;
-  const isCollection = ref?.type === "collection";
+  // Both Filmino collections and TMDB movie collections can be added "whole" or "just the contents"
+  const isCollection = ref?.type === "collection" || ref?.type === "tmdb_collection";
 
   const [status, setStatus] = useState<ItemStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [pending, setPending] = useState<PendingAdd | null>(null);
+  const { refresh: refreshLibrary } = useLibrary();
 
   const load = useCallback(async () => {
     if (!key || !loggedIn) return;
@@ -88,12 +92,13 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
           const n = res?.added ?? 0;
           setNotice(n > 0 ? `Přidáno: ${plural(n, "položka", "položky", "položek")} z kolekce` : "Všechny položky už v kolekci jsou");
         }
+        refreshLibrary();
       } catch (err) {
         if (mode === "whole") setContains(collectionId, false); // undo
         setError(errorMessage(err));
       }
     },
-    [ref, setContains]
+    [ref, setContains, refreshLibrary]
   );
 
   /** Adds or removes the item from a collection, updating the UI right away. */
@@ -109,12 +114,13 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
       setContains(collectionId, false);
       try {
         await collectionsApi.removeItem(collectionId, key);
+        refreshLibrary();
       } catch (err) {
         setContains(collectionId, true);
         setError(errorMessage(err));
       }
     },
-    [ref, key, isCollection, add, nameOf, setContains]
+    [ref, key, isCollection, add, nameOf, setContains, refreshLibrary]
   );
 
   const toggleSystem = useCallback(
@@ -140,12 +146,13 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
             ],
           }
         );
+        refreshLibrary();
         return created;
       } catch (err) {
         setError(errorMessage(err));
       }
     },
-    [ref, add]
+    [ref, add, refreshLibrary]
   );
 
   /** Creates a new collection containing this item (asks first when the item is a collection). */

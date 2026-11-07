@@ -83,14 +83,12 @@ export default function CreateCollectionDialog({ open, onClose, onCreate, subtit
           className="dark:bg-input/30 border-input w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px]"
         />
         <Switch checked={isPublic} onChange={setIsPublic} label="Veřejná" description="Kdokoli ji uvidí na vašem profilu. Soukromou vidíte jen vy a lidé, se kterými ji sdílíte." />
-        {!onCreate && (
-          <Switch
-            checked={organizational}
-            onChange={setOrganizational}
-            label="Organizační kolekce"
-            description="Nezobrazí se v seznamech ani na profilu – slouží jen jako skupina uvnitř jiných kolekcí (např. výběr epizod)."
-          />
-        )}
+        <Switch
+          checked={organizational}
+          onChange={setOrganizational}
+          label="Organizační kolekce"
+          description="Nezobrazí se v seznamech ani na profilu – slouží jen jako skupina uvnitř jiných kolekcí (např. výběr epizod)."
+        />
         {(error || externalError) && <p className="text-sm text-destructive">{error || externalError}</p>}
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={onClose}>Zrušit</Button>

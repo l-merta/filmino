@@ -14,6 +14,7 @@ import MediaActions from "@/components/collections/MediaActions";
 import CollectionItemCard from "@/components/collections/CollectionItemCard";
 import { CollectionGrid } from "@/components/collections/CollectionTile";
 import ReorderItems from "@/components/collections/ReorderItems";
+import { useLibrary } from "@/components/LibraryProvider";
 import { cn } from "@/lib/utils";
 import { collectionsApi, errorMessage, ITEM_TYPE_LABEL, plural, type CollectionDetail } from "@/lib/collections";
 
@@ -30,6 +31,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const [filter, setFilter] = useState<string>("ALL");
   const [busy, setBusy] = useState(false);
   const [reordering, setReordering] = useState(false);
+  const { refresh: refreshLibrary } = useLibrary();
 
   const load = useCallback(async () => {
     try {
@@ -79,6 +81,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const removeItem = (key: string) =>
     run(async () => {
       await collectionsApi.removeItem(id, key);
+      refreshLibrary();
       setData((d) => d && { ...d, items: d.items.filter((i) => i.itemKey !== key), counts: { ...d.counts, items: d.counts.items - 1 } });
     });
 

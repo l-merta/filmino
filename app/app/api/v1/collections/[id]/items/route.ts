@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { handle, readJson, requireUserId, HttpError } from "@/lib/server/http";
-import { addCollectionContents, topPosition, containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
+import { addCollectionContents, addTmdbCollectionContents, topPosition, containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -22,8 +22,15 @@ export const POST = handle(async (req: NextRequest, { params }: Ctx) => {
   const data = itemInputToData(body.item);
 
   if (body.mode === "contents") {
-    if (!data.childCollectionId) throw new HttpError(400, "Obsah lze přidat jen z kolekce");
-    const added = await addCollectionContents(data.childCollectionId, id, userId);
+    let added: number;
+    if (data.type === "TMDB_COLLECTION" && data.tmdbId !== null) {
+      // e.g. "Harry Potter Collection" -> add the individual movies
+      added = await addTmdbCollectionContents(data.tmdbId, id, userId);
+    } else if (data.childCollectionId) {
+      added = await addCollectionContents(data.childCollectionId, id, userId);
+    } else {
+      throw new HttpError(400, "Obsah lze přidat jen z kolekce");
+    }
     return NextResponse.json({ added }, { status: 201 });
   }
 

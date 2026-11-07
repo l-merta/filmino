@@ -1,6 +1,7 @@
 import type { Collection, CollectionItemType, Prisma, SystemCollection } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+import { axiosInstance } from "@/lib/axios";
 import { HttpError } from "@/lib/server/http";
 import { isShareLinkUsable } from "@/lib/server/shareLinks";
 
@@ -361,6 +362,42 @@ export async function addCollectionContents(sourceId: string, targetId: string, 
       subtitle: i.subtitle,
       posterPath: i.posterPath,
       year: i.year,
+      addedById: userId,
+    })),
+    skipDuplicates: true,
+  });
+  if (res.count > 0) await prisma.collection.update({ where: { id: targetId }, data: { updatedAt: new Date() } });
+  return res.count;
+}
+
+/**
+ * Adds every movie of a TMDB movie collection (e.g. all Harry Potter films)
+ * into `targetId`, in release order. Returns how many were added.
+ */
+export async function addTmdbCollectionContents(tmdbCollectionId: number, targetId: string, userId: string): Promise<number> {
+  type Part = { id: number; title?: string; original_title?: string; poster_path?: string | null; release_date?: string };
+  let parts: Part[];
+  try {
+    const { data } = await axiosInstance.get<{ parts?: Part[] }>(`/collection/${tmdbCollectionId}`, { params: { language: "cs-CZ" } });
+    parts = data.parts ?? [];
+  } catch {
+    throw new HttpError(502, "Nepodařilo se načíst filmy z TMDB");
+  }
+  // Oldest first; movies without a date go last
+  parts.sort((a, b) => (a.release_date || "9999").localeCompare(b.release_date || "9999"));
+
+  const start = (await topPosition(targetId)) - parts.length;
+  const res = await prisma.collectionItem.createMany({
+    data: parts.map((p, idx) => ({
+      collectionId: targetId,
+      position: start + idx,
+      ...itemInputToData({
+        type: "movie",
+        tmdbId: p.id,
+        title: p.title || p.original_title,
+        posterPath: p.poster_path ?? null,
+        year: p.release_date?.split("-")[0] || null,
+      }),
       addedById: userId,
     })),
     skipDuplicates: true,
