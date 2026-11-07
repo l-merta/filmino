@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { ensureSystemCollections } from '@/lib/server/collections';
 import bcrypt from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,13 +24,16 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         username,
         email,
         password: hashedPassword,
       },
     });
+
+    // Every user starts with Favorites / Watched / Watchlist
+    await ensureSystemCollections(user.id);
 
     return NextResponse.json({ message: 'Uživatel vytvořen' }, { status: 201 });
   } catch (error) {

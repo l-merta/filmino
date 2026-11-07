@@ -12,7 +12,7 @@ services:
       - /.next
     environment:
       - NODE_ENV=development
-      - DB_URL_PRISMA=${DB_URL}
+      - DB_URL_PRISMA=${DB_URL_PRISMA}
     env_file:
       - .env
 
@@ -23,10 +23,12 @@ services:
     ports:
       - "5200:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      TZ: Europe/Prague
+    command: --default-time-zone=Europe/Prague
     volumes:
       - db_data:/var/lib/mysql
 

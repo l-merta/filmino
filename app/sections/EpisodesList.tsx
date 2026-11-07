@@ -13,9 +13,10 @@ interface EpisodesListProps {
   icon?: React.ReactNode;
   tvId: number;
   seasonId: number;
+  tvName?: string;
 }
 
-export default function EpisodesList({ header, icon, tvId, seasonId }: EpisodesListProps) {
+export default function EpisodesList({ header, icon, tvId, seasonId, tvName }: EpisodesListProps) {
   const { data, isLoading, error } = tmdb.tv.Season(Number(tvId), Number(seasonId), { language: 'en' });
   const cardCountAdd = 16;
 
@@ -52,7 +53,7 @@ export default function EpisodesList({ header, icon, tvId, seasonId }: EpisodesL
         (data && data.episodes && data.episodes.length > 0 && <>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-8">
             {Array.from({ length: totalCardCount }).map((_, index) => (
-              (data.episodes && index < data.episodes.length && <EpisodeCard key={'card-' + index} tvId={tvId} details={data.episodes[index]} />)
+              (data.episodes && index < data.episodes.length && <EpisodeCard key={'card-' + index} tvId={tvId} tvName={tvName} details={data.episodes[index]} />)
             ))}
           </div>
           {data.episodes.length > 0 && totalCardCount < data.episodes.length && 

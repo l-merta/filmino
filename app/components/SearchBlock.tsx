@@ -1,20 +1,23 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-import SearchCard from "./SearchCard";
+import SearchCard, { type SearchLink, type SearchResult } from "./SearchCard";
 import { Button } from "@/components/ui/button";
 
-import { MediaList, MediaDetails, Params } from "@/types/tmdbApi";
+import { Params } from "@/types/tmdbApi";
 
 interface SearchBlockProps {
   search: string;
-  fetchFunction: (params?: Params) => Promise<MediaList>;
-  link: 'filmy' | 'serialy';
+  fetchFunction: (params?: Params) => Promise<{ results?: SearchResult[]; total_results?: number }>;
+  link: SearchLink;
   typeName: string;
+  /** Heading of the block, e.g. "Herci" (typeName is used in "Zobrazit všechny …") */
+  label?: string;
+  onNavigate?: () => void;
 }
 
-export default function SearchBlock({ search, fetchFunction, link, typeName }: SearchBlockProps) {
-  const [mediaItems, setMediaItems] = useState<MediaDetails[]>([]);
+export default function SearchBlock({ search, fetchFunction, link, typeName, label, onNavigate }: SearchBlockProps) {
+  const [mediaItems, setMediaItems] = useState<SearchResult[]>([]);
   const [resultsLength, setResultsLength] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,7 +53,8 @@ export default function SearchBlock({ search, fetchFunction, link, typeName }: S
 }, [search, fetchFunction]);
 
   if (!isLoading) return (
-    <div className="w-80 bg-[var(--background)] flex flex-col gap-1 rounded-b-md pb-1.5 pointer-events-auto z-6">
+    <div className="w-full md:w-80 bg-[var(--background)] flex flex-col gap-1 rounded-md md:rounded-t-none pb-1.5 pointer-events-auto z-6" onClick={onNavigate}>
+      <span className="px-3 pt-2 text-xs uppercase tracking-wide opacity-60">{label ?? typeName}</span>
       {mediaItems.length > 0 ? 
         mediaItems.slice(0, showResults).map((item) => (
           <SearchCard key={item.id} link={link} data={item} />
@@ -59,14 +63,14 @@ export default function SearchBlock({ search, fetchFunction, link, typeName }: S
         <div className="p-4 text-center text-gray-500">Žádné výsledky</div>
       }
       {mediaItems.length > showResults && (
-        <Link href={`/${link}/hledat/${search}`} className="">
-          <Button className="w-full !h-15" variant={'ghost'}>Zobrazit všechny {typeName} - {resultsLength}</Button>
+        <Link href={`/${link}/hledat/${encodeURIComponent(search)}`} className="">
+          <Button className="w-full !h-12 md:!h-15" variant={'ghost'}>Zobrazit všechny {typeName} - {resultsLength}</Button>
         </Link>
       )}
     </div>
   )
   else return (
-    <div className="w-80 bg-[var(--background-2)] flex flex-col gap-1 rounded-b-md pb-1.5">
+    <div className="w-full md:w-80 bg-[var(--background-2)] flex flex-col gap-1 rounded-md md:rounded-t-none pb-1.5">
       {Array.from({ length: 2 }).map((_, index) => (
         <SearchCard key={`search-card-skeleton-${index}`} link={link} data={undefined} />
       ))}

@@ -8,9 +8,13 @@ import { EpisodeDetails } from "@/types/tmdbApi";
 
 import { Tv } from "lucide-react";
 
+import ActionMenu from "@/components/collections/ActionMenu";
+import LibraryBadges from "@/components/collections/LibraryBadges";
+
 interface CardProps {
   details?: EpisodeDetails;
   tvId: number;
+  tvName?: string;
 }
 
 export function SkeletonCard() {
@@ -26,11 +30,20 @@ export function SkeletonCard() {
   );
 }
 
-export function EpisodeCard({ details, tvId }: CardProps) {
+export function EpisodeCard({ details, tvId, tvName }: CardProps) {
   const sNumber = "s" + (details ? details.season_number.toString().padStart(2, '0') : "00");
   const eNumber = "e" + (details ? details.episode_number.toString().padStart(2, '0') : "00");
 
   if (details) return (
+    <div className="relative group z-3">
+    <ActionMenu
+      className="absolute top-2 right-2 z-10"
+      item={{
+        type: "episode", tmdbId: tvId, seasonNumber: details.season_number, episodeNumber: details.episode_number,
+        title: details.name, subtitle: (tvName ? tvName + " · " : "") + (sNumber + eNumber).toUpperCase(),
+        posterPath: details.still_path, year: details.air_date?.split('-')[0] || null,
+      }}
+    />
     <Link href={'/serialy/' + tvId + "/" + sNumber + "/" + eNumber} className="flex flex-col gap-0.5 hover:scale-98 transition-transform duration-200 z-3">
       <div className="w-full aspect-[16/9] relative flex items-center justify-center">
         <Image 
@@ -43,6 +56,7 @@ export function EpisodeCard({ details, tvId }: CardProps) {
         />
         <Tv size={40} className="opacity-70 absolute z-2" />
         <Skeleton className="w-full h-full rounded-md absolute z-1" />
+        <LibraryBadges mediaKey={`episode:${tvId}:${details.season_number}:${details.episode_number}`} className="absolute bottom-2 left-2 z-4" />
       </div>
       <div className="flex justify-between gap-1 mt-2">
         <span className="font-bold text-[0.9rem] line-clamp-1">{details.name}</span>
@@ -50,10 +64,11 @@ export function EpisodeCard({ details, tvId }: CardProps) {
       </div>
       {details.runtime && <span className="font-semibold text-[0.9rem] opacity-60 line-clamp-1">{details.runtime} min</span>}
     </Link>
+    </div>
   )
 }
 
-export default function ActorCard({ details, tvId }: CardProps) {
+export default function ActorCard({ details, tvId, tvName }: CardProps) {
   if (!details) return <SkeletonCard />
-  if (details) return <EpisodeCard details={details} tvId={tvId} />
+  if (details) return <EpisodeCard details={details} tvId={tvId} tvName={tvName} />
 }

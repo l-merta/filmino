@@ -1,14 +1,15 @@
-import Profil from "@/pages/Profil";
+import Uzivatel from "@/pages/Uzivatel";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Profil - Filmino",
-  description: "Spravujte svůj profil a nastavení",
+  description: "Vaše kolekce a profil",
   icons: {
     icon: "/images/Filmino_filmy_logo.png",
   },
 };
 
 export default function Page() {
-  return <Profil />;
+  // Without an id the profile page shows the logged in user
+  return <Uzivatel />;
 }
