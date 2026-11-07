@@ -170,6 +170,7 @@ export const collectionsApi = {
   itemStatus: (key: string) => apiGet<ItemStatus>("/me/item-status", { key }),
   addItem: (collectionId: string, item: MediaRef, mode?: AddMode) =>
     apiPost<{ added?: number }>(`/collections/${collectionId}/items`, { item, mode }),
+  reorderItems: (collectionId: string, keys: string[]) => apiClient.put(`/collections/${collectionId}/items/order`, { keys }),
   removeItem: (collectionId: string, key: string) =>
     apiDelete(`/collections/${collectionId}/items?key=${encodeURIComponent(key)}`),
   create: (body: { name: string; description?: string; isPublic?: boolean; showInLists?: boolean; item?: MediaRef }) =>

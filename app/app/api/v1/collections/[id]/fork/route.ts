@@ -45,6 +45,7 @@ export const POST = handle(async (req: NextRequest, { params }: Ctx) => {
           subtitle: i.subtitle,
           posterPath: i.posterPath,
           year: i.year,
+          position: i.position,
           addedById: userId,
         })),
       },

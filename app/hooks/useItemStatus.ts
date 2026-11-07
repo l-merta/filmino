@@ -16,7 +16,8 @@ import {
 } from "@/lib/collections";
 
 /** An add that waits for the user to pick "whole collection" or "just its contents". */
-export type PendingAdd = { target: { collectionId: string } | { newName: string }; targetName: string };
+export type NewCollectionInput = { name: string; description?: string; isPublic?: boolean };
+export type PendingAdd = { target: { collectionId: string } | { newCollection: NewCollectionInput }; targetName: string };
 
 /**
  * Loads + changes which of my collections contain one item.
@@ -125,10 +126,10 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
   );
 
   const createAndAdd = useCallback(
-    async (name: string, mode: AddMode): Promise<CollectionSummary | undefined> => {
+    async (input: NewCollectionInput, mode: AddMode): Promise<CollectionSummary | undefined> => {
       if (!ref) return;
       try {
-        const created = await collectionsApi.create(mode === "whole" ? { name, item: ref } : { name });
+        const created = await collectionsApi.create(mode === "whole" ? { ...input, item: ref } : input);
         if (mode === "contents") await add(created.id, "contents");
         setStatus((s) =>
           s && {
@@ -149,12 +150,13 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
 
   /** Creates a new collection containing this item (asks first when the item is a collection). */
   const createWithItem = useCallback(
-    async (name: string) => {
+    async (input: NewCollectionInput) => {
+      setError(null);
       if (isCollection) {
-        setPending({ target: { newName: name }, targetName: name });
+        setPending({ target: { newCollection: input }, targetName: input.name });
         return { pending: true } as const;
       }
-      return createAndAdd(name, "whole");
+      return createAndAdd(input, "whole");
     },
     [isCollection, createAndAdd]
   );
@@ -166,7 +168,7 @@ export function useItemStatus(ref: MediaRef | null, enabled = true) {
       setPending(null);
       if (!p || !mode) return;
       if ("collectionId" in p.target) await add(p.target.collectionId, mode);
-      else await createAndAdd(p.target.newName, mode);
+      else await createAndAdd(p.target.newCollection, mode);
     },
     [pending, add, createAndAdd]
   );

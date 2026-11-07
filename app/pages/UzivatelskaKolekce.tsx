@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bookmark, Copy, Eye, GitFork, Globe, Heart, Lock, Settings, UserCheck, UserPlus, Users, EyeOff } from "lucide-react";
+import { ArrowUpDown, Bookmark, Copy, Eye, GitFork, Globe, Heart, Lock, Settings, UserCheck, UserPlus, Users, EyeOff } from "lucide-react";
 
 import Header from "@/components/Header";
 import List from "@/sections/List";
@@ -13,6 +13,7 @@ import UserAvatar from "@/components/UserAvatar";
 import MediaActions from "@/components/collections/MediaActions";
 import CollectionItemCard from "@/components/collections/CollectionItemCard";
 import { CollectionGrid } from "@/components/collections/CollectionTile";
+import ReorderItems from "@/components/collections/ReorderItems";
 import { cn } from "@/lib/utils";
 import { collectionsApi, errorMessage, ITEM_TYPE_LABEL, plural, type CollectionDetail } from "@/lib/collections";
 
@@ -28,6 +29,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("ALL");
   const [busy, setBusy] = useState(false);
+  const [reordering, setReordering] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -171,8 +173,36 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
           </div>
         )}
 
-        {data && (
+        {data && reordering && (
+          <List header="Pořadí položek">
+            <ReorderItems
+              items={data.items}
+              onCancel={() => setReordering(false)}
+              onSave={async (keys) => {
+                await run(async () => {
+                  await collectionsApi.reorderItems(id, keys);
+                  await load();
+                  setReordering(false);
+                });
+              }}
+            />
+          </List>
+        )}
+
+        {data && !reordering && (
           <List header="Obsah">
+            {data.viewer.canEdit && data.items.length > 1 && (
+              <Button
+                variant="outline"
+                className="button-outline mb-6 mr-2"
+                onClick={() => {
+                  setFilter("ALL");
+                  setReordering(true);
+                }}
+              >
+                <ArrowUpDown /> Upravit pořadí
+              </Button>
+            )}
             {types.length > 1 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {["ALL", ...types].map((t) => (

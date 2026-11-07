@@ -312,9 +312,15 @@ export function serializeCollectionSummary(c: CollectionWithPreview) {
 /** Prisma `include` for a collection summary with up to 4 preview posters. */
 export const collectionSummaryInclude = {
   owner: { select: publicUserSelect },
-  items: { select: { posterPath: true }, where: { posterPath: { not: null } }, orderBy: { createdAt: "desc" }, take: 4 },
+  items: { select: { posterPath: true }, where: { posterPath: { not: null } }, orderBy: [{ position: "asc" }, { createdAt: "desc" }], take: 4 },
   _count: { select: { items: true } },
 } satisfies Prisma.CollectionInclude;
+
+/** Position for a new item so it shows first (one lower than the current lowest). */
+export async function topPosition(collectionId: string): Promise<number> {
+  const agg = await prisma.collectionItem.aggregate({ where: { collectionId }, _min: { position: true } });
+  return (agg._min.position ?? 1) - 1;
+}
 
 /**
  * Copies every item of `sourceId` into `targetId` (instead of nesting the collection itself).
@@ -325,7 +331,10 @@ export async function addCollectionContents(sourceId: string, targetId: string, 
   if (sourceId === targetId) throw new HttpError(400, "Kolekci nelze přidat samu do sebe");
   await requireCollectionAccess(sourceId, userId, "view");
 
-  const items = await prisma.collectionItem.findMany({ where: { collectionId: sourceId }, orderBy: { createdAt: "asc" } });
+  const items = await prisma.collectionItem.findMany({
+    where: { collectionId: sourceId },
+    orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+  });
 
   const safe = [];
   for (const i of items) {
@@ -336,8 +345,11 @@ export async function addCollectionContents(sourceId: string, targetId: string, 
     safe.push(i);
   }
 
+  // Put the copied items on top of the target, keeping their order
+  const start = (await topPosition(targetId)) - safe.length;
   const res = await prisma.collectionItem.createMany({
-    data: safe.map((i) => ({
+    data: safe.map((i, idx) => ({
+      position: start + idx,
       collectionId: targetId,
       type: i.type,
       itemKey: i.itemKey,

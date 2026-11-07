@@ -146,6 +146,8 @@ model CollectionItem {
   subtitle          String?            @db.VarChar(255)
   posterPath        String?            @db.VarChar(255)
   year              String?            @db.VarChar(32)
+  // Manual order inside the collection (lower = earlier). New items get the lowest number.
+  position          Int                @default(0)
   addedById         String?            @db.VarChar(191)
   createdAt         DateTime           @default(now())
 
@@ -154,6 +156,7 @@ model CollectionItem {
   addedBy         Users?      @relation("ItemAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
 
   @@unique([collectionId, itemKey])
+  @@index([collectionId, position])
   @@index([itemKey])
   @@index([childCollectionId])
 }

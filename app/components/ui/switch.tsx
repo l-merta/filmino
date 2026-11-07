@@ -26,7 +26,7 @@ export function Switch({ checked, onChange, disabled, label, description }: Swit
         onClick={() => onChange(!checked)}
         className={cn(
           "relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer",
-          checked ? "bg-[var(--color-main,var(--primary))]" : "bg-input"
+          checked ? "bg-[var(--color-main,var(--color-main-1))]" : "bg-input"
         )}
       >
         <span

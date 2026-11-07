@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { handle, readJson, requireUserId, HttpError } from "@/lib/server/http";
-import { addCollectionContents, containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
+import { addCollectionContents, topPosition, containsCollection, itemInputToData, requireCollectionAccess, type ItemInput } from "@/lib/server/collections";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -39,7 +39,7 @@ export const POST = handle(async (req: NextRequest, { params }: Ctx) => {
 
   const item = await prisma.collectionItem.upsert({
     where: { collectionId_itemKey: { collectionId: id, itemKey: data.itemKey } },
-    create: { ...data, collectionId: id, addedById: userId },
+    create: { ...data, collectionId: id, addedById: userId, position: await topPosition(id) },
     update: {},
   });
   await prisma.collection.update({ where: { id }, data: { updatedAt: new Date() } });

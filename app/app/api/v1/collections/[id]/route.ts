@@ -30,7 +30,7 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
         owner: { select: publicUserSelect },
         contributors: { include: { user: { select: publicUserSelect } }, orderBy: { createdAt: "asc" } },
         items: {
-          orderBy: { createdAt: "desc" },
+          orderBy: [{ position: "asc" }, { createdAt: "desc" }],
           include: { addedBy: { select: publicUserSelect } },
         },
       },
