@@ -36,11 +36,11 @@ export default function Header({ active }: HeaderProps) {
       <Link href="/serialy" className={(active == "serialy" ? "text-[var(--color-main-2)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
         Seriály
       </Link>
-      {session && (
+      {/* {session && (
         <Link href="/profil" className={(pathname === "/profil" || pathname?.startsWith("/kolekce") ? "text-[var(--color-main)]" : "opacity-80") + " font-semibold hover:opacity-70"}>
           Kolekce
         </Link>
-      )}
+      )} */}
     </>
   );
 
@@ -52,11 +52,11 @@ export default function Header({ active }: HeaderProps) {
             <h1 className={"text-[var(--color-main)] text-2xl font-bold"}>Filmino</h1>
           </Link>
           {/* Desktop search */}
-          <Search className="hidden md:block" />
+          <Search className="hidden lg:block" />
         </div>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center space-x-4">
+        <nav className="hidden lg:flex items-center space-x-4">
           {navLinks}
           {!session ?
             <div className="flex items-center space-x-2">
@@ -73,9 +73,9 @@ export default function Header({ active }: HeaderProps) {
                 <UserAvatar user={session.user} />
                 <span className="whitespace-nowrap max-w-40 truncate">{session.user.username}</span>
               </Link>
-              <Link href="/nastaveni" aria-label="Nastavení účtu">
+              {/* <Link href="/nastaveni" aria-label="Nastavení účtu">
                 <Button className="button-outline" variant="outline"><Settings /></Button>
-              </Link>
+              </Link> */}
               <Button
                 onClick={() => signOut({ callbackUrl: "/prihlaseni" })}
                 className="button-outline"
@@ -89,7 +89,7 @@ export default function Header({ active }: HeaderProps) {
         </nav>
 
         {/* Mobile buttons */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           <Button variant="outline" size="icon" className="button-outline" aria-label="Hledat" onClick={() => { setSearchOpen((o) => !o); setMenuOpen(false); }}>
             {searchOpen ? <X /> : <SearchIcon />}
           </Button>
@@ -104,7 +104,7 @@ export default function Header({ active }: HeaderProps) {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="md:hidden mt-4 pb-2 flex flex-col gap-4 text-lg">
+        <nav className="lg:hidden mt-4 pb-2 flex flex-col gap-4 text-lg">
           {navLinks}
           <div className="border-t" />
           {!session ? (
@@ -123,7 +123,7 @@ export default function Header({ active }: HeaderProps) {
                 <span className="truncate">{session.user.username}</span>
               </Link>
               <Link href="/profil" className="flex items-center gap-3 opacity-80"><User size={18} /> Profil</Link>
-              <Link href="/profil" className="flex items-center gap-3 opacity-80"><FolderHeart size={18} /> Moje kolekce</Link>
+              {/* <Link href="/profil" className="flex items-center gap-3 opacity-80"><FolderHeart size={18} /> Moje kolekce</Link> */}
               <Link href="/nastaveni" className="flex items-center gap-3 opacity-80"><Settings size={18} /> Nastavení účtu</Link>
               <button onClick={() => signOut({ callbackUrl: "/prihlaseni" })} className="flex items-center gap-3 opacity-80 text-left cursor-pointer">
                 <LogOut size={18} /> Odhlásit se
