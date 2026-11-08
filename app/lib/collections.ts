@@ -4,6 +4,9 @@ import { apiClient, apiDelete, apiGet, apiPost } from "@/lib/apiClient";
 /** When adding a collection into another one: nest the whole collection, or copy just its items. */
 export type AddMode = "whole" | "contents";
 
+/** Language of TMDB texts / images: Czech, English or the movie's original language. */
+export type LanguagePref = "cs" | "en" | "original";
+
 export type SystemKind = "FAVORITES" | "WATCHED" | "WATCHLIST";
 
 /** Something that can be put in a collection. */
@@ -120,6 +123,7 @@ export type CollectionDetail = {
   system: SystemKind | null;
   isPublic: boolean;
   showInLists: boolean;
+  addToEnd: boolean;
   createdAt: string;
   updatedAt: string;
   owner: PublicUser;
@@ -181,7 +185,7 @@ export const collectionsApi = {
     ),
   get: (id: string, share?: string | null) =>
     apiGet<CollectionDetail>(`/collections/${id}`, share ? { share } : undefined),
-  update: (id: string, body: Partial<{ name: string; description: string | null; isPublic: boolean; showInLists: boolean }>) =>
+  update: (id: string, body: Partial<{ name: string; description: string | null; isPublic: boolean; showInLists: boolean; addToEnd: boolean }>) =>
     apiClient.patch(`/collections/${id}`, body).then((r) => r.data),
   remove: (id: string) => apiDelete(`/collections/${id}`),
   follow: (id: string, share?: string | null) => apiPost(`/collections/${id}/follow`, { share: share || undefined }),
@@ -198,8 +202,9 @@ export const usersApi = {
   profile: (id: string, share?: string | null) => apiGet<ProfileResponse>(`/users/${id}`, share ? { share } : undefined),
   follow: (id: string) => apiPost<{ status: "PENDING" | "ACCEPTED" }>(`/users/${id}/follow`),
   unfollow: (id: string) => apiDelete(`/users/${id}/follow`),
-  me: () => apiGet<{ id: string; username: string; email: string; image: string | null; isPublic: boolean; hasPassword: boolean }>("/me"),
-  updateMe: (body: Partial<{ username: string; email: string; isPublic: boolean; newPassword: string; currentPassword: string }>) =>
+  me: () =>
+    apiGet<{ id: string; username: string; email: string; image: string | null; isPublic: boolean; textLanguage: LanguagePref; imageLanguage: LanguagePref; hasPassword: boolean }>("/me"),
+  updateMe: (body: Partial<{ username: string; email: string; isPublic: boolean; textLanguage: LanguagePref; imageLanguage: LanguagePref; newPassword: string; currentPassword: string }>) =>
     apiClient.patch("/me", body).then((r) => r.data),
   followRequests: () =>
     apiGet<{ requests: PublicUser[]; followers: PublicUser[]; following: (PublicUser & { status: string })[] }>("/me/follow-requests"),

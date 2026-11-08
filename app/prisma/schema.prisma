@@ -16,6 +16,9 @@ model Users {
   password      String?  @db.VarChar(191)
   image         String?  @db.VarChar(191)
   isPublic      Boolean  @default(true)
+  // Language preferences for TMDB data: "cs" | "en" | "original"
+  textLanguage  String   @default("cs") @db.VarChar(16)
+  imageLanguage String   @default("en") @db.VarChar(16)
   createdAt     DateTime @default(now())
   accounts      Account[]
   sessions      Session[]
@@ -110,6 +113,8 @@ model Collection {
   // collections (e.g. a group of episodes) and is not listed on the profile or
   // in the user's collection lists. It has nothing to do with permissions.
   showInLists  Boolean           @default(true)
+  // true = newly added items go to the end instead of the front
+  addToEnd     Boolean           @default(false)
   ownerId      String            @db.VarChar(191)
   forkedFromId String?           @db.VarChar(191)
   createdAt    DateTime          @default(now())

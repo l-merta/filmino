@@ -114,7 +114,7 @@ export default function ActionMenu({ item, className, extraActions }: Props) {
                   const active = !!state.status?.system[kind]?.contains;
                   return (
                     <button key={kind} role="menuitemcheckbox" aria-checked={active} className={itemClass} disabled={!state.status} onClick={() => state.toggleSystem(kind)}>
-                      <Icon size={16} className={cn(active && "fill-current text-[var(--color-main,var(--color-main-1))]")} />
+                      <Icon size={16} className={cn(active && "text-[var(--color-main,var(--color-main-1))]", active && kind !== "WATCHED" && "fill-current")} />
                       {active ? activeLabel : label}
                     </button>
                   );

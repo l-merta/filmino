@@ -153,6 +153,15 @@ export default function NastaveniKolekce({ id }: { id: string }) {
             )}
           </Card>
 
+          <Card title="Pořadí položek">
+            <Switch
+              checked={data.addToEnd}
+              onChange={(v) => update({ addToEnd: v }, v ? "Nové položky se přidají na konec" : "Nové položky se přidají na začátek")}
+              label="Přidávat nové položky na konec"
+              description="Ve výchozím stavu se nově přidané filmy a seriály zobrazí jako první. Zapněte, pokud je chcete řadit za ostatní (např. při sestavování seznamu podle pořadí sledování)."
+            />
+          </Card>
+
           <Card
             title="Sdílení"
             description={

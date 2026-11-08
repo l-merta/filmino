@@ -5,6 +5,13 @@ import { Skeleton } from "./ui/skeleton";
 
 import { ReviewDetails } from "@/types/tmdbApi";
 
+/** "2023-05-14T18:22:10.123Z" -> "14. 5. 2023" */
+function formatDate(iso?: string) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? iso : d.toLocaleDateString("cs-CZ", { day: "numeric", month: "numeric", year: "numeric" });
+}
+
 interface CardProps {
   details?: ReviewDetails;
 }
@@ -26,14 +33,14 @@ export function ReviewCard({ details }: CardProps) {
     <div className="w-full flex gap-4">
       <div className="w-15 h-15 rounded-full overflow-hidden flex justify-center items-center relative">
         <Avatar className="w-15 h-15">
-          <AvatarImage src={tmdb.image(details.author_details.avatar_path || "")} />
-          <AvatarFallback className="text-xl">{details.author_details.username && details.author_details.username.substring(0, 1).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={tmdb.image(details.author_details?.avatar_path || "")} />
+          <AvatarFallback className="text-xl">{details.author_details?.username && details.author_details.username.substring(0, 1).toUpperCase()}</AvatarFallback>
         </Avatar>
       </div>
       <div className="flex flex-col gap-2 w-full">
         <div className="flex gap-2 items-center">
           <span className="font-semibold">{details.author}</span>
-          <span className="opacity-80">{details.updated_at}</span>
+          <span className="opacity-80" title={details.updated_at}>{formatDate(details.created_at || details.updated_at)}</span>
         </div>
         <p className="line-clamp-5 opacity-80">{details.content}</p>
       </div>

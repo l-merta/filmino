@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import { prisma } from "@/lib/prisma";
 import { handle, readJson, requireUserId, HttpError } from "@/lib/server/http";
+import { forgetLanguagePrefs, isLanguagePref } from "@/lib/server/languagePrefs";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const USERNAME_REGEX = /^[\p{L}\p{N}_.-]{3,30}$/u;
@@ -17,21 +18,23 @@ export const GET = handle(async () => {
     email: user.email,
     image: user.image,
     isPublic: user.isPublic,
+    textLanguage: user.textLanguage,
+    imageLanguage: user.imageLanguage,
     hasPassword: !!user.password,
   });
 });
 
 /**
  * PATCH /api/v1/me
- * Body: { username?, email?, isPublic?, newPassword?, currentPassword? }
+ * Body: { username?, email?, isPublic?, textLanguage?, imageLanguage?, newPassword?, currentPassword? }
  * Changing e-mail or password requires the current password (if the account has one).
  */
 export const PATCH = handle(async (req: NextRequest) => {
   const userId = await requireUserId();
-  const body = await readJson<{ username?: string; email?: string; isPublic?: boolean; newPassword?: string; currentPassword?: string }>(req);
+  const body = await readJson<{ username?: string; email?: string; isPublic?: boolean; textLanguage?: string; imageLanguage?: string; newPassword?: string; currentPassword?: string }>(req);
   const user = await prisma.users.findUniqueOrThrow({ where: { id: userId } });
 
-  const data: { username?: string; email?: string; isPublic?: boolean; password?: string } = {};
+  const data: { username?: string; email?: string; isPublic?: boolean; password?: string; textLanguage?: string; imageLanguage?: string } = {};
 
   if (body.username !== undefined && body.username.trim() !== user.username) {
     const username = body.username.trim();
@@ -61,9 +64,15 @@ export const PATCH = handle(async (req: NextRequest) => {
   }
 
   if (body.isPublic !== undefined) data.isPublic = !!body.isPublic;
+  for (const key of ["textLanguage", "imageLanguage"] as const) {
+    if (body[key] === undefined) continue;
+    if (!isLanguagePref(body[key])) throw new HttpError(400, "Neplatný jazyk");
+    data[key] = body[key];
+  }
 
   try {
     await prisma.users.update({ where: { id: userId }, data });
+    forgetLanguagePrefs(userId);
   } catch (err) {
     if ((err as { code?: string }).code === "P2002") {
       throw new HttpError(400, "Toto uživatelské jméno nebo e-mail už někdo používá");

@@ -317,10 +317,17 @@ export const collectionSummaryInclude = {
   _count: { select: { items: true } },
 } satisfies Prisma.CollectionInclude;
 
-/** Position for a new item so it shows first (one lower than the current lowest). */
-export async function topPosition(collectionId: string): Promise<number> {
-  const agg = await prisma.collectionItem.aggregate({ where: { collectionId }, _min: { position: true } });
-  return (agg._min.position ?? 1) - 1;
+/**
+ * Position of the first of `count` new items.
+ * By default new items go to the front (below the current lowest position);
+ * collections with `addToEnd` put them after the current highest one.
+ * Items added together keep their order: start, start+1, …
+ */
+export async function insertPosition(collectionId: string, count = 1): Promise<number> {
+  const col = await prisma.collection.findUnique({ where: { id: collectionId }, select: { addToEnd: true } });
+  const agg = await prisma.collectionItem.aggregate({ where: { collectionId }, _min: { position: true }, _max: { position: true } });
+  if (col?.addToEnd) return (agg._max.position ?? -1) + 1;
+  return (agg._min.position ?? 0) - count;
 }
 
 /**
@@ -346,8 +353,8 @@ export async function addCollectionContents(sourceId: string, targetId: string, 
     safe.push(i);
   }
 
-  // Put the copied items on top of the target, keeping their order
-  const start = (await topPosition(targetId)) - safe.length;
+  // Put the copied items at the front (or end) of the target, keeping their order
+  const start = await insertPosition(targetId, safe.length);
   const res = await prisma.collectionItem.createMany({
     data: safe.map((i, idx) => ({
       position: start + idx,
@@ -386,7 +393,7 @@ export async function addTmdbCollectionContents(tmdbCollectionId: number, target
   // Oldest first; movies without a date go last
   parts.sort((a, b) => (a.release_date || "9999").localeCompare(b.release_date || "9999"));
 
-  const start = (await topPosition(targetId)) - parts.length;
+  const start = await insertPosition(targetId, parts.length);
   const res = await prisma.collectionItem.createMany({
     data: parts.map((p, idx) => ({
       collectionId: targetId,
