@@ -1,3 +1,4 @@
+import { localizePosters } from "@/lib/server/localPosters";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
@@ -66,6 +67,9 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
           })
         : Promise.resolve([]),
     ]);
+
+    // Preview posters in the viewer's image language
+    await localizePosters([...owned, ...contributed, ...followed.map((f) => f.collection)].flatMap((c) => c.items));
 
     const order = ["FAVORITES", "WATCHED", "WATCHLIST"];
     collections = {

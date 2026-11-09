@@ -55,7 +55,7 @@ export default function MediaActions({ item, className }: Props) {
             onClick={() => state.toggleSystem(kind)}
             aria-pressed={active}
           >
-            <Icon className={cn(active && "fill-current")} />
+            <Icon className={cn(active && kind !== "WATCHED" && "fill-current")} />
             <span>{active ? activeLabel : label}</span>
           </Button>
         );

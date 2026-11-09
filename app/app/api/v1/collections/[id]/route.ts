@@ -1,3 +1,4 @@
+import { localizePosters } from "@/lib/server/localPosters";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
@@ -46,6 +47,9 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
       : null,
   ]);
 
+  // Posters in the viewer's image language
+  await localizePosters(collection.items);
+
   return NextResponse.json({
     id: collection.id,
     name: collection.name,
@@ -53,6 +57,7 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
     system: collection.system,
     isPublic: collection.isPublic,
     showInLists: collection.showInLists,
+    addToEnd: collection.addToEnd,
     createdAt: collection.createdAt,
     updatedAt: collection.updatedAt,
     owner: collection.owner,
@@ -86,17 +91,17 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
 
 /**
  * PATCH /api/v1/collections/:id
- * Body: { name?, description?, isPublic?, showInLists? }
- * Contributors can rename / describe. Only the owner can change visibility.
+ * Body: { name?, description?, isPublic?, showInLists?, addToEnd? }
+ * Contributors can rename / describe and pick where new items go. Only the owner can change visibility.
  * System collections can't be renamed.
  */
 export const PATCH = handle(async (req: NextRequest, { params }: Ctx) => {
   const { id } = await params;
   const userId = await requireUserId();
   const access = await requireCollectionAccess(id, userId, "edit");
-  const body = await readJson<{ name?: string; description?: string | null; isPublic?: boolean; showInLists?: boolean }>(req);
+  const body = await readJson<{ name?: string; description?: string | null; isPublic?: boolean; showInLists?: boolean; addToEnd?: boolean }>(req);
 
-  const data: { name?: string; description?: string | null; isPublic?: boolean; showInLists?: boolean } = {};
+  const data: { name?: string; description?: string | null; isPublic?: boolean; showInLists?: boolean; addToEnd?: boolean } = {};
 
   if (body.name !== undefined) {
     if (access.collection.system) throw new HttpError(400, "Název výchozí kolekce nelze změnit");
@@ -108,6 +113,7 @@ export const PATCH = handle(async (req: NextRequest, { params }: Ctx) => {
   if (body.description !== undefined) {
     data.description = body.description?.trim().slice(0, 2000) || null;
   }
+  if (body.addToEnd !== undefined) data.addToEnd = !!body.addToEnd;
   if (body.isPublic !== undefined || body.showInLists !== undefined) {
     if (!access.isOwner) throw new HttpError(403, "Viditelnost může měnit jen vlastník");
     if (body.isPublic !== undefined) data.isPublic = !!body.isPublic;

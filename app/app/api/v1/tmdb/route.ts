@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { axiosInstance } from "@/lib/axios";
 import { MediaDetails } from "@/types/tmdbApi";
+import { getLanguagePrefs } from "@/lib/server/languagePrefs";
+import { IMAGE_FIELDS, TEXT_FIELDS, patchLanguage, sortImages, tmdbLanguage } from "@/lib/server/tmdbLocalize";
 
 // Default parameters that apply to all TMDB requests
 const DEFAULT_PARAMS = {
@@ -39,10 +41,32 @@ export async function GET(request: NextRequest) {
       }
     });
 
+    // The user's language settings (texts and images can differ, see Nastavení účtu)
+    const prefs = await getLanguagePrefs();
+    // A page can still ask for a specific language (e.g. reviews in the original language)
+    const fixedLanguage = params.language;
+    const textLanguage = fixedLanguage ?? (prefs.text === "original" ? "en-US" : tmdbLanguage(prefs.text));
+
+    // Images endpoint: make sure pictures in the wanted language are included
+    const imagesPath = /\/(movie|tv)\/\d+\/images$/.test(tmdbPath);
+    let imageLang = prefs.image === "original" ? null : prefs.image;
+    if (imagesPath && prefs.image === "original") {
+      try {
+        const { data } = await axiosInstance.get(tmdbPath.replace(/\/images$/, ""), { params: { language: "en-US" } });
+        imageLang = data.original_language ?? "en";
+      } catch {
+        imageLang = "en";
+      }
+    }
+    if (imagesPath && imageLang && params.include_image_language && !params.include_image_language.split(",").includes(imageLang)) {
+      params.include_image_language = `${imageLang},${params.include_image_language}`;
+    }
+
     // Merge with default parameters (user params override defaults)
     const finalParams = {
       ...DEFAULT_PARAMS,
       ...params,
+      language: textLanguage,
     };
 
     // Make the request to TMDB
@@ -52,6 +76,19 @@ export async function GET(request: NextRequest) {
     });
 
     let responseData = response.data;
+
+    if (imagesPath) {
+      if (imageLang) sortImages(responseData, imageLang);
+    } else {
+      // Texts in the original language, images in another one: patch both in one go when they match
+      const bothOriginal = !fixedLanguage && prefs.text === "original" && prefs.image === "original";
+      if (!fixedLanguage && prefs.text === "original") {
+        await patchLanguage(tmdbPath, finalParams, responseData, "original", textLanguage, bothOriginal ? [...TEXT_FIELDS, ...IMAGE_FIELDS] : TEXT_FIELDS);
+      }
+      if (!bothOriginal) {
+        await patchLanguage(tmdbPath, finalParams, responseData, prefs.image, textLanguage, IMAGE_FIELDS);
+      }
+    }
 
     if (responseData.results) {
       // Filter results if excluded_genres is provided and response has results array

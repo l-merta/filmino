@@ -26,7 +26,7 @@ export default function LibraryBadges({ item, mediaKey, className }: { item?: Me
     <div className={cn("flex items-center gap-1 rounded-full bg-black/70 px-1.5 py-1 text-white pointer-events-auto", className)}>
       {active.map(({ flag, icon: Icon, label }) => (
         <span key={flag} title={label} aria-label={label} className="flex">
-          <Icon size={14} className={flag === "custom" ? "" : "fill-current"} />
+          <Icon size={14} className={flag === "favorite" || flag === "watchlist" ? "fill-current" : ""} />
         </span>
       ))}
     </div>

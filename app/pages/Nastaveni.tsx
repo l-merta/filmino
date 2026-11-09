@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import UserAvatar from "@/components/UserAvatar";
 import ShareLinksManager from "@/components/collections/ShareLinksManager";
-import { collectionsApi, errorMessage, usersApi, type PublicUser } from "@/lib/collections";
+import { collectionsApi, errorMessage, usersApi, type LanguagePref, type PublicUser } from "@/lib/collections";
+import { cn } from "@/lib/utils";
 
 type Me = Awaited<ReturnType<typeof usersApi.me>>;
 type Msg = { type: "ok" | "error"; text: string } | null;
@@ -34,6 +35,37 @@ function Message({ msg }: { msg: Msg }) {
   return <p className={msg.type === "ok" ? "text-sm opacity-80" : "text-sm text-destructive"}>{msg.text}</p>;
 }
 
+const LANGUAGE_OPTIONS: { value: LanguagePref; label: string }[] = [
+  { value: "cs", label: "Čeština" },
+  { value: "en", label: "Angličtina" },
+  { value: "original", label: "Původní jazyk" },
+];
+
+/** Three buttons in a row, one of them selected. */
+function LanguagePicker({ label, value, onChange }: { label: string; value: LanguagePref; onChange: (v: LanguagePref) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-sm font-semibold">{label}</span>
+      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={label}>
+        {LANGUAGE_OPTIONS.map((o) => (
+          <Button
+            key={o.value}
+            type="button"
+            size="sm"
+            role="radio"
+            aria-checked={value === o.value}
+            variant={value === o.value ? "default" : "outline"}
+            className={cn(value !== o.value && "button-outline")}
+            onClick={() => value !== o.value && onChange(o.value)}
+          >
+            {o.label}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const loadProfileLinks = () => usersApi.profileShareLinks();
 const createProfileLink = (_kind: "view" | "invite", label?: string) => usersApi.createProfileShareLink(label);
 
@@ -52,6 +84,7 @@ export default function Nastaveni() {
   const [accountMsg, setAccountMsg] = useState<Msg>(null);
   const [passwordMsg, setPasswordMsg] = useState<Msg>(null);
   const [privacyMsg, setPrivacyMsg] = useState<Msg>(null);
+  const [languageMsg, setLanguageMsg] = useState<Msg>(null);
   const [followers, setFollowers] = useState<PublicUser[]>([]);
 
   useEffect(() => {
@@ -117,6 +150,18 @@ export default function Nastaveni() {
     }
   };
 
+  const setLanguage = async (key: "textLanguage" | "imageLanguage", value: LanguagePref) => {
+    if (!me) return;
+    setLanguageMsg(null);
+    try {
+      await usersApi.updateMe({ [key]: value });
+      setMe({ ...me, [key]: value });
+      setLanguageMsg({ type: "ok", text: "Uloženo – projeví se při dalším načtení stránky" });
+    } catch (err) {
+      setLanguageMsg({ type: "error", text: errorMessage(err) });
+    }
+  };
+
   const removeFollower = async (id: string) => {
     await usersApi.removeFollower(id);
     setFollowers((f) => f.filter((u) => u.id !== id));
@@ -173,6 +218,15 @@ export default function Nastaveni() {
               description="Veřejný profil a veřejné kolekce uvidí kdokoli. U soukromého profilu musíte žádosti o sledování schválit."
             />
             <Message msg={privacyMsg} />
+          </Card>
+
+          <Card
+            title="Jazyk"
+            description="V jakém jazyce se mají zobrazovat názvy a popisy filmů a v jakém plakáty a loga. „Původní jazyk“ je jazyk, ve kterém film vznikl. Když překlad neexistuje, použije se dostupná verze."
+          >
+            <LanguagePicker label="Texty" value={me.textLanguage} onChange={(v) => setLanguage("textLanguage", v)} />
+            <LanguagePicker label="Obrázky" value={me.imageLanguage} onChange={(v) => setLanguage("imageLanguage", v)} />
+            <Message msg={languageMsg} />
           </Card>
 
           <Card

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, GripVertical, Tv } from "lucide-react";
+import { ArrowDownUp, ChevronLeft, ChevronRight, GripVertical, Tv } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { tmdb } from "@/lib/useTmdb";
@@ -26,6 +26,36 @@ export default function ReorderItems({ items, onSave, onCancel }: Props) {
   const [dragKey, setDragKey] = useState<string | null>(null);
   const [overKey, setOverKey] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Auto-scroll while dragging near the top / bottom edge of the window.
+  // Browsers barely scroll on their own during drag & drop (and not at all upwards
+  // when a fixed header covers the top), so we do it ourselves.
+  const pointerY = useRef<number | null>(null);
+  useEffect(() => {
+    if (!dragKey) return;
+    const onDragOver = (e: DragEvent) => {
+      pointerY.current = e.clientY;
+    };
+    let frame = 0;
+    const tick = () => {
+      const y = pointerY.current;
+      if (y !== null) {
+        const zone = Math.min(160, window.innerHeight / 4); // how close to the edge scrolling starts
+        let speed = 0;
+        if (y < zone) speed = -((zone - y) / zone);
+        else if (y > window.innerHeight - zone) speed = (y - (window.innerHeight - zone)) / zone;
+        if (speed) window.scrollBy(0, speed * 25); // up to 25px per frame, faster closer to the edge
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    document.addEventListener("dragover", onDragOver);
+    frame = requestAnimationFrame(tick);
+    return () => {
+      document.removeEventListener("dragover", onDragOver);
+      cancelAnimationFrame(frame);
+      pointerY.current = null;
+    };
+  }, [dragKey]);
 
   const move = (from: number, to: number) => {
     if (to < 0 || to >= order.length || from === to) return;
@@ -54,7 +84,10 @@ export default function ReorderItems({ items, onSave, onCancel }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-3 rounded-lg border p-3">
-        <p className="text-sm opacity-80 flex-1 min-w-60">Přetáhněte kartičky na nové místo, nebo použijte šipky. Pak pořadí uložte.</p>
+        <p className="text-sm opacity-80 flex-1 min-w-60">Přetáhněte kartičky na nové místo (u okraje okna se stránka sama posune), nebo použijte šipky. Pak pořadí uložte.</p>
+        <Button variant="outline" className="button-outline" onClick={() => setOrder((o) => [...o].reverse())} disabled={saving} title="Otočí aktuální pořadí naruby">
+          <ArrowDownUp /> Obrátit pořadí
+        </Button>
         <Button variant="outline" onClick={onCancel} disabled={saving}>Zrušit</Button>
         <Button onClick={save} disabled={saving}>{saving ? "Ukládám…" : "Uložit pořadí"}</Button>
       </div>
