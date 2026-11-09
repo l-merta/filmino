@@ -313,7 +313,7 @@ export function serializeCollectionSummary(c: CollectionWithPreview) {
 /** Prisma `include` for a collection summary with up to 4 preview posters. */
 export const collectionSummaryInclude = {
   owner: { select: publicUserSelect },
-  items: { select: { posterPath: true }, where: { posterPath: { not: null } }, orderBy: [{ position: "asc" }, { createdAt: "desc" }], take: 4 },
+  items: { select: { posterPath: true, type: true, tmdbId: true, seasonNumber: true }, where: { posterPath: { not: null } }, orderBy: [{ position: "asc" }, { createdAt: "desc" }], take: 4 },
   _count: { select: { items: true } },
 } satisfies Prisma.CollectionInclude;
 

@@ -1,3 +1,4 @@
+import { localizePosters } from "@/lib/server/localPosters";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
@@ -37,6 +38,9 @@ export const GET = handle(async () => {
       orderBy: { createdAt: "desc" },
     }),
   ]);
+
+  // Preview posters in the viewer's image language
+  await localizePosters([...mine, ...contributed, ...followed.map((f) => f.collection)].flatMap((c) => c.items));
 
   const order = ["FAVORITES", "WATCHED", "WATCHLIST"];
   const system = mine.filter((c) => c.system).sort((a, b) => order.indexOf(a.system!) - order.indexOf(b.system!));

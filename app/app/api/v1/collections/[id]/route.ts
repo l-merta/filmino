@@ -1,3 +1,4 @@
+import { localizePosters } from "@/lib/server/localPosters";
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
@@ -45,6 +46,9 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
         })
       : null,
   ]);
+
+  // Posters in the viewer's image language
+  await localizePosters(collection.items);
 
   return NextResponse.json({
     id: collection.id,

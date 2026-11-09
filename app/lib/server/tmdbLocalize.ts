@@ -21,35 +21,42 @@ export function tmdbLanguage(code: string): string {
 const sameLanguage = (a: string, b: string) => a.split("-")[0] === b.split("-")[0];
 
 /** Every movie / show / season / collection part in a response, with the language it should get. */
-function collect(data: Entity, pref: LanguagePref | null): { entity: Entity; lang: string | undefined }[] {
-  const out: { entity: Entity; lang: string | undefined }[] = [];
+type Found = { entity: Entity; lang: string | undefined; kind?: string };
+
+function collect(data: Entity, pref: LanguagePref | null): Found[] {
+  const out: Found[] = [];
   const langFor = (e: Entity, fallback?: string) => (pref === "original" || pref === null ? e.original_language ?? fallback : pref);
   if (!data || typeof data !== "object") return out;
 
-  if (data.id !== undefined) out.push({ entity: data, lang: langFor(data) });
+  // A TMDB collection has no original language of its own, use its first movie's
+  const parts = data.parts as Entity[] | undefined;
+  if (data.id !== undefined) out.push({ entity: data, lang: langFor(data, Array.isArray(parts) ? parts[0]?.original_language : undefined) });
+  // Movie details: the "part of a collection" card
+  const btc = data.belongs_to_collection as Entity | null | undefined;
+  if (btc && typeof btc === "object") out.push({ entity: btc, lang: langFor(btc, data.original_language), kind: "collection" });
   for (const key of ["results", "parts", "seasons"]) {
     const list = data[key];
     if (Array.isArray(list)) {
       for (const e of list as Entity[]) {
-        if (e && typeof e === "object") out.push({ entity: e, lang: langFor(e, data.original_language) });
+        if (e && typeof e === "object") out.push({ entity: e, lang: langFor(e, data.original_language), kind: key === "seasons" ? "season" : undefined });
       }
     }
   }
   return out;
 }
 
-const keyOf = (e: Entity) => `${e.media_type ?? ""}:${e.id}`;
+const keyOf = ({ entity: e, kind }: Found) => `${kind ?? e.media_type ?? ""}:${e.id}`;
 
 /**
  * Re-fetches `path` in the language each item should have (`pref`) and copies `fields` over.
  * At most 3 extra TMDB requests (lists can mix many original languages).
  */
 export async function patchLanguage(path: string, params: Params, data: Entity, pref: LanguagePref, baseLanguage: string, fields: string[]) {
-  const groups = new Map<string, Entity[]>();
-  for (const { entity, lang } of collect(data, pref)) {
-    if (!lang || sameLanguage(tmdbLanguage(lang), baseLanguage)) continue;
-    const l = tmdbLanguage(lang);
-    groups.set(l, [...(groups.get(l) ?? []), entity]);
+  const groups = new Map<string, Found[]>();
+  for (const found of collect(data, pref)) {
+    if (!found.lang || sameLanguage(tmdbLanguage(found.lang), baseLanguage)) continue;
+    const l = tmdbLanguage(found.lang);
+    groups.set(l, [...(groups.get(l) ?? []), found]);
   }
   const biggest = [...groups.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, 3);
 
@@ -61,11 +68,12 @@ export async function patchLanguage(path: string, params: Params, data: Entity, 
       } catch {
         return; // keep what we have
       }
-      // Seasons are matched separately so a season id can't clash with a show id
+      // Match by kind + id (seasons and collections can't clash with a movie's id)
       const found = new Map<string, Entity>();
-      for (const { entity } of collect(other, null)) found.set(keyOf(entity), entity);
-      for (const e of entities) {
-        const src = found.get(keyOf(e));
+      for (const f of collect(other, null)) found.set(keyOf(f), f.entity);
+      for (const f of entities) {
+        const e = f.entity;
+        const src = found.get(keyOf(f));
         if (!src) continue;
         for (const f of fields) {
           // TMDB returns "" when a translation is missing, keep the original then
