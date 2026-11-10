@@ -310,6 +310,42 @@ export function serializeCollectionSummary(c: CollectionWithPreview) {
   };
 }
 
+/**
+ * Up to 4 preview posters for each of the given collections (used when a collection
+ * is shown inside another one). A collection that only holds other collections
+ * borrows its children's posters (up to `depth` levels down).
+ */
+export async function collectionPreviews(ids: string[], depth = 2): Promise<Map<string, PosterSource[]>> {
+  const result = new Map<string, PosterSource[]>();
+  if (ids.length === 0) return result;
+
+  const rows = await prisma.collectionItem.findMany({
+    where: { collectionId: { in: ids } },
+    orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+    select: { collectionId: true, posterPath: true, type: true, tmdbId: true, seasonNumber: true, childCollectionId: true },
+  });
+
+  const children = new Map<string, string[]>();
+  for (const r of rows) {
+    const list = result.get(r.collectionId) ?? [];
+    if (r.posterPath && r.type !== "COLLECTION" && list.length < 4) list.push({ ...r });
+    result.set(r.collectionId, list);
+    if (r.childCollectionId) children.set(r.collectionId, [...(children.get(r.collectionId) ?? []), r.childCollectionId]);
+  }
+
+  // Fill up empty ones from their own nested collections
+  const needy = ids.filter((id) => (result.get(id)?.length ?? 0) === 0 && children.has(id));
+  if (depth > 1 && needy.length > 0) {
+    const nested = await collectionPreviews([...new Set(needy.flatMap((id) => children.get(id)!))], depth - 1);
+    for (const id of needy) {
+      result.set(id, children.get(id)!.flatMap((c) => nested.get(c) ?? []).slice(0, 4));
+    }
+  }
+  return result;
+}
+
+export type PosterSource = { posterPath: string | null; type: string; tmdbId: number | null; seasonNumber: number | null };
+
 /** Prisma `include` for a collection summary with up to 4 preview posters. */
 export const collectionSummaryInclude = {
   owner: { select: publicUserSelect },

@@ -24,18 +24,7 @@ export default function CollectionTile({ collection, showOwner, share }: Props) 
     <Link href={href} className="flex flex-col gap-1 hover:scale-98 transition-transform duration-200">
       <div className="w-full aspect-[2/3] rounded-md overflow-hidden bg-[var(--background)] border relative">
         {posters.length > 0 ? (
-          <div className={"grid w-full h-full " + (posters.length > 1 ? "grid-cols-2 grid-rows-2" : "")}>
-            {posters.map((p, i) => (
-              <Image
-                key={p + i}
-                src={tmdb.image(p)}
-                alt=""
-                width={200}
-                height={300}
-                className={"w-full h-full object-cover " + (posters.length === 2 ? "row-span-2" : posters.length === 3 && i === 0 ? "row-span-2" : "")}
-              />
-            ))}
-          </div>
+          <PosterMosaic posters={posters} />
         ) : (
           <div className="w-full h-full flex items-center justify-center opacity-40">
             <Icon size={48} />
@@ -61,6 +50,29 @@ export default function CollectionTile({ collection, showOwner, share }: Props) 
       <span className="font-bold mt-1 line-clamp-1">{collection.name}</span>
       {showOwner && collection.owner && <span className="text-sm opacity-60 line-clamp-1">{collection.owner.username}</span>}
     </Link>
+  );
+}
+
+/**
+ * 1–4 posters filling a 2:3 box (1 = full, 2 = side by side, 3 = one big + two small, 4 = 2×2).
+ * Pictures can be landscape episode stills, so ask for wide enough versions to stay sharp when cropped.
+ */
+export function PosterMosaic({ posters }: { posters: string[] }) {
+  const list = posters.slice(0, 4);
+  return (
+    <div className={"grid w-full h-full " + (list.length > 1 ? "grid-cols-2 grid-rows-2" : "")}>
+      {list.map((p, i) => (
+        <Image
+          key={p + i}
+          src={tmdb.image(p)}
+          alt=""
+          width={400}
+          height={600}
+          sizes={list.length === 1 ? "640px" : "384px"}
+          className={"w-full h-full object-cover " + (list.length === 2 || (list.length === 3 && i === 0) ? "row-span-2" : "")}
+        />
+      ))}
+    </div>
   );
 }
 

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
 import { handle, readJson, requireUserId, HttpError } from "@/lib/server/http";
 import {
+  collectionPreviews,
   collectionSummaryInclude,
   countWatched,
   publicUserSelect,
@@ -47,8 +48,11 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
       : null,
   ]);
 
+  // Nested collections show a mosaic of what's inside them
+  const previews = await collectionPreviews(collection.items.flatMap((i) => (i.childCollectionId ? [i.childCollectionId] : [])));
+
   // Posters in the viewer's image language
-  await localizePosters(collection.items);
+  await localizePosters([...collection.items, ...[...previews.values()].flat()]);
 
   return NextResponse.json({
     id: collection.id,
@@ -77,6 +81,7 @@ export const GET = handle(async (req: NextRequest, { params }: Ctx) => {
       year: i.year,
       createdAt: i.createdAt,
       addedBy: i.addedBy,
+      previewPosters: i.childCollectionId ? (previews.get(i.childCollectionId) ?? []).map((p) => p.posterPath!) : undefined,
     })),
     counts: { follows: followCount, forks: forkCount, watched: watchedCount, items: collection.items.length },
     viewer: {
