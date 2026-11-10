@@ -9,7 +9,7 @@ import { tmdb } from "@/lib/useTmdb";
 import { cn } from "@/lib/utils";
 import { ITEM_TYPE_LABEL, type CollectionItem } from "@/lib/collections";
 
-import { CollectionGrid } from "./CollectionTile";
+import { CollectionGrid, PosterMosaic } from "./CollectionTile";
 
 interface Props {
   items: CollectionItem[];
@@ -120,8 +120,18 @@ export default function ReorderItems({ items, onSave, onCancel }: Props) {
             )}
           >
             <div className="w-full aspect-[2/3] relative flex items-center justify-center rounded-md overflow-hidden bg-[var(--background)]">
-              {item.posterPath && (
-                <Image src={tmdb.image(item.posterPath)} alt={item.title} width={300} height={450} className="w-full h-full object-cover absolute" draggable={false} />
+              {item.type === "COLLECTION" && item.previewPosters?.length ? (
+                <div className="w-full h-full absolute pointer-events-none"><PosterMosaic posters={item.previewPosters} /></div>
+              ) : item.posterPath && (
+                <Image
+                  src={tmdb.image(item.posterPath)}
+                  alt={item.title}
+                  width={item.type === "EPISODE" ? 1280 : 400}
+                  height={item.type === "EPISODE" ? 720 : 600}
+                  sizes={item.type === "EPISODE" ? "(max-width: 640px) 100vw, 640px" : "(max-width: 640px) 50vw, 384px"}
+                  className="w-full h-full object-cover absolute"
+                  draggable={false}
+                />
               )}
               {!item.posterPath && <Tv size={40} className="opacity-70" />}
               <span className="absolute top-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white">{index + 1}</span>

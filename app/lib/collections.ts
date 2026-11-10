@@ -114,6 +114,8 @@ export type CollectionItem = {
   year: string | null;
   createdAt: string;
   addedBy: PublicUser | null;
+  /** Nested collections only: up to 4 posters of what's inside */
+  previewPosters?: string[];
 };
 
 export type CollectionDetail = {
