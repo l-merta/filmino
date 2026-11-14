@@ -12,15 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import UserAvatar from "@/components/UserAvatar";
 import ShareLinksManager from "@/components/collections/ShareLinksManager";
-import { collectionsApi, errorMessage, usersApi, type LanguagePref, type PublicUser } from "@/lib/collections";
+import { collectionsApi, errorMessage, recommendationsApi, usersApi, type CollectionSummary, type LanguagePref, type PublicUser } from "@/lib/collections";
 import { cn } from "@/lib/utils";
 
 type Me = Awaited<ReturnType<typeof usersApi.me>>;
 type Msg = { type: "ok" | "error"; text: string } | null;
 
-function Card({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+function Card({ title, description, children, id }: { title: string; description?: string; children: React.ReactNode; id?: string }) {
   return (
-    <section className="rounded-xl border p-5 flex flex-col gap-4">
+    <section id={id} className="rounded-xl border p-5 flex flex-col gap-4 scroll-mt-28">
       <div>
         <h2 className="font-bold text-xl">{title}</h2>
         {description && <p className="text-sm opacity-70 mt-1">{description}</p>}
@@ -86,6 +86,10 @@ export default function Nastaveni() {
   const [privacyMsg, setPrivacyMsg] = useState<Msg>(null);
   const [languageMsg, setLanguageMsg] = useState<Msg>(null);
   const [followers, setFollowers] = useState<PublicUser[]>([]);
+  // "Pro vás": every collection the user can pick from, and which ones are picked
+  const [pickable, setPickable] = useState<{ label: string; collections: CollectionSummary[] }[]>([]);
+  const [sources, setSources] = useState<string[]>([]);
+  const [sourcesMsg, setSourcesMsg] = useState<Msg>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/prihlaseni");
@@ -96,6 +100,19 @@ export default function Nastaveni() {
       setEmail(m.email);
     });
     usersApi.followRequests().then((r) => setFollowers(r.followers)).catch(() => {});
+    collectionsApi
+      .mine()
+      .then((c) =>
+        setPickable(
+          [
+            { label: "Moje kolekce", collections: [...c.system, ...c.owned] },
+            { label: "Sdílené se mnou", collections: c.contributed },
+            { label: "Sledované", collections: c.followed },
+          ].filter((g) => g.collections.length > 0)
+        )
+      )
+      .catch(() => {});
+    recommendationsApi.sources().then((r) => setSources(r.collectionIds)).catch(() => {});
   }, [status, router]);
 
   if (!me) {
@@ -159,6 +176,20 @@ export default function Nastaveni() {
       setLanguageMsg({ type: "ok", text: "Uloženo – projeví se při dalším načtení stránky" });
     } catch (err) {
       setLanguageMsg({ type: "error", text: errorMessage(err) });
+    }
+  };
+
+  const toggleSource = async (collectionId: string) => {
+    const before = sources;
+    const next = sources.includes(collectionId) ? sources.filter((s) => s !== collectionId) : [...sources, collectionId];
+    setSources(next); // show the change right away, undo it if saving fails
+    setSourcesMsg(null);
+    try {
+      await recommendationsApi.setSources(next);
+      setSourcesMsg({ type: "ok", text: "Uloženo" });
+    } catch (err) {
+      setSources(before);
+      setSourcesMsg({ type: "error", text: errorMessage(err) });
     }
   };
 
@@ -227,6 +258,43 @@ export default function Nastaveni() {
             <LanguagePicker label="Texty" value={me.textLanguage} onChange={(v) => setLanguage("textLanguage", v)} />
             <LanguagePicker label="Obrázky" value={me.imageLanguage} onChange={(v) => setLanguage("imageLanguage", v)} />
             <Message msg={languageMsg} />
+          </Card>
+
+          <Card
+            id="pro-vas"
+            title="Pro vás"
+            description="Vyberte kolekce, podle kterých vám budeme doporučovat filmy a seriály. Doporučení najdete nahoře na stránkách Filmy a Seriály. Co už máte ve Zhlédnutých, se nedoporučuje."
+          >
+            {pickable.length === 0 ? (
+              <p className="text-sm opacity-70">Zatím nemáte žádné kolekce.</p>
+            ) : (
+              pickable.map((group) => (
+                <div key={group.label} className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold">{group.label}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {group.collections.map((c) => {
+                      const on = sources.includes(c.id);
+                      return (
+                        <Button
+                          key={c.id}
+                          type="button"
+                          size="sm"
+                          role="checkbox"
+                          aria-checked={on}
+                          variant={on ? "default" : "outline"}
+                          className={cn(!on && "button-outline")}
+                          onClick={() => toggleSource(c.id)}
+                        >
+                          {c.name}
+                          {c.owner && group.label !== "Moje kolekce" && <span className="opacity-60">· {c.owner.username}</span>}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))
+            )}
+            <Message msg={sourcesMsg} />
           </Card>
 
           <Card

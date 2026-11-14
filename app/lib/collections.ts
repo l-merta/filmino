@@ -1,5 +1,6 @@
 // Client-side helpers + types for collections, profiles and share links.
-import { apiClient, apiDelete, apiGet, apiPost } from "@/lib/apiClient";
+import { apiClient, apiDelete, apiGet, apiPost, apiPut } from "@/lib/apiClient";
+import type { MediaList } from "@/types/tmdbApi";
 
 /** When adding a collection into another one: nest the whole collection, or copy just its items. */
 export type AddMode = "whole" | "contents";
@@ -198,6 +199,17 @@ export const collectionsApi = {
   createShareLink: (id: string, purpose: "view" | "invite", label?: string) =>
     apiPost<ShareLinkInfo>(`/collections/${id}/share-links`, { purpose, label }),
   deleteShareLink: (linkId: string) => apiDelete(`/share-links/${linkId}`),
+  /** "Podobné" at the end of a collection, same shape as a TMDB list */
+  similar: (id: string, type: "movie" | "tv", params?: Record<string, unknown>, share?: string | null) =>
+    apiGet<MediaList>(`/collections/${id}/similar`, { page: params?.page ?? 1, type, ...(share ? { share } : {}) }),
+};
+
+/** "Pro vás" recommendations */
+export const recommendationsApi = {
+  list: (type: "movie" | "tv", params?: Record<string, unknown>) =>
+    apiGet<MediaList>("/me/recommendations", { page: params?.page ?? 1, type }),
+  sources: () => apiGet<{ collectionIds: string[] }>("/me/recommendation-sources"),
+  setSources: (collectionIds: string[]) => apiPut<{ collectionIds: string[] }>("/me/recommendation-sources", { collectionIds }),
 };
 
 export const usersApi = {

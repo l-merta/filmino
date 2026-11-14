@@ -34,11 +34,16 @@ function collect(data: Entity, pref: LanguagePref | null): Found[] {
   // Movie details: the "part of a collection" card
   const btc = data.belongs_to_collection as Entity | null | undefined;
   if (btc && typeof btc === "object") out.push({ entity: btc, lang: langFor(btc, data.original_language), kind: "collection" });
-  for (const key of ["results", "parts", "seasons"]) {
+  // "cast" / "crew" are an actor's movies and shows (/person/:id/movie_credits etc.).
+  // On a movie's own /credits they are people, who have no poster, so those are skipped.
+  for (const key of ["results", "parts", "seasons", "cast", "crew"]) {
     const list = data[key];
     if (Array.isArray(list)) {
+      const credits = key === "cast" || key === "crew";
       for (const e of list as Entity[]) {
-        if (e && typeof e === "object") out.push({ entity: e, lang: langFor(e, data.original_language), kind: key === "seasons" ? "season" : undefined });
+        if (!e || typeof e !== "object") continue;
+        if (credits && !("poster_path" in e)) continue;
+        out.push({ entity: e, lang: langFor(e, data.original_language), kind: key === "seasons" ? "season" : undefined });
       }
     }
   }

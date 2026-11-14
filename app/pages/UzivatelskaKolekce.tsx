@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowUpDown, Bookmark, Copy, Eye, GitFork, Globe, Heart, Lock, Settings, UserCheck, UserPlus, Users, EyeOff } from "lucide-react";
+import { ArrowUpDown, Bookmark, Copy, Eye, GitFork, Globe, Heart, Lock, Plus, Settings, UserCheck, UserPlus, Users, EyeOff } from "lucide-react";
 
 import Header from "@/components/Header";
 import List from "@/sections/List";
+import MediaList from "@/sections/MediaList";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/components/UserAvatar";
@@ -22,6 +23,13 @@ import ErrorPage from "./Error";
 
 const SYSTEM_ICON = { FAVORITES: Heart, WATCHED: Eye, WATCHLIST: Bookmark };
 
+/** How many items are shown at first, and how many more each "+" click adds */
+const PAGE_SIZE = 20;
+
+// Which item types can bring in similar movies / shows (nested collections can contain both)
+const MOVIE_SOURCES = ["MOVIE", "TMDB_COLLECTION", "COLLECTION"];
+const TV_SOURCES = ["TV", "SEASON", "EPISODE", "COLLECTION"];
+
 /** /kolekce/:id — a user's collection */
 export default function UzivatelskaKolekce({ id, share }: { id: string; share: string | null }) {
   const router = useRouter();
@@ -31,6 +39,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const [filter, setFilter] = useState<string>("ALL");
   const [busy, setBusy] = useState(false);
   const [reordering, setReordering] = useState(false);
+  const [shown, setShown] = useState(PAGE_SIZE);
   const { refresh: refreshLibrary } = useLibrary();
 
   const load = useCallback(async () => {
@@ -47,6 +56,9 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
 
   const types = useMemo(() => Array.from(new Set((data?.items ?? []).map((i) => i.type))), [data]);
   const items = useMemo(() => (data?.items ?? []).filter((i) => filter === "ALL" || i.type === filter), [data, filter]);
+
+  // Start from the first page again when switching filters or collections
+  useEffect(() => setShown(PAGE_SIZE), [filter, id]);
 
   if (notFound) {
     return <ErrorPage code={404} title="Kolekce nenalezena" message="Kolekce neexistuje, nebo k ní nemáte přístup." type="movie" />;
@@ -221,7 +233,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
               </p>
             ) : (
               <CollectionGrid>
-                {items.map((item) => (
+                {items.slice(0, shown).map((item) => (
                   <CollectionItemCard
                     key={item.id}
                     item={item}
@@ -231,7 +243,22 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
                 ))}
               </CollectionGrid>
             )}
+            {items.length > shown && (
+              <div className="w-full flex justify-center align-middle">
+                <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" aria-label="Načíst další" onClick={() => setShown((n) => n + PAGE_SIZE)}>
+                  <Plus />
+                </Button>
+              </div>
+            )}
           </List>
+        )}
+
+        {/* Similar movies / shows of everything in this collection (hidden when there are none) */}
+        {data && !reordering && data.items.some((i) => MOVIE_SOURCES.includes(i.type)) && (
+          <MediaList key={"similar-movie-" + id} header="Podobné filmy" type="movie" fetchFunction={(params) => collectionsApi.similar(id, "movie", params, share)} />
+        )}
+        {data && !reordering && data.items.some((i) => TV_SOURCES.includes(i.type)) && (
+          <MediaList key={"similar-tv-" + id} header="Podobné seriály" type="tv" fetchFunction={(params) => collectionsApi.similar(id, "tv", params, share)} />
         )}
       </main>
     </div>
