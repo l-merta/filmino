@@ -31,6 +31,7 @@ model Users {
   followers          UserFollow[]            @relation("Following")
   createdShareLinks  ShareLink[]             @relation("ShareLinkCreator")
   profileShareLinks  ShareLink[]             @relation("ShareLinkProfile")
+  recommendationSources RecommendationSource[]
 }
 
 model Account {
@@ -128,6 +129,7 @@ model Collection {
   contributors CollectionContributor[]
   follows      CollectionFollow[]
   shareLinks   ShareLink[]
+  recommendedFor RecommendationSource[]
 
   // MySQL allows many NULLs in a unique index, so this only stops duplicate
   // system collections (one FAVORITES / WATCHED / WATCHLIST per user).
@@ -231,4 +233,17 @@ model ShareLink {
 
   @@index([collectionId])
   @@index([profileUserId])
+}
+
+// "Pro vás" (For you): which collections a user's recommendations are built from
+model RecommendationSource {
+  userId       String   @db.VarChar(191)
+  collectionId String   @db.VarChar(191)
+  createdAt    DateTime @default(now())
+
+  user       Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, collectionId])
+  @@index([collectionId])
 }
