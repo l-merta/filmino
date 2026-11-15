@@ -23,12 +23,33 @@ import ErrorPage from "./Error";
 
 const SYSTEM_ICON = { FAVORITES: Heart, WATCHED: Eye, WATCHLIST: Bookmark };
 
-/** How many items are shown at first, and how many more each "+" click adds */
-const PAGE_SIZE = 20;
+/** Roughly how many items are shown at first, and how many more each "+" click adds */
+const ITEMS_PER_PAGE = 24;
 
 // Which item types can bring in similar movies / shows (nested collections can contain both)
 const MOVIE_SOURCES = ["MOVIE", "TMDB_COLLECTION", "COLLECTION"];
 const TV_SOURCES = ["TV", "SEASON", "EPISODE", "COLLECTION"];
+
+// Must match the columns of CollectionGrid (grid-cols-2 sm:3 md:4 lg:5 xl:6)
+const GRID_BREAKPOINTS: [query: string, columns: number][] = [
+  ["(min-width: 1280px)", 6],
+  ["(min-width: 1024px)", 5],
+  ["(min-width: 768px)", 4],
+  ["(min-width: 640px)", 3],
+];
+
+/** How many cards fit in one row of the collection grid right now (updates when the window is resized). */
+function useGridColumns() {
+  const [columns, setColumns] = useState(6);
+  useEffect(() => {
+    const lists = GRID_BREAKPOINTS.map(([q]) => window.matchMedia(q));
+    const update = () => setColumns(GRID_BREAKPOINTS.find((_, i) => lists[i].matches)?.[1] ?? 2);
+    update();
+    lists.forEach((l) => l.addEventListener("change", update));
+    return () => lists.forEach((l) => l.removeEventListener("change", update));
+  }, []);
+  return columns;
+}
 
 /** /kolekce/:id — a user's collection */
 export default function UzivatelskaKolekce({ id, share }: { id: string; share: string | null }) {
@@ -39,7 +60,10 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const [filter, setFilter] = useState<string>("ALL");
   const [busy, setBusy] = useState(false);
   const [reordering, setReordering] = useState(false);
-  const [shown, setShown] = useState(PAGE_SIZE);
+  const [pages, setPages] = useState(1);
+  // Always show whole rows: 24 items = 4 rows of 6, but 5 per row needs 25 (5 rows)
+  const columns = useGridColumns();
+  const shown = pages * columns * Math.ceil(ITEMS_PER_PAGE / columns);
   const { refresh: refreshLibrary } = useLibrary();
 
   const load = useCallback(async () => {
@@ -58,7 +82,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
   const items = useMemo(() => (data?.items ?? []).filter((i) => filter === "ALL" || i.type === filter), [data, filter]);
 
   // Start from the first page again when switching filters or collections
-  useEffect(() => setShown(PAGE_SIZE), [filter, id]);
+  useEffect(() => setPages(1), [filter, id]);
 
   if (notFound) {
     return <ErrorPage code={404} title="Kolekce nenalezena" message="Kolekce neexistuje, nebo k ní nemáte přístup." type="movie" />;
@@ -245,7 +269,7 @@ export default function UzivatelskaKolekce({ id, share }: { id: string; share: s
             )}
             {items.length > shown && (
               <div className="w-full flex justify-center align-middle">
-                <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" aria-label="Načíst další" onClick={() => setShown((n) => n + PAGE_SIZE)}>
+                <Button variant={"ghost"} className="button-outline w-30 rounded-full border-2 !p-0 mt-4" aria-label="Načíst další" onClick={() => setPages((n) => n + 1)}>
                   <Plus />
                 </Button>
               </div>
